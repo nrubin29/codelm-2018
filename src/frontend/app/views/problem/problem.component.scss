@@ -1,0 +1,39 @@
+.display-side {
+  display: flex;
+
+  & > * {
+    flex: 1;
+  }
+
+  & :not(:last-child) {
+    margin-right: 1em;
+  }
+}
+
+.header {
+  display: flex;
+
+  & :first-child {
+    flex: 1;
+  }
+}
+
+.flex-horizontal {
+  display: flex;
+
+  & :not(:last-child) {
+    margin-right: 1em;
+  }
+}
+
+h1 {
+  font-size: 3em;
+}
+
+input[type=button] {
+  font-size: 1.5em;
+}
+
+li {
+  list-style: none;
+}

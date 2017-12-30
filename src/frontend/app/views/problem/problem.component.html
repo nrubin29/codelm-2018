@@ -1,0 +1,46 @@
+<div class="header">
+  <div>
+    <h1>{{problem}}. Lorem Ipsum</h1>
+  </div>
+  <div class="flex-horizontal">
+    <input type="button" value="Test">
+    <input type="button" value="Submit">
+  </div>
+</div>
+<br>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ac maximus justo. Phasellus varius purus vitae ligula pulvinar, vitae eleifend justo vehicula. Morbi fermentum ac lorem non blandit. Sed viverra nec odio quis pretium. Etiam ultricies felis sit amet quam consequat venenatis. Donec quis mattis sapien, sit amet euismod nulla.</p>
+<br>
+<div class="display-side">
+  <div>
+    <app-tabs>
+      <app-pane title="IO">
+        <table>
+          <thead>
+          <tr>
+            <th>Input</th>
+            <th>Output</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>4</td>
+          </tr>
+          </tbody>
+        </table>
+      </app-pane>
+      <app-pane title="Submissions">
+        <ul>
+          <li>List item</li>
+        </ul>
+      </app-pane>
+    </app-tabs>
+  </div>
+  <div>
+    <codemirror [config]="{ lineNumbers: true, mode: 'text/x-python' }"></codemirror>
+  </div>
+</div>

@@ -5,8 +5,8 @@
   },
   "apps": [
     {
-      "root": "src",
-      "outDir": "dist",
+      "root": "src/frontend",
+      "outDir": "dist/frontend",
       "assets": [
         "assets",
         "favicon.ico"
@@ -19,7 +19,8 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles.css"
+        "styles.scss",
+        "../../node_modules/codemirror/lib/codemirror.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
@@ -29,11 +30,6 @@
       }
     }
   ],
-  "e2e": {
-    "protractor": {
-      "config": "./protractor.conf.js"
-    }
-  },
   "lint": [
     {
       "project": "src/tsconfig.app.json",
@@ -48,13 +44,8 @@
       "exclude": "**/node_modules/**"
     }
   ],
-  "test": {
-    "karma": {
-      "config": "./karma.conf.js"
-    }
-  },
   "defaults": {
-    "styleExt": "css",
+    "styleExt": "scss",
     "component": {}
   }
 }

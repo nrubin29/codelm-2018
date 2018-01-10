@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import 'rxjs/add/operator/switchMap';
 import 'codemirror/mode/python/python';
+import { ProblemBaseComponent } from '../problembase/problembase.component';
 
 @Component({
   selector: 'app-problem',
@@ -11,12 +12,10 @@ import 'codemirror/mode/python/python';
 export class ProblemComponent implements OnInit {
   problem: string;
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private problemBase: ProblemBaseComponent) {}
 
   ngOnInit() {
-    this.route.paramMap.switchMap((params: ParamMap) => params.get('id')).subscribe(problem => {
-      this.problem = problem;
-    });
+    this.problemBase.problem.subscribe(problem => this.problem = problem)
   }
 
 }

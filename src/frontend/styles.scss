@@ -28,14 +28,27 @@
   margin: 1em;
 }
 
+.container-padding {
+  padding: 1em;
+}
+
+router-outlet {
+  display: none;
+}
+
 app-root {
   display: flex;
   flex-direction: column;
 
   min-height: 100vh;
+
+  // Temp
+  //justify-content: space-around;
+  //flex-flow: wrap;
+  //align-items: center;
 }
 
-app-dashboard {
+app-dashboard, app-home {
   display: flex;
   flex: 1;
 
@@ -44,6 +57,7 @@ app-dashboard {
 
 main {
   @extend .container;
+  display: flex;
   flex: 1;
 }
 
@@ -52,11 +66,8 @@ input[type=button], input[type=submit] {
   display: block;
   text-align: center;
   padding: .5em;
-  border: thin solid #f0f0f0;
-
-  &:not(:last-child) {
-    border-right: none;
-  }
+  background: #f0f0f0;
+  border: thin solid lightgray;
 
   &.active {
     background: #f0f0f0;

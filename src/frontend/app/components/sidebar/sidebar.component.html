@@ -1,0 +1,8 @@
+<div class="content" *ngIf="visible">
+  <img src="assets/logo-portrait.png" class="logo">
+  <h2>Team 1</h2>
+  <h3>Score: 10</h3>
+  <br>
+  <a [routerLink]="['..', 'dashboard']">Dashboard</a>
+  <a *ngFor="let i of [1, 2, 3, 4, 5, 6]" [routerLink]="['problem', i]">Problem {{i}}</a>
+</div>

@@ -14,6 +14,11 @@ import { AdminComponent } from './views/admin/admin/admin.component';
 import { SubmitComponent } from './views/dashboard/submit/submit.component';
 import { ProblemBaseComponent } from './views/dashboard/problembase/problembase.component';
 import { ResultComponent } from './views/dashboard/result/result.component';
+import { HomeComponent } from './views/home/home.component';
+import { FeedComponent } from './components/feed/feed.component';
+import { CardComponent } from './components/card/card.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -27,12 +32,17 @@ import { ResultComponent } from './views/dashboard/result/result.component';
     AdminComponent,
     SubmitComponent,
     ProblemBaseComponent,
-    ResultComponent
+    ResultComponent,
+    HomeComponent,
+    FeedComponent,
+    CardComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,
     CodemirrorModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

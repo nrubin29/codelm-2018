@@ -1,16 +1,4 @@
-<div class="sidebar">
-  <img src="assets/logo.png" class="logo">
-  <h2>Team 1</h2>
-  <h3>Score: 10</h3>
-  <br>
-  <a [routerLink]="['standings']">Standings</a>
-  <a [routerLink]="['problem', 1]">Problem 1</a>
-  <a [routerLink]="['problem', 2]">Problem 2</a>
-  <a [routerLink]="['problem', 3]">Problem 3</a>
-  <a [routerLink]="['problem', 4]">Problem 4</a>
-  <a [routerLink]="['problem', 5]">Problem 5</a>
-  <a [routerLink]="['problem', 6]">Problem 6</a>
-</div>
+<app-sidebar [@slideInOut]="sidebarState"></app-sidebar>
 <main>
   <router-outlet></router-outlet>
 </main>

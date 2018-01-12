@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterContentInit, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DashboardComponent } from '../dashboard/dashboard.component';
 
 @Component({
   selector: 'app-submit',
@@ -8,10 +9,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class SubmitComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private dashboard: DashboardComponent, private router: Router) { }
 
   ngOnInit() {
-    setTimeout(() => this.router.navigate(['dashboard', 'result', 1]), 5000)
-  }
+    setTimeout(() => this.dashboard.toggleSidebar(), 0);
 
+    setTimeout(() => {
+      this.dashboard.toggleSidebar();
+      this.router.navigate(['dashboard', 'result', 1])
+    }, 5000);
+  }
 }

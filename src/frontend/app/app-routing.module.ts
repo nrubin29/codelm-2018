@@ -8,13 +8,15 @@ import { AdminComponent } from './views/admin/admin/admin.component';
 import { SubmitComponent } from './views/dashboard/submit/submit.component';
 import { ProblemBaseComponent } from './views/dashboard/problembase/problembase.component';
 import { ResultComponent } from './views/dashboard/result/result.component';
+import { HomeComponent } from './views/home/home.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
   {path: 'login', component: LoginComponent},
+  {path: 'home', component: HomeComponent},
   {path: 'dashboard', component: DashboardComponent, /*canActivate: [SocketGuard],*/ children:
     [
-      {path: 'standings', component: StandingsComponent},
+      {path: '', component: StandingsComponent},
       {path: 'problem/:id', component: ProblemBaseComponent, children:
         [
           {path: '', component: ProblemComponent},

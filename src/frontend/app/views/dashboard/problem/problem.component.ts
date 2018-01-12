@@ -18,7 +18,7 @@ export class ProblemComponent implements OnInit {
     this.problemBase.problem.subscribe(problem => this.problem = problem)
   }
 
-  submitClicked() {
+  submitClicked(type: string) {
     this.router.navigate(['submit'], {relativeTo: this.activatedRoute})
   }
 }

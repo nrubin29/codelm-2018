@@ -1,1 +1,39 @@
-<p>Result ID {{resultId}}</p>
+<div class="header">
+    <div>
+        <h1>1. Lorem Ipsum</h1>
+    </div>
+    <div class="flex-horizontal">
+        <h2>ID: {{resultId}}</h2>
+    </div>
+</div>
+<div class="display-side">
+    <div>
+        <app-card title="Result">
+            <h2>100%</h2>
+        </app-card>
+        <app-card title="IO">
+            <table>
+                <thead>
+                <tr>
+                    <th>Input</th>
+                    <th>Output</th>
+                    <th>Correct</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>4</td>
+                </tr>
+                </tbody>
+            </table>
+        </app-card>
+    </div>
+    <codemirror [config]="{ lineNumbers: true, mode: 'text/x-python' }"></codemirror>
+</div>

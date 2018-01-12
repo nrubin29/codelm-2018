@@ -1,0 +1,25 @@
+:host {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+img {
+  width: 30vw;
+  margin-bottom: 1em;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  font-size: 2em;
+
+  &:not(:last-child) {
+    margin-bottom: 1em;
+  }
+}

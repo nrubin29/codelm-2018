@@ -3,8 +3,8 @@
     <h1>{{problem}}. Lorem Ipsum</h1>
   </div>
   <div class="flex-horizontal">
-    <input type="button" value="Test">
-    <input type="button" value="Submit" (click)="submitClicked()">
+    <input type="button" value="Test" (click)="submitClicked('test')">
+    <input type="button" value="Submit" (click)="submitClicked('submit')">
   </div>
 </div>
 <div class="display-side">
@@ -33,6 +33,7 @@
   </app-card>
 </div>
 <codemirror [config]="{ lineNumbers: true, mode: 'text/x-python' }"></codemirror>
+<br>
 <app-card title="Submissions">
   <ul>
     <li>List item</li>

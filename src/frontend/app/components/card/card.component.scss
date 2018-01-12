@@ -1,4 +1,9 @@
 :host {
+  display: flex;
+}
+
+.card {
+  flex: 1;
   border: thin solid #f0f0f0;
   border-radius: 10px;
   overflow: hidden;

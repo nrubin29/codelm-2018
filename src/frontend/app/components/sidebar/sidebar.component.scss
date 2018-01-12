@@ -1,4 +1,4 @@
-.content {
+:host {
   height: 100vh;
   width: 20vw;
   max-width: 20vw;
@@ -9,7 +9,7 @@
 }
 
 .logo {
-  width: 100%;
+  width: calc(100% - 1em);
   margin: 0.5em 0.5em 1.5em;
 }
 
@@ -20,7 +20,7 @@ a {
   justify-content: center;
   font-variant: none;
 
-  &:nth-child(2n + 1) {
+  &:nth-child(2n) {
     background: #f0f0f0;
   }
 }

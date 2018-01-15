@@ -1,0 +1,40 @@
+<ng-container *ngIf="submission">
+    <div class="header">
+        <div>
+            <h1>{{submission.problem.id}}. {{submission.problem.title}}</h1>
+        </div>
+        <div class="flex-horizontal">
+            <h2>ID: {{submission.id}}</h2>
+        </div>
+    </div>
+    <div class="display-side">
+        <div>
+            <app-card title="Result">
+                <h2>{{submission.result}}</h2>
+            </app-card>
+            <app-card title="IO">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Input</th>
+                        <th>Correct Output</th>
+                        <th>Your Output</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let testCase of submission.testCases">
+                        <ng-container *ngIf="!testCase.hidden">
+                            <td>{{testCase.testCase.input}}</td>
+                            <td>{{testCase.testCase.output}}</td>
+                            <td>{{testCase.output}}</td>
+                            <td>Correct</td>
+                        </ng-container>
+                    </tr>
+                    </tbody>
+                </table>
+            </app-card>
+        </div>
+        <codemirror [config]="{ lineNumbers: true, mode: 'text/x-python', readOnly: true }"></codemirror>
+    </div>
+</ng-container>

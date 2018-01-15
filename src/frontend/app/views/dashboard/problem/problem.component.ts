@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import 'rxjs/add/operator/switchMap';
 import 'codemirror/mode/python/python';
-import { ProblemBaseComponent } from '../problembase/problembase.component';
+import { ProblemModel } from '../../../../../common/models/problem.model';
+import { ProblemService } from '../../../services/problem.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-problem',
@@ -10,15 +12,18 @@ import { ProblemBaseComponent } from '../problembase/problembase.component';
   styleUrls: ['./problem.component.scss']
 })
 export class ProblemComponent implements OnInit {
-  problem: string;
+  problem: ProblemModel;
 
-  constructor(private problemBase: ProblemBaseComponent, private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(private problemService: ProblemService, private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    this.problemBase.problem.subscribe(problem => this.problem = problem)
+    this.activatedRoute.paramMap.switchMap((params: ParamMap) => params.get('id')).subscribe(id => {
+      this.problem = null;
+      this.problemService.getProblem(id).then(problem => this.problem = problem).catch(console.log)
+    });
   }
 
   submitClicked(type: string) {
-    this.router.navigate(['submit'], {relativeTo: this.activatedRoute})
+    this.router.navigate(['dashboard', 'submit'])
   }
 }

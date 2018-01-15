@@ -1,8 +1,10 @@
 import { DivisionModel } from './division.model';
+import { SubmissionModel } from './submission.model';
 
 export interface TeamModel {
   id: number;
-  name: string;
+  username: string;
   members: string;
   division: DivisionModel;
+  submissions: SubmissionModel[];
 }

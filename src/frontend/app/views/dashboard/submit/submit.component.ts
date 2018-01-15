@@ -12,11 +12,12 @@ export class SubmitComponent implements OnInit {
   constructor(private dashboard: DashboardComponent, private router: Router) { }
 
   ngOnInit() {
-    setTimeout(() => this.dashboard.toggleSidebar(), 0);
+    this.dashboard.sidebar.toggle();
+    setTimeout(() => {}, 0);
 
     setTimeout(() => {
-      this.dashboard.toggleSidebar();
-      this.router.navigate(['dashboard', 'result', 1])
+      this.dashboard.sidebar.toggle();
+      this.router.navigate(['dashboard', 'submission', 1])
     }, 5000);
   }
 }

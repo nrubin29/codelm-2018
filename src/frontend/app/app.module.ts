@@ -12,14 +12,19 @@ import { PaneComponent } from './components/pane/pane.component';
 import { StandingsComponent } from './views/dashboard/standings/standings.component';
 import { AdminComponent } from './views/admin/admin/admin.component';
 import { SubmitComponent } from './views/dashboard/submit/submit.component';
-import { ProblemBaseComponent } from './views/dashboard/problembase/problembase.component';
-import { ResultComponent } from './views/dashboard/result/result.component';
+import { SubmissionComponent } from './views/dashboard/submission/submission.component';
 import { HomeComponent } from './views/home/home.component';
 import { FeedComponent } from './components/feed/feed.component';
 import { CardComponent } from './components/card/card.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { InMemoryDataService } from './in-memory-data.service';
+import { RestService } from './services/rest.service';
+import { ProblemService } from './services/problem.service';
+import { SubmissionService } from './services/submission.service';
 
 @NgModule({
   declarations: [
@@ -32,8 +37,7 @@ import { FormsModule } from '@angular/forms';
     StandingsComponent,
     AdminComponent,
     SubmitComponent,
-    ProblemBaseComponent,
-    ResultComponent,
+    SubmissionComponent,
     HomeComponent,
     FeedComponent,
     CardComponent,
@@ -42,11 +46,17 @@ import { FormsModule } from '@angular/forms';
   imports: [
     BrowserModule,
     FormsModule,
+    HttpClientModule,
+    // HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService),
     CodemirrorModule,
     AppRoutingModule,
     BrowserAnimationsModule,
   ],
-  providers: [],
+  providers: [
+    RestService,
+    ProblemService,
+    SubmissionService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

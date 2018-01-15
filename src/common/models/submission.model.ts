@@ -1,18 +1,11 @@
 import { TeamModel } from './team.model';
-import { ProblemModel } from './problem.model';
+import { ProblemModel, TestCaseModel } from './problem.model';
 
 export interface SubmissionModel {
   id: number;
   team: TeamModel;
   problem: ProblemModel;
-  testCases: TestCaseModel[];
+  code: string;
+  testCases: {testCase: TestCaseModel, output: string}[];
   result: string;
-}
-
-export interface TestCaseModel {
-  id: number;
-  hidden: boolean;
-  input: string;
-  output: string;
-  correct: string;
 }

@@ -6,8 +6,7 @@ import { ProblemComponent } from './views/dashboard/problem/problem.component';
 import { StandingsComponent } from './views/dashboard/standings/standings.component';
 import { AdminComponent } from './views/admin/admin/admin.component';
 import { SubmitComponent } from './views/dashboard/submit/submit.component';
-import { ProblemBaseComponent } from './views/dashboard/problembase/problembase.component';
-import { ResultComponent } from './views/dashboard/result/result.component';
+import { SubmissionComponent } from './views/dashboard/submission/submission.component';
 import { HomeComponent } from './views/home/home.component';
 
 const routes: Routes = [
@@ -17,13 +16,9 @@ const routes: Routes = [
   {path: 'dashboard', component: DashboardComponent, /*canActivate: [SocketGuard],*/ children:
     [
       {path: '', component: StandingsComponent},
-      {path: 'problem/:id', component: ProblemBaseComponent, children:
-        [
-          {path: '', component: ProblemComponent},
-          {path: 'submit', component: SubmitComponent},
-        ]
-      },
-      {path: 'result/:rid', component: ResultComponent}
+      {path: 'problem/:id', component: ProblemComponent},
+      {path: 'submit', component: SubmitComponent},
+      {path: 'submission/:id', component: SubmissionComponent}
     ]
   },
   {path: 'admin', component: AdminComponent, /*canActivate: [SocketGuard],*/ children:

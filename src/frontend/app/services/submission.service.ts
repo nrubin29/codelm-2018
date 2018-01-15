@@ -14,6 +14,6 @@ export class SubmissionService {
   }
 
   getSubmissions(teamId: string): Promise<SubmissionModel[]> {
-    return this.restService.get<SubmissionModel[]>(`${this.endpoint}/team/${teamId}`)
+    return this.restService.get<SubmissionModel[]>(`${this.endpoint}/?team=${teamId}`)
   }
 }

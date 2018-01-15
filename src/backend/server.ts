@@ -2,6 +2,7 @@ import express = require('express');
 import morgan = require('morgan');
 import bodyParser = require('body-parser');
 import mongoose = require('mongoose');
+import './daos/dao';
 import api from './api';
 
 const app = express();

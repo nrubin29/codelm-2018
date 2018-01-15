@@ -21,30 +21,30 @@ export class InMemoryDataService implements InMemoryDbService {
       }
     ];
 
-    const submissions: SubmissionModel[] = [
-      {
-        id: 1,
-        team: {
-          id: 1,
-          username: 'demoteam',
-          members: 'Alice, Bob, Charlie',
-          division: {
-            id: 1,
-            name: 'Expert'
-          },
-          submissions: []
-        },
-        problem: problems[0],
-        code: 'def foo(bar):\n  print(bar)',
-        testCases: [{testCase: {id: 1, hidden: false, input: '1', output: '2'}, output: '2'}, {testCase: {id: 2, hidden: false, input: '2', output: '3'}, output: '3'}],
-        result: '100%'
-      }
-    ];
+    // const submissions: SubmissionModel[] = [
+    //   {
+    //     id: 1,
+    //     team: {
+    //       id: 1,
+    //       username: 'demoteam',
+    //       members: 'Alice, Bob, Charlie',
+    //       division: {
+    //         id: 1,
+    //         name: 'Expert'
+    //       },
+    //       submissions: []
+    //     },
+    //     problem: problems[0],
+    //     code: 'def foo(bar):\n  print(bar)',
+    //     testCases: [{testCase: {id: 1, hidden: false, input: '1', output: '2'}, output: '2'}, {testCase: {id: 2, hidden: false, input: '2', output: '3'}, output: '3'}],
+    //     result: '100%'
+    //   }
+    // ];
+    //
+    // const teams: TeamModel[] = [{
+    //   id: 1, username: 'demoteam', members: 'Alice, Bob, Charlie', division: divisions[0], submissions: submissions
+    // }];
 
-    const teams: TeamModel[] = [{
-      id: 1, username: 'demoteam', members: 'Alice, Bob, Charlie', division: divisions[0], submissions: submissions
-    }];
-
-    return {divisions, problems, submissions, teams};
+    return {divisions, problems} //, submissions, teams};
   }
 }

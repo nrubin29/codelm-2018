@@ -5,18 +5,20 @@ type ProblemType = ProblemModel & mongoose.Document;
 
 //new mongoose.Schema().loadClass(ProblemModel)
 
+export const TestCaseSchema = new mongoose.Schema({
+  id: Number,
+  hidden: Boolean,
+  input: String,
+  output: String
+});
+
 const Problem = mongoose.model<ProblemType>('Problem', new mongoose.Schema({
   id: Number,
   title: String,
   description: String,
-  divisions: [{type: mongoose.Schema.Types.ObjectId, ref: 'divisions'}],
+  divisions: [{type: mongoose.Schema.Types.ObjectId, ref: 'Division'}],
   points: Number,
-  testCases: [{
-    id: Number,
-    hidden: Boolean,
-    input: String,
-    output: String
-  }]
+  testCases: [TestCaseSchema]
 }));
 
 export class ProblemDao {

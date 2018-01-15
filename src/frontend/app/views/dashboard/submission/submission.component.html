@@ -25,8 +25,8 @@
                     <tbody>
                     <tr *ngFor="let testCase of submission.testCases">
                         <ng-container *ngIf="!testCase.hidden">
-                            <td>{{testCase.testCase.input}}</td>
-                            <td>{{testCase.testCase.output}}</td>
+                            <td>{{testCase.input}}</td>
+                            <td>{{testCase.correctOutput}}</td>
                             <td>{{testCase.output}}</td>
                             <td>Correct</td>
                         </ng-container>

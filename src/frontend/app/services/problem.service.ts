@@ -14,6 +14,6 @@ export class ProblemService {
   }
 
   getProblems(divisionId: string): Promise<ProblemModel[]> {
-    return this.restService.get<ProblemModel[]>(`${this.endpoint}/division/${divisionId}`)
+    return this.restService.get<ProblemModel[]>(`${this.endpoint}/?division=${divisionId}`)
   }
 }

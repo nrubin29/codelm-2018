@@ -6,6 +6,7 @@ export interface ProblemModel {
   description: string;
   divisions: DivisionModel[];
   points: number;
+  testCasesCaseSensitive: boolean;
   testCases: TestCaseModel[];
 }
 

@@ -4,7 +4,7 @@
             <h1>{{submission.problem.id}}. {{submission.problem.title}}</h1>
         </div>
         <div class="flex-horizontal">
-            <h2>ID: {{submission.id}}</h2>
+            <h2>ID: {{submission._id}}</h2>
         </div>
     </div>
     <div class="display-side">
@@ -24,12 +24,10 @@
                     </thead>
                     <tbody>
                     <tr *ngFor="let testCase of submission.testCases">
-                        <ng-container *ngIf="!testCase.hidden">
-                            <td>{{testCase.input}}</td>
-                            <td>{{testCase.correctOutput}}</td>
-                            <td>{{testCase.output}}</td>
-                            <td>Correct</td>
-                        </ng-container>
+                        <td>{{testCase.input}}</td>
+                        <td>{{testCase.correctOutput}}</td>
+                        <td>{{testCase.output}}</td>
+                        <td>Correct</td>
                     </tr>
                     </tbody>
                 </table>

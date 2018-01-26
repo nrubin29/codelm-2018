@@ -17,6 +17,7 @@ export class InMemoryDataService implements InMemoryDbService {
         description: 'Given a number, add 1 to it.',
         divisions: [],
         points: 1,
+        testCasesCaseSensitive: true,
         testCases: [{id: 1, hidden: false, input: '1', output: '2'}, {id: 2, hidden: true, input: '2', output: '3'}]
       }
     ];

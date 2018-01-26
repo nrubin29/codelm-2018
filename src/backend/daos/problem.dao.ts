@@ -18,11 +18,11 @@ const Problem = mongoose.model<ProblemType>('Problem', new mongoose.Schema({
   description: String,
   divisions: [{type: mongoose.Schema.Types.ObjectId, ref: 'Division'}],
   points: Number,
+  testCasesCaseSensitive: {type: Boolean, default: true},
   testCases: [TestCaseSchema]
 }));
 
 export class ProblemDao {
-
   static getProblem(id: string): Promise<ProblemModel> {
     return Problem.findOne({id: id}).exec()
   }

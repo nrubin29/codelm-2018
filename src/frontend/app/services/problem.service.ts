@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
 import { ProblemModel } from '../../../common/models/problem.model';
+import { TestCaseSubmissionModel } from '../../../common/models/submission.model';
 
 @Injectable()
 export class ProblemService {
@@ -15,5 +16,9 @@ export class ProblemService {
 
   getProblems(divisionId: string): Promise<ProblemModel[]> {
     return this.restService.get<ProblemModel[]>(`${this.endpoint}/?division=${divisionId}`)
+  }
+
+  submit(id: string, data: any): Promise<TestCaseSubmissionModel[]> {
+    return this.restService.post<TestCaseSubmissionModel[]>(`${this.endpoint}/${id}/submit`, data);
   }
 }

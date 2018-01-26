@@ -9,20 +9,17 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   animations: [ // TODO: Make this work.
     trigger('slideInOut', [
       state('in', style({
-        transform: 'translateX(0)',
-        display: 'flex'
-      })),
-      state('out', style({
-        transform: 'translateX(-100%)',
+        // flex: '0',
+        // transform: 'translateX(-100%)',
         display: 'none'
       })),
-      transition('in => out',[
-        style({transform: 'translateX(-100%)'}),
-        animate(100)
-      ]), //animate('400ms ease-in-out')),
-      transition('out => in', [
-        animate(100, style({transform: 'translateX(100%)'}))
-      ]) //animate('400ms ease-in-out'))
+      state('out', style({
+        // flex: '1',
+        // transform: 'translateX(0)',
+        display: 'flex'
+      })),
+      transition('in => out', animate('400ms ease-in-out')),
+      transition('out => in', animate('400ms ease-in-out')),
     ])
   ]
 })

@@ -6,21 +6,21 @@ import { TeamModel } from '../../common/models/team.model';
 
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
-    const divisions: DivisionModel[] = [
-      { id: 1, name: 'Demo' }
-    ];
+    // const divisions: DivisionModel[] = [
+    //   { id: 1, name: 'Demo' }
+    // ];
 
-    const problems: ProblemModel[] = [
-      {
-        id: 1,
-        title: 'Add one',
-        description: 'Given a number, add 1 to it.',
-        divisions: [],
-        points: 1,
-        testCasesCaseSensitive: true,
-        testCases: [{id: 1, hidden: false, input: '1', output: '2'}, {id: 2, hidden: true, input: '2', output: '3'}]
-      }
-    ];
+    // const problems: ProblemModel[] = [
+    //   {
+    //     id: 1,
+    //     title: 'Add one',
+    //     description: 'Given a number, add 1 to it.',
+    //     divisions: [],
+    //     points: 1,
+    //     testCasesCaseSensitive: true,
+    //     testCases: [{id: 1, hidden: false, input: '1', output: '2'}, {id: 2, hidden: true, input: '2', output: '3'}]
+    //   }
+    // ];
 
     // const submissions: SubmissionModel[] = [
     //   {
@@ -46,6 +46,7 @@ export class InMemoryDataService implements InMemoryDbService {
     //   id: 1, username: 'demoteam', members: 'Alice, Bob, Charlie', division: divisions[0], submissions: submissions
     // }];
 
-    return {divisions, problems} //, submissions, teams};
+    // return {divisions, problems, submissions, teams};
+    return {}
   }
 }

@@ -24,10 +24,10 @@ const Problem = mongoose.model<ProblemType>('Problem', new mongoose.Schema({
 
 export class ProblemDao {
   static getProblem(id: string): Promise<ProblemModel> {
-    return Problem.findOne({id: id}).exec()
+    return Problem.findById(id).exec()
   }
 
   static getProblemsForDivision(division: string): Promise<ProblemModel[]> {
-    return Problem.find({division: {id: division}}).exec()
+    return Problem.find({divisions: {_id: division}}).exec()
   }
 }

@@ -25,6 +25,9 @@ import { InMemoryDataService } from './in-memory-data.service';
 import { RestService } from './services/rest.service';
 import { ProblemService } from './services/problem.service';
 import { SubmissionService } from './services/submission.service';
+import { SocketGuard } from './guards/socket.guard';
+import { SocketService } from './services/socket.service';
+import { TeamService } from './services/team.service';
 
 @NgModule({
   declarations: [
@@ -55,7 +58,10 @@ import { SubmissionService } from './services/submission.service';
   providers: [
     RestService,
     ProblemService,
-    SubmissionService
+    SubmissionService,
+    TeamService,
+    SocketService,
+    SocketGuard
   ],
   bootstrap: [AppComponent]
 })

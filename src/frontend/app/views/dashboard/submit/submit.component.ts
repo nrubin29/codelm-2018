@@ -15,7 +15,7 @@ export class SubmitComponent implements OnInit {
   ngOnInit() {
     this.dashboard.sidebar.toggle();
 
-    this.problemService.submit('1', '').then(submissionId => {
+    this.problemService.submit(this.problemService.problemSubmission).then(submissionId => {
       this.dashboard.sidebar.toggle();
       this.router.navigate(['dashboard', 'submission', submissionId])
     });

@@ -5,12 +5,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class RestService {
 
   private baseUrl = '/api/';
-  key: string;
+  teamId: string;
 
   constructor(private http: HttpClient) { }
 
   private get headers(): HttpHeaders {
-    return new HttpHeaders().set('Authorization', 'Basic ' + this.key)
+    return new HttpHeaders().set('Authorization', 'Basic ' + this.teamId)
   }
 
   get<T>(endpoint: string): Promise<T> {

@@ -9,11 +9,14 @@
 }
 
 .logo {
-  width: calc(100% - 1em);
   margin: 0.5em 0.5em 1.5em;
+
+  & img {
+    width: calc(100% - 1em);
+  }
 }
 
-a {
+a:not(.logo) {
   flex: 1;
   display: flex;
   align-items: center;

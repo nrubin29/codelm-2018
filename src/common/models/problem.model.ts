@@ -1,6 +1,7 @@
 import { DivisionModel } from './division.model';
 
 export interface ProblemModel {
+  _id: string;
   id: number;
   title: string;
   description: string;

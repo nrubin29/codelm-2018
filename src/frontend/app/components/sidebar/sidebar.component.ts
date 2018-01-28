@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ProblemModel } from '../../../../common/models/problem.model';
+import { ProblemService } from '../../services/problem.service';
+import { TeamService } from '../../services/team.service';
+import { TeamModel } from '../../../../common/models/team.model';
 
 @Component({
   selector: 'app-sidebar',
@@ -6,11 +10,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
+  team: TeamModel;
+  problems: ProblemModel[] = [];
   state = 'out';
 
-  constructor() { }
+  constructor(private problemService: ProblemService, private teamService: TeamService) { }
 
   ngOnInit() {
+    this.team = this.teamService.team;
+    this.problemService.getProblems(this.teamService.team.division._id).then(problems => this.problems = problems);
   }
 
   toggle() {

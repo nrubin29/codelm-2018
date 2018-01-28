@@ -1,4 +1,13 @@
 import { PythonRunner, CodeFile } from './coderunner';
+import crypto = require('crypto');
+
+const password = 'password';
+
+const salt = crypto.randomBytes(16).toString('hex');
+const hash = crypto.pbkdf2Sync(password, new Buffer(salt), 1000, 64, 'sha512').toString('hex');
+
+console.log(salt);
+console.log(hash);
 
 const runner = new PythonRunner("coderunner-test", [new CodeFile("main.py", "print(input())")]);
 

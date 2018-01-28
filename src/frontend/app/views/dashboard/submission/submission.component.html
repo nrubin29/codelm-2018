@@ -27,7 +27,7 @@
                         <td>{{testCase.input}}</td>
                         <td>{{testCase.correctOutput}}</td>
                         <td>{{testCase.output}}</td>
-                        <td>Correct</td>
+                        <td>{{testCase.output == testCase.correctOutput ? 'Correct' : 'Incorrect'}}</td>
                     </tr>
                     </tbody>
                 </table>

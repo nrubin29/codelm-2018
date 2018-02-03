@@ -33,7 +33,8 @@ router.post('/submit', (req, res) => {
         problem: problem,
         code: problemSubmission.code,
         testCases: results,
-        result: '100%'
+        result: '100%',
+        test: problemSubmission.test
       }).then(submissionId => {
         res.json(submissionId);
       });

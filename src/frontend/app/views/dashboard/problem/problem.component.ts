@@ -27,7 +27,6 @@ export class ProblemComponent implements OnInit, AfterViewInit {
 
       this.problemService.getProblem(params['id']).then(problem => {
         this.problem = problem;
-        console.log(this.teamService.team.submissions);
         this.submissions = this.teamService.team.submissions.filter(submission => submission.problem._id === problem._id);
       }).catch(console.log);
     });
@@ -39,10 +38,11 @@ export class ProblemComponent implements OnInit, AfterViewInit {
     });
   }
 
-  submitClicked(type: string) {
+  submitClicked(test: boolean) {
     this.problemService.problemSubmission = {
       problemId: this.problem._id,
-      code: this.codeMirrors.first.value
+      code: this.codeMirrors.first.value,
+      test: test
     };
     this.router.navigate(['dashboard', 'submit'])
   }

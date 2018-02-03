@@ -15,5 +15,6 @@ export interface SubmissionModel {
   code: string;
   testCases: TestCaseSubmissionModel[];
   result: string;
+  test: boolean;
   points?: number; // This is optional because it is a Mongoose virtual.
 }

@@ -29,14 +29,19 @@ const SubmissionSchema = new mongoose.Schema({
   problem: {type: mongoose.Schema.Types.ObjectId, ref: 'Problem'},
   code: String,
   testCases: [TestCaseSubmissionSchema],
-  result: String
+  result: String,
+  test: {type: Boolean, default: false}
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
 });
 
 SubmissionSchema.virtual('points').get(function() {
-  if (this.testCases.every(testCase => testCase.toObject().correct)) {
+  if (this.test) {
+    return 0;
+  }
+
+  else if (this.testCases.every(testCase => testCase.toObject().correct)) {
     return this.problem.points;
   }
 

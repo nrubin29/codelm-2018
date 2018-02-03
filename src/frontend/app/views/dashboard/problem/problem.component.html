@@ -4,8 +4,8 @@
       <h1>{{problem.id}}. {{problem.title}} - {{problem.points}} point(s)</h1>
     </div>
     <div class="flex-horizontal">
-      <input type="button" value="Test" (click)="submitClicked('test')">
-      <input type="button" value="Submit" (click)="submitClicked('submit')">
+      <input type="button" value="Test" (click)="submitClicked(true)">
+      <input type="button" value="Submit" (click)="submitClicked(false)">
     </div>
   </div>
   <div class="display-side">

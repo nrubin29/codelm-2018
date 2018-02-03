@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { TeamModel } from '../../../../../common/models/team.model';
+import { TeamService } from '../../../services/team.service';
 
 @Component({
   selector: 'app-standings',
@@ -6,10 +8,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./standings.component.scss']
 })
 export class StandingsComponent implements OnInit {
+  team: TeamModel;
 
-  constructor() { }
+  constructor(private teamService: TeamService) { }
 
   ngOnInit() {
+    this.team = this.teamService.team;
   }
 
 }

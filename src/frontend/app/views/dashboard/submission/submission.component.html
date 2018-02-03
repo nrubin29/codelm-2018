@@ -11,6 +11,7 @@
         <div>
             <app-card title="Result">
                 <h2>{{submission.result}}</h2>
+                <h3>{{submission.points}} point(s)</h3>
             </app-card>
             <app-card title="IO">
                 <table>
@@ -27,7 +28,7 @@
                         <td>{{testCase.input}}</td>
                         <td>{{testCase.correctOutput}}</td>
                         <td>{{testCase.output}}</td>
-                        <td>{{testCase.output == testCase.correctOutput ? 'Correct' : 'Incorrect'}}</td>
+                        <td>{{testCase.correct ? 'Correct' : 'Incorrect'}}</td>
                     </tr>
                     </tbody>
                 </table>

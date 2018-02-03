@@ -6,6 +6,7 @@ export interface TestCaseSubmissionModel {
   input: string;
   output: string;
   correctOutput: string;
+  correct?: boolean; // This is optional because it is a Mongoose virtual.
 }
 
 export interface SubmissionModel {
@@ -14,4 +15,5 @@ export interface SubmissionModel {
   code: string;
   testCases: TestCaseSubmissionModel[];
   result: string;
+  points?: number; // This is optional because it is a Mongoose virtual.
 }

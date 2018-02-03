@@ -10,4 +10,5 @@ export interface TeamModel {
   members: string;
   division: DivisionModel;
   submissions: SubmissionModel[];
+  score?: number; // This is optional because it is a Mongoose virtual.
 }

@@ -33,9 +33,9 @@
   </div>
   <codemirror [config]="{ lineNumbers: true, mode: 'text/x-python' }"></codemirror>
   <br>
-  <app-card title="Submissions">
+  <app-card *ngIf="submissions" title="Submissions">
     <ul>
-      <li>List item</li>
+      <li *ngFor="let submission of submissions; let i = index"><a [routerLink]="['/', 'dashboard', 'submission', submission._id]">Submission {{i + 1}}</a></li>
     </ul>
   </app-card>
 </ng-container>

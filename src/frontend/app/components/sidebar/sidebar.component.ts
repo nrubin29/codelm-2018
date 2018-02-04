@@ -17,8 +17,10 @@ export class SidebarComponent implements OnInit {
   constructor(private problemService: ProblemService, private teamService: TeamService) { }
 
   ngOnInit() {
-    this.team = this.teamService.team;
-    this.problemService.getProblems(this.teamService.team.division._id).then(problems => this.problems = problems);
+    this.teamService.team.subscribe(team => {
+      this.team = team;
+      this.problemService.getProblems(this.team.division._id).then(problems => this.problems = problems);
+    });
   }
 
   toggle() {

@@ -10,7 +10,7 @@ import { TeamDao } from './daos/team.dao';
 
 import Packet from '../common/packets/packet';
 import './daos/dao';
-import submissionRoute from './routes/submission.route';
+import teamRoute from './routes/team.route';
 import problemRoute from './routes/problem.route';
 
 const app = express();
@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({extended: true})); // parse application/x-www-for
 app.use(bodyParser.json()); // parse application/json
 app.use(bodyParser.json({type: 'application/vnd.api+json'})); // Parse application/vnd.api+json as json
 app.use(express.static('./dist/frontend'));
-app.use('/api/submissions', submissionRoute);
+app.use('/api/teams', teamRoute);
 app.use('/api/problems', problemRoute);
 
 const httpSocketServer = http.createServer(app);

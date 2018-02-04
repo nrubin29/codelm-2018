@@ -21,7 +21,17 @@
       "styles": [
         "styles.scss",
         "../../node_modules/codemirror/lib/codemirror.css",
-        "../../node_modules/spinkit/scss/spinners/3-wave.scss"
+        "../../node_modules/spinkit/scss/spinners/1-rotating-plane.scss",
+        "../../node_modules/spinkit/scss/spinners/2-double-bounce.scss",
+        "../../node_modules/spinkit/scss/spinners/3-wave.scss",
+        "../../node_modules/spinkit/scss/spinners/4-wandering-cubes.scss",
+        "../../node_modules/spinkit/scss/spinners/5-pulse.scss",
+        "../../node_modules/spinkit/scss/spinners/6-chasing-dots.scss",
+        "../../node_modules/spinkit/scss/spinners/7-three-bounce.scss",
+        "../../node_modules/spinkit/scss/spinners/8-circle.scss",
+        "../../node_modules/spinkit/scss/spinners/9-cube-grid.scss",
+        "../../node_modules/spinkit/scss/spinners/10-fading-circle.scss",
+        "../../node_modules/spinkit/scss/spinners/11-folding-cube.scss"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

@@ -71,7 +71,7 @@ const Team = mongoose.model<TeamType>('Team', TeamSchema);
 
 export class TeamDao {
   static getTeam(id: string): Promise<TeamModel> {
-    return Team.findOne({id: id}).populate('division submissions.problem submissions.testCases.testCase').exec()
+    return Team.findById(id).populate('division submissions.problem submissions.testCases.testCase').exec()
   }
 
   static addSubmission(teamId: string, submission: SubmissionModel): Promise<string> {

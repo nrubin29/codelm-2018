@@ -31,7 +31,12 @@
       </table>
     </app-card>
   </div>
-  <codemirror [config]="{ lineNumbers: true, mode: 'text/x-python' }"></codemirror>
+  <select [(ngModel)]="language" (change)="onLanguageChange()" name="language">
+    <option value="python" selected>Python 3</option>
+    <option value="java">Java</option>
+    <option value="cpp">C++</option>
+  </select>
+  <codemirror [config]="config"></codemirror>
   <br>
   <app-card *ngIf="submissions" title="Submissions">
     <ul>

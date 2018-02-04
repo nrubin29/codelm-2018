@@ -13,7 +13,6 @@ export class StandingsComponent implements OnInit {
   constructor(private teamService: TeamService) { }
 
   ngOnInit() {
-    this.team = this.teamService.team;
+    this.teamService.team.subscribe(team => this.team = team);
   }
-
 }

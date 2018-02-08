@@ -28,6 +28,7 @@ import { SubmissionService } from './services/submission.service';
 import { SocketGuard } from './guards/socket.guard';
 import { SocketService } from './services/socket.service';
 import { TeamService } from './services/team.service';
+import { CodeSaverService } from './services/codesaver.service';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { TeamService } from './services/team.service';
     SubmissionService,
     TeamService,
     SocketService,
-    SocketGuard
+    SocketGuard,
+    CodeSaverService
   ],
   bootstrap: [AppComponent]
 })

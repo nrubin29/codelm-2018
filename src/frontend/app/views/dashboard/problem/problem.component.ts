@@ -9,6 +9,7 @@ import { CodemirrorComponent } from 'ng2-codemirror';
 import { SubmissionModel } from '../../../../../common/models/submission.model';
 import { TeamService } from '../../../services/team.service';
 import { TeamModel } from '../../../../../common/models/team.model';
+import { CodeSaverService } from '../../../services/codesaver.service';
 
 @Component({
   selector: 'app-problem',
@@ -22,13 +23,11 @@ export class ProblemComponent implements OnInit, AfterViewInit {
 
   @ViewChildren(CodemirrorComponent) codeMirrors: QueryList<CodemirrorComponent>;
   language: string;
-  config: any;
 
-  constructor(private problemService: ProblemService, private teamService: TeamService, private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(private problemService: ProblemService, private teamService: TeamService, private codeSaverService: CodeSaverService, private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
     this.language = 'python';
-    this.config = { lineNumbers: true, mode: 'text/x-python' };
 
     this.teamService.team.subscribe(team => this.team = team);
 
@@ -45,23 +44,20 @@ export class ProblemComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.codeMirrors.changes.subscribe((codeMirrors: QueryList<CodemirrorComponent>) => {
-      codeMirrors.first.writeValue('print(int(input()) % 2 == 0)');
+      codeMirrors.first.writeValue(this.codeSaverService.get(this.problem._id, codeMirrors.first.config.mode));
     });
   }
 
-  onLanguageChange() {
-    this.config.mode = {
-      python: 'text/x-python',
-      java: 'text/x-java',
-      cpp: 'text/x-c++src'
-    }[this.language];
-
-    // this.codeMirrors.first.codemirrorInit(this.config);
+  saveCode() {
+    this.codeSaverService.save(this.problem._id, this.codeMirrors.first.config.mode, this.codeMirrors.first.value);
   }
 
   submitClicked(test: boolean) {
+    this.saveCode();
+
     this.problemService.problemSubmission = {
       problemId: this.problem._id,
+      language: this.language,
       code: this.codeMirrors.first.value,
       test: test
     };

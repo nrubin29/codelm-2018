@@ -9,8 +9,7 @@ module.exports = {
         })
     ],
     entry: {
-        'bundle': './src/backend/server.ts',
-        'coderunner-test': './src/backend/coderunner.test.ts'
+        'bundle': './src/backend/server.ts'
     },
     module: {
         rules: [

@@ -3,12 +3,12 @@
     <div>
       <h1>{{problem.id}}. {{problem.title}} - {{problem.points}} point(s)</h1>
     </div>
-    <div class="flex-horizontal">
+    <div class="flex horizontal">
       <input type="button" value="Test" (click)="submitClicked(true)">
       <input type="button" value="Submit" (click)="submitClicked(false)">
     </div>
   </div>
-  <div class="display-side">
+  <div class="flex display-side">
     <app-card title="Problem">
       <p>{{problem.description}}</p>
     </app-card>
@@ -31,12 +31,16 @@
       </table>
     </app-card>
   </div>
-  <select [(ngModel)]="language" (change)="onLanguageChange()" name="language">
-    <option value="python" selected>Python 3</option>
-    <option value="java">Java</option>
-    <option value="cpp">C++</option>
-  </select>
-  <codemirror [config]="config"></codemirror>
+  <div class="flex right">
+    <select [(ngModel)]="language" (change)="saveCode()" name="language">
+      <option value="python" selected>Python 3</option>
+      <option value="java">Java</option>
+      <option value="cpp">C++</option>
+    </select>
+  </div>
+  <codemirror [config]="{ lineNumbers: true, mode: 'text/x-python' }" *ngIf="language === 'python'"></codemirror>
+  <codemirror [config]="{ lineNumbers: true, mode: 'text/x-java' }" *ngIf="language === 'java'"></codemirror>
+  <codemirror [config]="{ lineNumbers: true, mode: 'text/x-c++src' }" *ngIf="language === 'cpp'"></codemirror>
   <br>
   <app-card *ngIf="submissions" title="Submissions">
     <ul>

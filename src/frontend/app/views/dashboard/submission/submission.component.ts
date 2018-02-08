@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { ActivatedRoute} from '@angular/router';
 import { SubmissionModel } from '../../../../../common/models/submission.model';
 import { CodemirrorComponent } from 'ng2-codemirror';
 import { SubmissionService } from '../../../services/submission.service';
@@ -38,5 +38,13 @@ export class SubmissionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  get mode() {
+    return {
+      python: 'text/x-python',
+      java: 'text/x-java',
+      cpp: 'text/x-c++src'
+    }[this.submission.language];
   }
 }

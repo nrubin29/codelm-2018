@@ -4,12 +4,14 @@ import { TestCaseModel } from '../common/models/problem.model';
 import { Subject } from 'rxjs/Subject';
 import { TestCaseSubmissionModel } from '../common/models/submission.model';
 
-type RunResult = {exitCode: number, output: string}
-type TestCaseRunResult = TestCaseSubmissionModel & RunResult
+type RunResult = {output: string}
+export type TestCaseRunResult = TestCaseSubmissionModel & RunResult
+
+export type RunError = {stage: 'compile' | 'run', testCase?: number, error: string};
 
 export class CodeFile {
   /*
-  This class represents a single code file. A Runner can have multiple files.
+  This class represents a single code file. A CodeRunner can have multiple files.
   */
 
   constructor(public name: string, public code: string) { }
@@ -25,12 +27,10 @@ export class CodeFile {
   }
 }
 
-class Runner {
-  public log: string[];
+export class CodeRunner {
   public subject: Subject<string | TestCaseRunResult>;
 
   constructor(public folder: string, public files: CodeFile[]) {
-    this.log = [];
     this.subject = new Subject<string>();
   }
 
@@ -40,26 +40,34 @@ class Runner {
 
   // TODO: Refactor runProc and runTestCase to keep them DRY.
   protected runProc(cmd: string, args: string[]): Promise<RunResult> {
-    return new Promise<RunResult>((resolve, reject) => {
+    return new Promise<RunResult>((resolve: (value: RunResult) => void, reject: (reason: RunError) => void) => {
       try {
         // TODO: Timeout!
         const process = spawn(cmd, args, { cwd: this.folder });
-        const output = [];
+        const output: string[] = [];
+        const error: string[] = [];
 
         process.stdout.on('data', data => {
           output.push(data.toString().replace(/^\s+|\s+$/g, ''));
         });
 
         process.stderr.on('data', data => {
-          output.push(data.toString().replace(/^\s+|\s+$/g, ''));
-          // TODO: reject with error.
+          error.push(data.toString().replace(/^\s+|\s+$/g, ''));
         });
 
-        process.on('close', exitCode => {
-          resolve({
-            exitCode: exitCode,
-            output: output.filter(line => line !== '').join('\n'),
-          });
+        process.on('close', () => {
+          if (error.length > 0) {
+            reject({
+              stage: 'compile',
+              error: error.join('\n')
+            });
+          }
+
+          else {
+            resolve({
+              output: output.filter(line => line !== '').join('\n'),
+            });
+          }
         });
       }
 
@@ -70,11 +78,12 @@ class Runner {
   }
 
   protected runTestCaseProc(cmd: string, args: string[], testCase: TestCaseModel): Promise<TestCaseRunResult> {
-    return new Promise<TestCaseRunResult>((resolve, reject) => {
+    return new Promise<TestCaseRunResult>((resolve: (value: TestCaseRunResult) => void, reject: (reason: RunError) => void) => {
       try {
         // TODO: Timeout!
         const process = spawn(cmd, args, { cwd: this.folder });
-        const output = [];
+        const output: string[] = [];
+        const error: string[] = [];
 
         process.stdin.write(testCase.input + '\n');
         process.stdin.end();
@@ -84,19 +93,27 @@ class Runner {
         });
 
         process.stderr.on('data', data => {
-          output.push(data.toString().replace(/^\s+|\s+$/g, ''));
-          // TODO: reject with error.
+          error.push(data.toString().replace(/^\s+|\s+$/g, ''));
         });
 
-        process.on('close', exitCode => {
-          resolve({
-            id: testCase.id,
-            hidden: testCase.hidden,
-            input: testCase.input,
-            output: output.filter(line => line !== '').join('\n'),
-            correctOutput: testCase.output,
-            exitCode: exitCode,
-          });
+        process.on('close', () => {
+          if (error.length > 0) {
+            reject({
+              stage: 'run',
+              testCase: testCase.id,
+              error: error.join('\n')
+            });
+          }
+
+          else {
+            resolve({
+              id: testCase.id,
+              hidden: testCase.hidden,
+              input: testCase.input,
+              output: output.filter(line => line !== '').join('\n'),
+              correctOutput: testCase.output
+            });
+          }
         });
       }
 
@@ -107,50 +124,42 @@ class Runner {
   }
 
   async run(testCases: TestCaseModel[]): Promise<TestCaseRunResult[]> {
-    this.before();
-
-    await fs.remove(this.folder);
-
     try {
-      await fs.mkdir(this.folder);
-    }
-    catch {}
+      this.before();
 
-    await Promise.all(this.files.map(async file => file.mkfile(this.folder)));
+      await fs.remove(this.folder);
 
-    this.subject.next("compiling");
-    const compileResult = await this.compile();
-    if (compileResult.exitCode !== 0) {
-      this.subject.error(compileResult.exitCode);
-      this.subject.complete();
-    }
-
-    this.subject.next("running");
-
-    const results: TestCaseRunResult[] = [];
-    for (let testCase of testCases) {
-      const result = await this.runTestCase(testCase);
-      results.push(result);
-      this.subject.next(result);
-      if (result.exitCode !== 0) {
-        this.subject.error(result.exitCode);
-        this.subject.complete();
-        break;
+      try {
+        await fs.mkdir(this.folder);
       }
+      catch {}
+
+      await Promise.all(this.files.map(file => file.mkfile(this.folder)));
+
+      this.subject.next("compiling");
+      await this.compile();
+
+      this.subject.next("running");
+
+      const results: TestCaseRunResult[] = [];
+      for (let testCase of testCases) {
+        const result = await this.runTestCase(testCase);
+        results.push(result);
+        this.subject.next(result);
+      }
+
+      this.subject.next("cleaning up");
+
+      return Promise.resolve(results);
     }
 
-    this.subject.next("cleaning up");
-
-    await fs.remove(this.folder);
-
-    return Promise.resolve(results);
+    finally {
+      await fs.remove(this.folder);
+    }
   }
 
   protected compile(): Promise<RunResult> {
-    return Promise.resolve({
-      output: '',
-      exitCode: 0
-    });
+    return Promise.reject(new Error("compile() not implemented."));
   }
 
   protected runTestCase(testCase: TestCaseModel): Promise<TestCaseRunResult> {
@@ -158,7 +167,7 @@ class Runner {
   }
 }
 
-export class JavaRunner extends Runner {
+export class JavaRunner extends CodeRunner {
   compile() {
     return this.runProc('javac', this.files.map(file => file.name));
   }
@@ -168,7 +177,7 @@ export class JavaRunner extends Runner {
   }
 }
 
-export class PythonRunner extends Runner {
+export class PythonRunner extends CodeRunner {
   before() {
     this.files.push(new CodeFile('__init__.py', ''));
   }
@@ -182,7 +191,7 @@ export class PythonRunner extends Runner {
   }
 }
 
-export class CppRunner extends Runner {
+export class CppRunner extends CodeRunner {
   compile() {
     return this.runProc('g++', this.files.map(file => file.name));
   }

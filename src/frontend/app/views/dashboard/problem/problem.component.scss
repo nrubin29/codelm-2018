@@ -2,18 +2,6 @@
   flex: 1;
 }
 
-.display-side {
-  display: flex;
-
-  & > * {
-    flex: 1;
-  }
-
-  & > :not(:last-child) {
-    margin-right: 1em;
-  }
-}
-
 .header {
   display: flex;
   margin-bottom: 1em;
@@ -23,12 +11,29 @@
   }
 }
 
-.flex-horizontal {
+.flex {
   display: flex;
-  align-items: center;
 
-  & :not(:last-child) {
-    margin-right: 1em;
+  &.display-side {
+    & > * {
+      flex: 1;
+    }
+
+    & > :not(:last-child) {
+      margin-right: 1em;
+    }
+  }
+
+  &.horizontal {
+    align-items: center;
+
+    & :not(:last-child) {
+      margin-right: 1em;
+    }
+  }
+
+  &.right {
+    justify-content: flex-end;
   }
 }
 
@@ -38,6 +43,12 @@ h1 {
 
 input[type=button] {
   font-size: 1.5em;
+}
+
+select {
+  float: right;
+  font-size: 1.5em;
+  margin-bottom: 0.5em;
 }
 
 li {

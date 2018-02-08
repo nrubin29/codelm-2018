@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { ProblemDao } from '../daos/problem.dao';
-import { CodeFile, PythonRunner } from '../coderunner';
+import { CodeFile, CodeRunner, CppRunner, JavaRunner, PythonRunner, RunError } from '../coderunner';
 import { TeamDao } from '../daos/team.dao';
 import { ProblemSubmission } from '../../common/problem-submission';
 
@@ -20,7 +20,24 @@ router.post('/submit', (req, res) => {
   const problemSubmission = req.body as ProblemSubmission;
 
   ProblemDao.getProblem(problemSubmission.problemId).then(problem => {
-    const runner = new PythonRunner("coderunner-test", [new CodeFile("main.py", problemSubmission.code)]);
+    let runner: CodeRunner;
+
+    switch (problemSubmission.language) {
+      case 'python': {
+        runner = new PythonRunner("coderunner-test", [new CodeFile("main.py", problemSubmission.code)]);
+        break;
+      }
+
+      case 'java': {
+        runner = new JavaRunner("coderunner-test", [new CodeFile("Main.java", problemSubmission.code)]);
+        break;
+      }
+
+      case 'cpp': {
+        runner = new CppRunner("coderunner-test", [new CodeFile("main.cpp", problemSubmission.code)]);
+        break;
+      }
+    }
 
     const sub = runner.subject.subscribe(next => {
       console.log(next);
@@ -31,6 +48,7 @@ router.post('/submit', (req, res) => {
 
       TeamDao.addSubmission(req.header('Authorization').split(' ')[1], {
         problem: problem,
+        language: problemSubmission.language,
         code: problemSubmission.code,
         testCases: results,
         result: '100%',
@@ -38,7 +56,19 @@ router.post('/submit', (req, res) => {
       }).then(submissionId => {
         res.json(submissionId);
       });
-    }).catch(err => res.json(err));
+    }).catch((err: RunError) => {
+      console.error(err);
+      TeamDao.addSubmission(req.header('Authorization').split(' ')[1], {
+        problem: problem,
+        language: problemSubmission.language,
+        code: problemSubmission.code,
+        result: 'error',
+        error: err.error,
+        test: problemSubmission.test
+      }).then(submissionId => {
+        res.json(submissionId);
+      });
+    });
   })
 });
 

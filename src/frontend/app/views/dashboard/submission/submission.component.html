@@ -13,7 +13,7 @@
                 <h2>{{submission.result}}</h2>
                 <h3>{{submission.points}} point(s)</h3>
             </app-card>
-            <app-card title="IO">
+            <app-card title="IO" *ngIf="submission.testCases.length > 0">
                 <table>
                     <thead>
                     <tr>
@@ -33,7 +33,10 @@
                     </tbody>
                 </table>
             </app-card>
+            <app-card title="Error" *ngIf="submission.error">
+                <code>{{submission.error}}</code>
+            </app-card>
         </div>
-        <codemirror [config]="{ lineNumbers: true, mode: 'text/x-python', readOnly: true }"></codemirror>
+        <codemirror [config]="{ lineNumbers: true, mode: mode, readOnly: true }"></codemirror>
     </div>
 </ng-container>

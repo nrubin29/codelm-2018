@@ -1,5 +1,6 @@
 import { DivisionModel } from './division.model';
 
+// TODO: Add a testCasesOutputBoolean field that handles (true == True == 1) and (false == False == 0)
 export interface ProblemModel {
   _id: string;
   id: number;

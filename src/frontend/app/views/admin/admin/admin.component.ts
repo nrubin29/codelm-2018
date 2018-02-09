@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DivisionModel } from '../../../../../common/models/division.model';
+import { DivisionService } from '../../../services/division.service';
 
 @Component({
   selector: 'app-admin',
@@ -6,10 +8,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit {
-
   constructor() { }
 
   ngOnInit() {
+
   }
 
 }

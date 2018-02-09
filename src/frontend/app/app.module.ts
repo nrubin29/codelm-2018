@@ -13,7 +13,6 @@ import { StandingsComponent } from './views/dashboard/standings/standings.compon
 import { AdminComponent } from './views/admin/admin/admin.component';
 import { SubmitComponent } from './views/dashboard/submit/submit.component';
 import { SubmissionComponent } from './views/dashboard/submission/submission.component';
-import { HomeComponent } from './views/home/home.component';
 import { FeedComponent } from './components/feed/feed.component';
 import { CardComponent } from './components/card/card.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
@@ -29,6 +28,11 @@ import { SocketGuard } from './guards/socket.guard';
 import { SocketService } from './services/socket.service';
 import { TeamService } from './services/team.service';
 import { CodeSaverService } from './services/codesaver.service';
+import { PluralizePipe } from './pipes/pluralize.pipe';
+import { DivisionService } from './services/division.service';
+import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
+import { TeamComponent } from './views/admin/team/team.component';
+import { AdminHomeComponent } from './views/admin/admin-home/admin-home.component';
 
 @NgModule({
   declarations: [
@@ -42,10 +46,13 @@ import { CodeSaverService } from './services/codesaver.service';
     AdminComponent,
     SubmitComponent,
     SubmissionComponent,
-    HomeComponent,
     FeedComponent,
     CardComponent,
     SidebarComponent,
+    PluralizePipe,
+    LeaderboardComponent,
+    TeamComponent,
+    AdminHomeComponent,
   ],
   imports: [
     BrowserModule,
@@ -61,9 +68,11 @@ import { CodeSaverService } from './services/codesaver.service';
     ProblemService,
     SubmissionService,
     TeamService,
+    DivisionService,
     SocketService,
     SocketGuard,
-    CodeSaverService
+    CodeSaverService,
+    PluralizePipe,
   ],
   bootstrap: [AppComponent]
 })

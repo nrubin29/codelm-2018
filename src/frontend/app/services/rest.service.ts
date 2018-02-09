@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable()
 export class RestService {
-
   private baseUrl = '/api/';
   teamId: string;
 

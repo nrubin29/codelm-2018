@@ -4,6 +4,7 @@ import { SubmissionModel } from '../../../../../common/models/submission.model';
 import { CodemirrorComponent } from 'ng2-codemirror';
 import { SubmissionService } from '../../../services/submission.service';
 import { Subscription } from 'rxjs/Subscription';
+import { CodeSaverService } from '../../../services/codesaver.service';
 
 @Component({
   selector: 'app-result',
@@ -14,9 +15,10 @@ export class SubmissionComponent implements OnInit, AfterViewInit, OnDestroy {
   private sub: Subscription;
 
   private submission: SubmissionModel;
+  mode: string;
   @ViewChildren(CodemirrorComponent) codeMirrors: QueryList<CodemirrorComponent>;
 
-  constructor(private submissionService: SubmissionService, private activatedRoute: ActivatedRoute) { }
+  constructor(private submissionService: SubmissionService, private codeSaverService: CodeSaverService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
     // this.sub = this.activatedRoute.paramMap.switchMap((params: ParamMap) => params.get('id')).subscribe(id => {
@@ -25,8 +27,11 @@ export class SubmissionComponent implements OnInit, AfterViewInit, OnDestroy {
     // });
 
     this.sub = this.activatedRoute.params.subscribe(params => {
-      this.sub = null;
-      this.submissionService.getSubmission(params['id']).then(submission => this.submission = submission).catch(console.log)
+      this.submission = null;
+      this.submissionService.getSubmission(params['id']).then(submission => {
+        this.submission = submission;
+        this.mode = this.codeSaverService.getMode(submission.language);
+      }).catch(console.log);
     })
   }
 
@@ -38,13 +43,5 @@ export class SubmissionComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
-  }
-
-  get mode() {
-    return {
-      python: 'text/x-python',
-      java: 'text/x-java',
-      cpp: 'text/x-c++src'
-    }[this.submission.language];
   }
 }

@@ -4,7 +4,6 @@ import { SubmissionModel } from '../../../common/models/submission.model';
 
 @Injectable()
 export class SubmissionService {
-
   private endpoint = 'teams/submissions'; // TODO: When an admin is logged in, the endpoint would be teams/:id/submissions
 
   constructor(private restService: RestService) { }

@@ -1,0 +1,36 @@
+<div class="main" *ngIf="team">
+  <app-card title="Team Info" class="team">
+    <div class="container">
+      <table>
+        <tr>
+          <th>ID</th>
+          <td>{{team._id}}</td>
+        </tr>
+        <tr>
+          <th>Username</th>
+          <td>{{team.username}}</td>
+        </tr>
+        <tr>
+          <th>Members</th>
+          <td>{{team.members}}</td>
+        </tr>
+        <tr>
+          <th>Division</th>
+          <td>{{team.division.name}}</td>
+        </tr>
+        <tr>
+          <th>Score</th>
+          <td>{{team.score}}</td>
+        </tr>
+      </table>
+    </div>
+  </app-card>
+  <app-card title="Submissions">
+    <ul>
+      <li *ngFor="let problem of problems">
+        <p>{{problem.title}}</p>
+        <p *ngFor="let submission of problemSubmissions[problem._id]"><a [routerLink]="['/admin', 'submission', submission._id]">{{submission.result}}</a></p>
+      </li>
+    </ul>
+  </app-card>
+</div>

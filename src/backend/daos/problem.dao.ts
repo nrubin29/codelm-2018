@@ -3,9 +3,7 @@ import { ProblemModel } from '../../common/models/problem.model';
 
 type ProblemType = ProblemModel & mongoose.Document;
 
-//new mongoose.Schema().loadClass(ProblemModel)
-
-export const TestCaseSchema = new mongoose.Schema({
+const TestCaseSchema = new mongoose.Schema({
   id: Number,
   hidden: Boolean,
   input: String,

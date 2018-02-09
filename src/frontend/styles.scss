@@ -24,6 +24,15 @@
   cursor: default !important;
 }
 
+code {
+  font-family: 'Roboto Mono', monospace;
+  background: #eee;
+  padding: 0.25em;
+  margin-bottom: 0.5em;
+  border-radius: 10px;
+  white-space: pre;
+}
+
 .container {
   margin: 1em;
 }
@@ -48,7 +57,7 @@ app-root {
   //align-items: center;
 }
 
-app-dashboard, app-home {
+app-dashboard, app-admin {
   display: flex;
   flex: 1;
 

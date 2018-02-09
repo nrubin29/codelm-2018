@@ -76,13 +76,34 @@ const Team = mongoose.model<TeamType>('Team', TeamSchema);
 
 export class TeamDao {
   static getTeam(id: string): Promise<TeamModel> {
-    return Team.findById(id).populate('division submissions.problem submissions.testCases.testCase').exec()
+    return Team.findById(id).populate('division submissions.problem').exec()
+  }
+
+  static getTeamsForDivision(divisionId: string) {
+    return Team.find({division: {_id: divisionId}}).populate('division submissions.problem').exec();
   }
 
   static addSubmission(teamId: string, submission: SubmissionModel): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       Team.findByIdAndUpdate(teamId, {$push: {submissions: submission}}, {new: true}).exec().then((team: TeamModel) => {
         resolve(team.submissions[team.submissions.length - 1]._id);
+      }).catch(reject);
+    });
+  }
+
+  static getSubmission(submissionId: string): Promise<SubmissionModel> {
+    // TODO: Maybe make this nicer?
+    return new Promise((resolve, reject) => {
+      Team.find().populate('submissions.problem').exec().then((teams: TeamModel[]) => {
+        for (let team of teams) {
+          let submission = team.submissions.filter(submission => submission._id == submissionId);
+          if (submission.length > 0) {
+            resolve(submission[0]);
+            return;
+          }
+        }
+
+        reject(`Could not find submission with id ${submissionId}`);
       }).catch(reject);
     });
   }

@@ -1,0 +1,7 @@
+<ng-container *ngIf="divisions.length > 0">
+  <app-tabs>
+    <app-pane *ngFor="let division of divisions" [title]="division.name">
+      <app-leaderboard [division]="division"></app-leaderboard>
+    </app-pane>
+  </app-tabs>
+</ng-container>

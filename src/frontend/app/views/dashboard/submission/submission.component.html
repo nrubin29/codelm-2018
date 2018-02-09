@@ -11,7 +11,7 @@
         <div>
             <app-card title="Result">
                 <h2>{{submission.result}}</h2>
-                <h3>{{submission.points}} point(s)</h3>
+                <h3>{{submission.points}} {{'point'|pluralize:submission.points}}</h3>
             </app-card>
             <app-card title="IO" *ngIf="submission.testCases.length > 0">
                 <table>
@@ -25,9 +25,9 @@
                     </thead>
                     <tbody>
                     <tr *ngFor="let testCase of submission.testCases">
-                        <td>{{testCase.input}}</td>
-                        <td>{{testCase.correctOutput}}</td>
-                        <td>{{testCase.output}}</td>
+                        <td><code>{{testCase.input}}</code></td>
+                        <td><code>{{testCase.correctOutput}}</code></td>
+                        <td><code>{{testCase.output}}</code></td>
                         <td>{{testCase.correct ? 'Correct' : 'Incorrect'}}</td>
                     </tr>
                     </tbody>

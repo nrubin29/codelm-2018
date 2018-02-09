@@ -1,7 +1,7 @@
 <ng-container *ngIf="problem">
   <div class="header">
     <div>
-      <h1>{{problem.id}}. {{problem.title}} - {{problem.points}} point(s)</h1>
+      <h1>{{problem.id}}. {{problem.title}} - {{problem.points}} {{'point'|pluralize:problem.points}}</h1>
     </div>
     <div class="flex horizontal">
       <input type="button" value="Test" (click)="submitClicked(true)">
@@ -23,8 +23,8 @@
         <tbody>
         <tr *ngFor="let testCase of problem.testCases">
           <ng-container *ngIf="!testCase.hidden">
-            <td>{{testCase.input}}</td>
-            <td>{{testCase.output}}</td>
+            <td><code>{{testCase.input}}</code></td>
+            <td><code>{{testCase.output}}</code></td>
           </ng-container>
         </tr>
         </tbody>

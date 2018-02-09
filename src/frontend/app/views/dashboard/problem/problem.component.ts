@@ -27,7 +27,7 @@ export class ProblemComponent implements OnInit, AfterViewInit {
   constructor(private problemService: ProblemService, private teamService: TeamService, private codeSaverService: CodeSaverService, private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    this.language = 'python';
+    this.language = this.codeSaverService.getLanguage();
 
     this.teamService.team.subscribe(team => this.team = team);
 
@@ -44,7 +44,10 @@ export class ProblemComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.codeMirrors.changes.subscribe((codeMirrors: QueryList<CodemirrorComponent>) => {
-      codeMirrors.first.writeValue(this.codeSaverService.get(this.problem._id, codeMirrors.first.config.mode));
+      codeMirrors.forEach(cm => {
+        cm.writeValue(this.codeSaverService.get(this.problem._id, cm.config.mode));
+        this.codeSaverService.mode = cm.config.mode;
+      });
     });
   }
 

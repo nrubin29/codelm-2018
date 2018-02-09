@@ -49,4 +49,12 @@ export class TeamService {
       }).catch(reject);
     });
   }
+
+  getTeam(id: string) {
+    return this.restService.get<TeamModel>(`${this.endpoint}/${id}`)
+  }
+
+  getTeamsForDivision(divisionId: string) {
+    return this.restService.get<TeamModel[]>(`${this.endpoint}/division/${divisionId}`);
+  }
 }

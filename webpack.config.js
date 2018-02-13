@@ -9,7 +9,8 @@ module.exports = {
         })
     ],
     entry: {
-        'bundle': './src/backend/server.ts'
+        'bundle': './src/backend/server.ts',
+        'gen-pass': './gen-pass.ts'
     },
     module: {
         rules: [

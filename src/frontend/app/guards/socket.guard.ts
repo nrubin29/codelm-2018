@@ -7,7 +7,7 @@ import { SocketService } from '../services/socket.service';
 export class SocketGuard implements CanActivate {
   constructor(private socketService: SocketService, private router: Router) { }
 
-  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     if (this.socketService.isConnected()) {
       return true;
     }

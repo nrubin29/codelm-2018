@@ -128,13 +128,3 @@ int main ()
     });
   });
 });
-
-// import crypto = require('crypto');
-//
-// const password = 'password';
-//
-// const salt = crypto.randomBytes(16).toString('hex');
-// const hash = crypto.pbkdf2Sync(password, new Buffer(salt), 1000, 64, 'sha512').toString('hex');
-//
-// console.log(salt);
-// console.log(hash);

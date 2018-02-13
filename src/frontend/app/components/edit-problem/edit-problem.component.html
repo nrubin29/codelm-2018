@@ -1,0 +1,59 @@
+<h1>{{problem ? problem.title : 'New Problem'}}</h1>
+<form #problemForm="ngForm" [formGroup]="formGroup" (submit)="submit(problemForm)">
+    <h2>Data</h2>
+    <table>
+        <tr>
+            <th>_id</th>
+            <td><input type="text" formControlName="_id" disabled></td>
+        </tr>
+        <tr>
+            <th>ID</th>
+            <td><input type="number" formControlName="id"></td>
+        </tr>
+        <tr>
+            <th>Title</th>
+            <td><input type="text" formControlName="title"></td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td><textarea formControlName="description">{{problem.description}}</textarea></td>
+        </tr>
+        <tr>
+            <th>Divisions</th>
+            <td>
+                <select multiple formControlName="divisions">
+                    <option *ngFor="let division of divisions" [value]="division._id" [selected]="isDivisionSelected(division)">{{division.name}}</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>Points</th>
+            <td><input type="number" formControlName="points"></td>
+        </tr>
+        <tr>
+            <th>Test Cases Case Sensitive?</th>
+            <td><input type="checkbox" formControlName="testCasesCaseSensitive"></td>
+        </tr>
+    </table>
+    <h2>Test Cases <input type="button" value="+" class="inline" (click)="addTestCase()"></h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Input</th>
+            <th>Output</th>
+            <th>Hidden</th>
+        </tr>
+        </thead>
+        <tbody formArrayName="testCases">
+            <tr *ngFor="let _ of testCases.controls; index as i" [formGroupName]="i">
+                <td><input type="number" formControlName="id"></td>
+                <td><textarea formControlName="input"></textarea></td>
+                <td><textarea formControlName="output"></textarea></td>
+                <td><input type="checkbox" formControlName="hidden"></td>
+            </tr>
+        </tbody>
+    </table>
+    <input type="submit">
+    <input type="button" value="Delete" (click)="delete()" *ngIf="problem">
+</form>

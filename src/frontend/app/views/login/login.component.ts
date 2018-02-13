@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TeamService } from '../../services/team.service';
+import { AuthService } from '../../services/auth.service';
+import { LoginResponse } from '../../../../common/packets/login.response.packet';
 
 @Component({
   selector: 'app-login',
@@ -8,18 +10,24 @@ import { TeamService } from '../../services/team.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  user: {username: string, password: string} = {username: 'username', password: 'password'};
+  user: {username: string, password: string} = {username: '', password: ''};
 
-  constructor(private router: Router, private teamService: TeamService) { }
+  constructor(private router: Router, private authService: AuthService) { }
 
   ngOnInit() {
   }
 
   login() {
-    this.teamService.login(this.user.username, this.user.password).then(() => {
-      this.router.navigate(['dashboard']);
-    }).catch(() => {
-      alert('Incorrect username or password.');
+    this.authService.login(this.user.username, this.user.password).then(response => {
+      if (response === LoginResponse.SuccessAdmin) {
+        this.router.navigate(['admin']);
+      }
+
+      else if (response === LoginResponse.SuccessTeam) {
+        this.router.navigate(['dashboard']);
+      }
+    }).catch((response: LoginResponse | Error) => {
+      alert(response);
     });
   }
 }

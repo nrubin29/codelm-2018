@@ -10,19 +10,16 @@ export class SocketService {
   private socket: SocketIOClient.Socket;
   stream: Observable<Packet>;
 
-  // lastPacket: Packet; // Used to store a packet between states.
-
-  constructor(private router: Router) {
-
-  }
+  constructor(private router: Router) {}
 
   connect(): Promise<void> {
+    this.socket = io(location.protocol + '//' + location.hostname + environment.socketSuffix);
+    this.socket.on('disconnect', () => {
+      // TODO: Display a message saying that it disconnected.
+      this.router.navigate(['/login']);
+    });
+
     return new Promise<void>((resolve, reject) => {
-      this.socket = io(location.protocol + '//' + location.hostname + environment.socketSuffix);
-      this.socket.on('disconnect', () => {
-        // TODO: Display a message saying that it disconnected.
-        this.router.navigate(['/login']);
-      });
       this.socket.on('connect', () => {
         this.stream = new Observable<Packet>(observer => {
           this.socket.on('packet', packet => {
@@ -32,16 +29,6 @@ export class SocketService {
           //     this.socket.off('event');
           // }
         });
-
-        // this.stream.subscribe(packet => {
-          // if (packet.name === 'roles') {
-          //   const rolesPacket = packet as RolesPacket;
-          //   this.allRoles = rolesPacket.roles;
-          // }
-        // });
-
-        // this.emit(new JoinLobbyPacket(gameID));
-
         resolve();
       });
     });

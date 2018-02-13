@@ -2,6 +2,9 @@ import mongoose = require('mongoose');
 import crypto = require('crypto');
 import { TeamModel } from '../../common/models/team.model';
 import { SubmissionModel } from '../../common/models/submission.model';
+import { LoginResponse } from '../../common/packets/login.response.packet';
+import { NextFunction, Request, Response } from 'express-serve-static-core';
+import { AdminDao } from './admin.dao';
 
 type TeamType = TeamModel & mongoose.Document;
 
@@ -108,9 +111,13 @@ export class TeamDao {
     });
   }
 
-  static login(username: string, password: string) {
+  static login(username: string, password: string): Promise<TeamModel> {
     return new Promise<TeamModel>((resolve, reject) => {
       Team.findOne({username: username}).populate('division submissions.problem submissions.testCases.testCase').then(team => {
+        if (!team) {
+          reject(LoginResponse.NotFound);
+        }
+
         const inputHash = crypto.pbkdf2Sync(password, new Buffer(team.salt), 1000, 64, 'sha512').toString('hex');
 
         if (inputHash === team.password) {
@@ -118,9 +125,16 @@ export class TeamDao {
         }
 
         else {
-          reject('Incorrect password');
+          reject(LoginResponse.IncorrectPassword);
         }
       }).catch(reject);
     })
   }
+
+  static forceTeam(req: Request, res: Response, next: NextFunction) {
+    TeamDao.getTeam(req.header('Authorization').split(' ')[1]).then(team => {
+      req.params.team = team;
+      next();
+    }).catch(next);
+  };
 }

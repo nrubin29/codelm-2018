@@ -1,0 +1,24 @@
+<div class="flex display-side">
+  <div>
+    <app-tabs *ngIf="ready">
+      <app-pane *ngFor="let division of divisions" [title]="division.name">
+        <table>
+          <thead>
+          <tr>
+            <th>Number</th>
+            <th>Title</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let prob of problems[division._id]">
+            <td>{{prob.id}}</td>
+            <td><a (click)="problem = prob" href="javascript:void(0)">{{prob.title}}</a></td>
+          </tr>
+          </tbody>
+        </table>
+      </app-pane>
+    </app-tabs>
+    <input type="button" value="+" (click)="problem = null">
+  </div>
+  <app-edit-problem *ngIf="ready && problem !== undefined" [problem]="problem" [divisions]="divisions"></app-edit-problem>
+</div>

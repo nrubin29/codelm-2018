@@ -18,4 +18,18 @@ export class DivisionDao {
   static getDivisions(): Promise<DivisionModel[]> {
     return Division.find().populate('problems').exec()
   }
+
+  static addOrUpdateDivision(division: DivisionModel): Promise<DivisionModel> {
+    if (!division._id) {
+      return Division.create(division);
+    }
+
+    else {
+      return Division.findByIdAndUpdate(division._id, division, {new: true}).exec();
+    }
+  }
+
+  static deleteDivision(id: string): Promise<void> {
+    return Division.deleteOne({_id: id}).exec();
+  }
 }

@@ -10,11 +10,15 @@ import { SubmissionComponent } from './views/dashboard/submission/submission.com
 import { SocketGuard } from './guards/socket.guard';
 import { TeamComponent } from './views/admin/team/team.component';
 import { AdminHomeComponent } from './views/admin/admin-home/admin-home.component';
+import { ProblemsComponent } from './views/admin/problems/problems.component';
+import { DivisionsComponent } from './views/admin/divisions/divisions.component';
+import { TeamGuard } from './guards/team.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 const routes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
   {path: 'login', component: LoginComponent},
-  {path: 'dashboard', component: DashboardComponent, canActivate: [SocketGuard], children:
+  {path: 'dashboard', component: DashboardComponent, canActivate: [SocketGuard, TeamGuard], children:
     [
       {path: '', component: StandingsComponent},
       {path: 'problem/:id', component: ProblemComponent},
@@ -22,11 +26,13 @@ const routes: Routes = [
       {path: 'submission/:id', component: SubmissionComponent}
     ]
   },
-  {path: 'admin', component: AdminComponent, /*canActivate: [SocketGuard],*/ children:
+  {path: 'admin', component: AdminComponent, canActivate: [SocketGuard, AdminGuard], children:
       [
         {path: '', component: AdminHomeComponent},
         {path: 'team/:id', component: TeamComponent},
-        {path: 'submission/:id', component: SubmissionComponent}
+        {path: 'submission/:id', component: SubmissionComponent},
+        {path: 'problems', component: ProblemsComponent},
+        {path: 'divisions', component: DivisionsComponent}
       ]
   },
 ];

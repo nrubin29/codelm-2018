@@ -11,34 +11,8 @@ export class TeamService {
   private endpoint = 'teams';
   team: BehaviorSubject<TeamModel>;
 
-  constructor(private restService: RestService, private socketService: SocketService) {
+  constructor(private restService: RestService) {
     this.team = new BehaviorSubject<TeamModel>(null);
-  }
-
-  login(username: string, password: string): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.socketService.connect().then(() => {
-        let sub = this.socketService.stream.subscribe(packet => {
-          if (packet.name == 'loginResponse') {
-            const loginResponsePacket = packet as LoginResponsePacket;
-
-            sub.unsubscribe();
-
-            if (loginResponsePacket.success) {
-              this.team.next(loginResponsePacket.team);
-              this.restService.teamId = loginResponsePacket.team._id;
-              resolve();
-            }
-
-            else {
-              reject();
-            }
-          }
-        });
-
-        this.socketService.emit(new LoginPacket(username, password));
-      });
-    });
   }
 
   refreshTeam(): Promise<void> {
@@ -50,11 +24,11 @@ export class TeamService {
     });
   }
 
-  getTeam(id: string) {
+  getTeam(id: string): Promise<TeamModel> {
     return this.restService.get<TeamModel>(`${this.endpoint}/${id}`)
   }
 
-  getTeamsForDivision(divisionId: string) {
+  getTeamsForDivision(divisionId: string): Promise<TeamModel[]> {
     return this.restService.get<TeamModel[]>(`${this.endpoint}/division/${divisionId}`);
   }
 }

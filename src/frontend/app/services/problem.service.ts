@@ -3,6 +3,7 @@ import { RestService } from './rest.service';
 import { ProblemModel } from '../../../common/models/problem.model';
 import { TestCaseSubmissionModel } from '../../../common/models/submission.model';
 import { ProblemSubmission } from '../../../common/problem-submission';
+import { DivisionModel } from '../../../common/models/division.model';
 
 @Injectable()
 export class ProblemService {
@@ -32,5 +33,13 @@ export class ProblemService {
 
   submit(problemSubmission: ProblemSubmission): Promise<TestCaseSubmissionModel[]> {
     return this.restService.post<TestCaseSubmissionModel[]>(`${this.endpoint}/submit`, problemSubmission);
+  }
+
+  addOrUpdateProblem(problem: any): Promise<ProblemModel> { // problem should be a ProblemModel but division is a string[] rather than a DivisionModel[].
+    return this.restService.put<ProblemModel>(this.endpoint, problem);
+  }
+
+  deleteProblem(problemId: string): Promise<void> {
+    return this.restService.delete<void>(`${this.endpoint}/${problemId}`);
   }
 }

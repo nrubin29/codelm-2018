@@ -22,10 +22,24 @@ const Problem = mongoose.model<ProblemType>('Problem', new mongoose.Schema({
 
 export class ProblemDao {
   static getProblem(id: string): Promise<ProblemModel> {
-    return Problem.findById(id).exec()
+    return Problem.findById(id).populate('divisions').exec()
   }
 
   static getProblemsForDivision(division: string): Promise<ProblemModel[]> {
-    return Problem.find({divisions: {_id: division}}).exec()
+    return Problem.find({divisions: {_id: division}}).populate('divisions').exec()
+  }
+
+  static addOrUpdateProblem(problem: ProblemModel): Promise<ProblemModel> {
+    if (!problem._id) {
+      return Problem.create(problem);
+    }
+
+    else {
+      return Problem.findByIdAndUpdate(problem._id, problem, {new: true}).exec();
+    }
+  }
+
+  static deleteProblem(id: string): Promise<void> {
+    return Problem.deleteOne({_id: id}).exec();
   }
 }

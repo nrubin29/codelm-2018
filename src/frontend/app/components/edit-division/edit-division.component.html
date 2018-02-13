@@ -1,0 +1,15 @@
+<h1>{{division ? division.name : 'New Division'}}</h1>
+<form #divisionForm="ngForm" [formGroup]="formGroup" (submit)="submit(divisionForm)">
+  <table>
+    <tr>
+      <th>_id</th>
+      <td><input type="text" formControlName="_id" disabled></td>
+    </tr>
+    <tr>
+      <th>Name</th>
+      <td><input type="text" formControlName="name"></td>
+    </tr>
+  </table>
+  <input type="submit">
+  <input type="button" value="Delete" (click)="delete()" *ngIf="division">
+</form>

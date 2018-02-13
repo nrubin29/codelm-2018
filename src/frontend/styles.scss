@@ -83,8 +83,34 @@ input[type=button], input[type=submit] {
   }
 }
 
-a:visited {
-  color: inherit;
+//a:visited {
+//  color: inherit;
+//}
+
+.flex {
+  display: flex;
+
+  &.display-side {
+    & > * {
+      flex: 1;
+    }
+
+    & > :not(:last-child) {
+      margin-right: 1em;
+    }
+  }
+
+  &.horizontal {
+    align-items: center;
+
+    & :not(:last-child) {
+      margin-right: 1em;
+    }
+  }
+
+  &.right {
+    justify-content: flex-end;
+  }
 }
 
 table {

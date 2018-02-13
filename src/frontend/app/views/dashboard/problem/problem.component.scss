@@ -11,32 +11,6 @@
   }
 }
 
-.flex {
-  display: flex;
-
-  &.display-side {
-    & > * {
-      flex: 1;
-    }
-
-    & > :not(:last-child) {
-      margin-right: 1em;
-    }
-  }
-
-  &.horizontal {
-    align-items: center;
-
-    & :not(:last-child) {
-      margin-right: 1em;
-    }
-  }
-
-  &.right {
-    justify-content: flex-end;
-  }
-}
-
 h1 {
   font-size: 3em;
 }

@@ -4,12 +4,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Injectable()
 export class RestService {
   private baseUrl = '/api/';
-  teamId: string;
+  authId: string;
 
   constructor(private http: HttpClient) { }
 
   private get headers(): HttpHeaders {
-    return new HttpHeaders().set('Authorization', 'Basic ' + this.teamId)
+    return new HttpHeaders().set('Authorization', 'Basic ' + this.authId)
   }
 
   get<T>(endpoint: string): Promise<T> {
@@ -18,5 +18,13 @@ export class RestService {
 
   post<T>(endpoint: string, body: any): Promise<T> {
     return this.http.post<T>(this.baseUrl + endpoint, body, {headers: this.headers}).toPromise()
+  }
+
+  put<T>(endpoint: string, body: any): Promise<T> {
+    return this.http.put<T>(this.baseUrl + endpoint, body, {headers: this.headers}).toPromise();
+  }
+
+  delete<T>(endpoint: string): Promise<T> {
+    return this.http.delete<T>(this.baseUrl + endpoint, {headers: this.headers}).toPromise();
   }
 }

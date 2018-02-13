@@ -1,0 +1,8 @@
+<a [routerLink]="['/admin']" class="logo"><img src="assets/logo-portrait.png"></a>
+<h2>CodeLM Judging Dashboard</h2>
+<h3>For official use only</h3>
+<h4 *ngIf="admin">{{admin.name}}</h4>
+<br>
+<a [routerLink]="['/admin']">Leaderboard</a>
+<a [routerLink]="['/admin', 'divisions']">Divisions</a>
+<a [routerLink]="['/admin', 'problems']">Problems</a>

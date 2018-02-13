@@ -1,0 +1,18 @@
+<div class="flex display-side">
+  <div>
+    <table>
+      <thead>
+      <tr>
+        <th>Name</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let div of divisions">
+        <td><a (click)="division = div" href="javascript:void(0)">{{div.name}}</a></td>
+      </tr>
+      </tbody>
+    </table>
+    <input type="button" value="+" (click)="division = null">
+  </div>
+  <app-edit-division *ngIf="ready && division !== undefined" [division]="division"></app-edit-division>
+</div>

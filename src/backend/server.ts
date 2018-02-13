@@ -5,7 +5,7 @@ import mongoose = require('mongoose');
 import http = require('http');
 import io = require('socket.io');
 import { LoginPacket } from '../common/packets/login.packet';
-import { LoginResponsePacket } from '../common/packets/login.response.packet';
+import { LoginResponse, LoginResponsePacket } from '../common/packets/login.response.packet';
 import { TeamDao } from './daos/team.dao';
 
 import Packet from '../common/packets/packet';
@@ -13,6 +13,7 @@ import './daos/dao';
 import divisionRoute from './routes/division.route';
 import problemRoute from './routes/problem.route';
 import teamRoute from './routes/team.route';
+import { AdminDao } from './daos/admin.dao';
 
 const app = express();
 app.use(morgan('dev'));
@@ -38,12 +39,32 @@ mongoose.connect('mongodb://localhost/codelm', {useMongoClient: true}).then(() =
       socket.on('packet', (packet: Packet) => {
         if (packet.name === 'login') {
           let loginPacket = packet as LoginPacket;
+          // TODO: Clean this up.
           TeamDao.login(loginPacket.username, loginPacket.password).then(team => {
-            socket.emit('packet', new LoginResponsePacket(true, team));
-          }).catch(err => {
-            console.error(err);
-            socket.emit('packet', new LoginResponsePacket(false));
-            // socket.disconnect(true);
+            socket.emit('packet', new LoginResponsePacket(LoginResponse.SuccessTeam, team));
+          }).catch((response: LoginResponse | Error) => {
+            if (response === LoginResponse.NotFound) {
+              AdminDao.login(loginPacket.username, loginPacket.password).then(admin => {
+                socket.emit('packet', new LoginResponsePacket(LoginResponse.SuccessAdmin, undefined, admin));
+              }).catch((response: LoginResponse | Error) => {
+                if ((response as any).stack !== undefined) {
+                  console.error(response);
+                }
+
+                else {
+                  socket.emit('packet', new LoginResponsePacket(response as LoginResponse));
+                }
+              });
+            }
+
+            else if ((response as any).stack !== undefined) {
+              console.error(response);
+            }
+
+            else {
+              socket.emit('packet', new LoginResponsePacket(response as LoginResponse));
+              socket.disconnect(true);
+            }
           });
         }
       });

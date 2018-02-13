@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { ProblemDao } from '../daos/problem.dao';
 import { CodeFile, CodeRunner, CppRunner, JavaRunner, PythonRunner, RunError } from '../coderunner';
-import { TeamDao } from '../daos/team.dao';
+import { TeamDao, isTestCaseSubmissionCorrect } from '../daos/team.dao';
 import { ProblemSubmission } from '../../common/problem-submission';
 import { ProblemModel } from '../../common/models/problem.model';
 import { AdminDao } from '../daos/admin.dao';
@@ -56,23 +56,23 @@ router.post('/submit', TeamDao.forceTeam, (req, res) => {
     runner.run(problem.testCases).then(results => {
       sub.unsubscribe();
 
-      TeamDao.addSubmission(req.header('Authorization').split(' ')[1], {
+      TeamDao.addSubmission(req.params.team, {
         problem: problem,
         language: problemSubmission.language,
         code: problemSubmission.code,
         testCases: results,
-        result: '100%',
+        result: ((results.filter(result => isTestCaseSubmissionCorrect(result, problem)).length / results.length) * 100).toFixed(0) + '%',
         test: problemSubmission.test
       }).then(submissionId => {
         res.json(submissionId);
       });
     }).catch((err: RunError) => {
       console.error(err);
-      TeamDao.addSubmission(req.header('Authorization').split(' ')[1], {
+      TeamDao.addSubmission(req.params.team, {
         problem: problem,
         language: problemSubmission.language,
         code: problemSubmission.code,
-        result: 'error',
+        result: 'Error',
         error: err.error,
         test: problemSubmission.test
       }).then(submissionId => {

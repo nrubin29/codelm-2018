@@ -41,6 +41,10 @@ import { AdminSidebarComponent } from './components/admin-sidebar/admin-sidebar.
 import { AuthService } from './services/auth.service';
 import { AdminGuard } from './guards/admin.guard';
 import { TeamGuard } from './guards/team.guard';
+import { AdminsComponent } from './views/admin/admins/admins.component';
+import { EditAdminComponent } from './components/edit-admin/edit-admin.component';
+import { AdminService } from './services/admin.service';
+import { EditTeamComponent } from './components/edit-team/edit-team.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +70,9 @@ import { TeamGuard } from './guards/team.guard';
     DivisionsComponent,
     EditDivisionComponent,
     AdminSidebarComponent,
+    AdminsComponent,
+    EditAdminComponent,
+    EditTeamComponent,
   ],
   imports: [
     BrowserModule,
@@ -87,6 +94,7 @@ import { TeamGuard } from './guards/team.guard';
     AuthService,
     CodeSaverService,
     SocketGuard,
+    AdminService,
     TeamGuard,
     AdminGuard,
     PluralizePipe,

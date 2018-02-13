@@ -4,16 +4,11 @@ import { LoginResponse, LoginResponsePacket } from '../../../common/packets/logi
 import { SocketService } from './socket.service';
 import { TeamService } from './team.service';
 import { RestService } from './rest.service';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { AdminModel } from '../../../common/models/admin.model';
+import { AdminService } from './admin.service';
 
 @Injectable()
 export class AuthService {
-  admin: BehaviorSubject<AdminModel>;
-
-  constructor(private socketService: SocketService, private restService: RestService, private teamService: TeamService) {
-    this.admin = new BehaviorSubject<AdminModel>(null);
-  }
+  constructor(private socketService: SocketService, private restService: RestService, private teamService: TeamService, private adminService: AdminService) {}
 
   login(username: string, password: string): Promise<LoginResponse> {
     return new Promise<LoginResponse>((resolve, reject) => {
@@ -31,7 +26,7 @@ export class AuthService {
             }
 
             else if (loginResponsePacket.response === LoginResponse.SuccessAdmin) {
-              this.admin.next(loginResponsePacket.admin);
+              this.adminService.admin.next(loginResponsePacket.admin);
               this.restService.authId = loginResponsePacket.admin._id;
               resolve(LoginResponse.SuccessAdmin);
             }
@@ -46,5 +41,4 @@ export class AuthService {
       }).catch(reject);
     });
   }
-
 }

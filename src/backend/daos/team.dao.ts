@@ -1,10 +1,10 @@
 import mongoose = require('mongoose');
 import crypto = require('crypto');
 import { TeamModel } from '../../common/models/team.model';
-import { SubmissionModel } from '../../common/models/submission.model';
+import { SubmissionModel, TestCaseSubmissionModel } from '../../common/models/submission.model';
 import { LoginResponse } from '../../common/packets/login.response.packet';
 import { NextFunction, Request, Response } from 'express-serve-static-core';
-import { AdminDao } from './admin.dao';
+import { ProblemModel } from '../../common/models/problem.model';
 
 type TeamType = TeamModel & mongoose.Document;
 
@@ -19,12 +19,16 @@ const TestCaseSubmissionSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-TestCaseSubmissionSchema.virtual('correct').get(function() {
-  if (this.parent().problem.testCasesCaseSensitive) {
-    return this.correctOutput === this.output;
+export function isTestCaseSubmissionCorrect(testCase: TestCaseSubmissionModel, problem: ProblemModel) {
+  if (problem.testCasesCaseSensitive) {
+    return testCase.output === testCase.correctOutput;
   }
 
-  return this.correctOutput.toLowerCase() === this.output.toLowerCase();
+  return testCase.output.toLowerCase() === testCase.correctOutput.toLowerCase();
+}
+
+TestCaseSubmissionSchema.virtual('correct').get(function() {
+  return isTestCaseSubmissionCorrect(this, this.parent().problem);
 });
 
 const SubmissionSchema = new mongoose.Schema({
@@ -59,7 +63,6 @@ SubmissionSchema.virtual('points').get(function() {
 });
 
 const TeamSchema = new mongoose.Schema({
-  id: Number,
   username: String,
   password: String,
   salt: String,
@@ -86,9 +89,9 @@ export class TeamDao {
     return Team.find({division: {_id: divisionId}}).populate('division submissions.problem').exec();
   }
 
-  static addSubmission(teamId: string, submission: SubmissionModel): Promise<string> {
+  static addSubmission(team: TeamModel, submission: SubmissionModel): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      Team.findByIdAndUpdate(teamId, {$push: {submissions: submission}}, {new: true}).exec().then((team: TeamModel) => {
+      Team.findByIdAndUpdate(team._id, {$push: {submissions: submission}}, {new: true}).exec().then((team: TeamModel) => {
         resolve(team.submissions[team.submissions.length - 1]._id);
       }).catch(reject);
     });
@@ -129,6 +132,28 @@ export class TeamDao {
         }
       }).catch(reject);
     })
+  }
+
+  static addOrUpdateTeam(team: any): Promise<TeamModel> {
+    if (team.password) {
+      const salt = crypto.randomBytes(16).toString('hex');
+      const hash = crypto.pbkdf2Sync(team.password, new Buffer(salt), 1000, 64, 'sha512').toString('hex');
+
+      team.salt = salt;
+      team.password = hash;
+    }
+
+    if (!team._id) {
+      return Team.create(team as TeamModel);
+    }
+
+    else {
+      return Team.findByIdAndUpdate(team._id, team, {new: true}).exec();
+    }
+  }
+
+  static deleteTeam(id: string): Promise<void> {
+    return Team.deleteOne({_id: id}).exec();
   }
 
   static forceTeam(req: Request, res: Response, next: NextFunction) {

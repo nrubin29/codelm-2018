@@ -1,4 +1,4 @@
-<ng-container *ngIf="problem">
+<ng-container *ngIf="problem && submissions">
   <div class="header">
     <div>
       <h1>{{problem.id}}. {{problem.title}} - {{problem.points}} {{'point'|pluralize:problem.points}}</h1>
@@ -22,10 +22,8 @@
         </thead>
         <tbody>
         <tr *ngFor="let testCase of problem.testCases">
-          <ng-container *ngIf="!testCase.hidden">
-            <td><code>{{testCase.input}}</code></td>
-            <td><code>{{testCase.output}}</code></td>
-          </ng-container>
+          <td><code>{{testCase.input}}</code></td>
+          <td><code>{{testCase.output}}</code></td>
         </tr>
         </tbody>
       </table>
@@ -42,7 +40,7 @@
   <codemirror [config]="{ lineNumbers: true, mode: 'text/x-java' }" *ngIf="language === 'java'"></codemirror>
   <codemirror [config]="{ lineNumbers: true, mode: 'text/x-c++src' }" *ngIf="language === 'cpp'"></codemirror>
   <br>
-  <app-card *ngIf="submissions" title="Submissions">
+  <app-card *ngIf="submissions.length > 0" title="Submissions">
     <ul>
       <li *ngFor="let submission of submissions; let i = index"><a [routerLink]="['/', 'dashboard', 'submission', submission._id]">Submission {{i + 1}}</a></li>
     </ul>

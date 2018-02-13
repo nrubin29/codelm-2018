@@ -41,6 +41,32 @@ export class AdminDao {
     return Admin.findById(id).exec();
   }
 
+  static getAdmins(): Promise<AdminModel[]> {
+    return Admin.find().exec();
+  }
+
+  static addOrUpdateAdmin(admin: any): Promise<AdminModel> {
+    if (admin.password) {
+      const salt = crypto.randomBytes(16).toString('hex');
+      const hash = crypto.pbkdf2Sync(admin.password, new Buffer(salt), 1000, 64, 'sha512').toString('hex');
+
+      admin.salt = salt;
+      admin.password = hash;
+    }
+
+    if (!admin._id) {
+      return Admin.create(admin as AdminModel);
+    }
+
+    else {
+      return Admin.findByIdAndUpdate(admin._id, admin, {new: true}).exec();
+    }
+  }
+
+  static deleteAdmin(id: string): Promise<void> {
+    return Admin.deleteOne({_id: id}).exec();
+  }
+
   static forceAdmin(req: Request, res: Response, next: NextFunction) {
     AdminDao.getAdmin(req.header('Authorization').split(' ')[1]).then(admin => {
       req.params.admin = admin;

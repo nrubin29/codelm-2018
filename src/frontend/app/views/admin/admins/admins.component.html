@@ -1,0 +1,22 @@
+<div class="flex display-side">
+  <div>
+    <table>
+      <thead>
+      <tr>
+        <th>Username</th>
+        <th>Name</th>
+        <th>Superuser</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let adm of admins">
+        <td>{{adm.username}}</td>
+        <td><a (click)="admin = adm" href="javascript:void(0)">{{adm.name}}</a></td>
+        <td><input type="checkbox" [checked]="adm.superUser" disabled></td>
+      </tr>
+      </tbody>
+    </table>
+    <input type="button" value="+" (click)="admin = null">
+  </div>
+  <app-edit-admin *ngIf="ready && admin !== undefined" [admin]="admin"></app-edit-admin>
+</div>

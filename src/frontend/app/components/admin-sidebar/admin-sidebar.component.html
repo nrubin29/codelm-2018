@@ -3,6 +3,8 @@
 <h3>For official use only</h3>
 <h4 *ngIf="admin">{{admin.name}}</h4>
 <br>
-<a [routerLink]="['/admin']">Leaderboard</a>
+<a [routerLink]="['/admin']">Standings</a>
 <a [routerLink]="['/admin', 'divisions']">Divisions</a>
 <a [routerLink]="['/admin', 'problems']">Problems</a>
+<a [routerLink]="['/admin', 'admins']">Admins</a>
+<a [routerLink]="['/admin', 'add-team']">Add Team</a>

@@ -123,7 +123,7 @@ export class CodeRunner {
     })
   }
 
-  async run(testCases: TestCaseModel[]): Promise<TestCaseRunResult[]> {
+  async run(testCases: TestCaseModel[]): Promise<TestCaseSubmissionModel[]> {
     try {
       this.before();
 

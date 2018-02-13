@@ -12,6 +12,14 @@ router.get('/:id', AdminDao.forceAdmin, (req, res) => {
   TeamDao.getTeam(req.params.id).then(team => res.json(team));
 });
 
+router.put('/', AdminDao.forceAdmin, (req, res) => {
+  TeamDao.addOrUpdateTeam(req.body).then(team => res.json(team)).catch(console.error);
+});
+
+router.delete('/:id', AdminDao.forceAdmin, (req, res) => {
+  TeamDao.deleteTeam(req.params.id).then(() => res.json(true)).catch(console.error);
+});
+
 // TODO: Don't send hidden test cases and other sensitive data unless user is admin.
 
 router.get('/submissions', TeamDao.forceTeam, (req, res) => {

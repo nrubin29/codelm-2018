@@ -1,0 +1,27 @@
+<h1>{{admin ? admin.name : 'New Admin'}}</h1>
+<form #adminForm="ngForm" [formGroup]="formGroup" (submit)="submit(adminForm)">
+  <table>
+    <tr>
+      <th>_id</th>
+      <td><input type="text" formControlName="_id" disabled></td>
+    </tr>
+    <tr>
+      <th>Name</th>
+      <td><input type="text" formControlName="name"></td>
+    </tr>
+    <tr>
+      <th>Superuser</th>
+      <td><input type="checkbox" formControlName="superUser"></td>
+    </tr>
+    <tr>
+      <th>Username</th>
+      <td><input type="text" formControlName="username"></td>
+    </tr>
+    <tr>
+      <th>Password</th>
+      <td><input type="text" formControlName="password"></td>
+    </tr>
+  </table>
+  <input type="submit">
+  <input type="button" value="Delete" (click)="delete()" *ngIf="admin._id">
+</form>

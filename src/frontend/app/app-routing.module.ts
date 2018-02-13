@@ -14,6 +14,8 @@ import { ProblemsComponent } from './views/admin/problems/problems.component';
 import { DivisionsComponent } from './views/admin/divisions/divisions.component';
 import { TeamGuard } from './guards/team.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { AdminsComponent } from './views/admin/admins/admins.component';
+import { EditTeamComponent } from './components/edit-team/edit-team.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
@@ -31,8 +33,10 @@ const routes: Routes = [
         {path: '', component: AdminHomeComponent},
         {path: 'team/:id', component: TeamComponent},
         {path: 'submission/:id', component: SubmissionComponent},
+        {path: 'divisions', component: DivisionsComponent},
         {path: 'problems', component: ProblemsComponent},
-        {path: 'divisions', component: DivisionsComponent}
+        {path: 'admins', component: AdminsComponent},
+        {path: 'add-team', component: EditTeamComponent}
       ]
   },
 ];

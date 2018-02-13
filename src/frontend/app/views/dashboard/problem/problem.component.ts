@@ -38,6 +38,12 @@ export class ProblemComponent implements OnInit, AfterViewInit {
       this.problemService.getProblem(params['id']).then(problem => {
         this.problem = problem;
         this.submissions = this.team.submissions.filter(submission => submission.problem._id === problem._id);
+
+        // TODO: Is it safe to assume that points > 0 means success?
+        const solved = this.submissions.filter(submission => submission.points > 0);
+        if (solved.length > 0) {
+          this.router.navigate(['/dashboard', 'submission', solved[0]._id]);
+        }
       }).catch(console.log);
     });
   }

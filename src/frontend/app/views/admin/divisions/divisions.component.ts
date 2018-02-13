@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ProblemService } from '../../../services/problem.service';
 import { DivisionModel } from '../../../../../common/models/division.model';
 import { DivisionService } from '../../../services/division.service';
 
@@ -12,7 +11,7 @@ export class DivisionsComponent implements OnInit {
   divisions: DivisionModel[] = [];
   division: DivisionModel = undefined;
 
-  constructor(private divisionService: DivisionService, private problemService: ProblemService) { }
+  constructor(private divisionService: DivisionService) { }
 
   ngOnInit() {
     this.reload();

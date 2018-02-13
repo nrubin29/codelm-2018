@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { TeamModel } from '../../../common/models/team.model';
 import { SocketService } from './socket.service';
 import { RestService } from './rest.service';
-import { LoginPacket } from '../../../common/packets/login.packet';
-import { LoginResponsePacket } from '../../../common/packets/login.response.packet';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
@@ -30,5 +28,13 @@ export class TeamService {
 
   getTeamsForDivision(divisionId: string): Promise<TeamModel[]> {
     return this.restService.get<TeamModel[]>(`${this.endpoint}/division/${divisionId}`);
+  }
+
+  addOrUpdateTeam(team: any): Promise<TeamModel> {
+    return this.restService.put<TeamModel>(this.endpoint, team);
+  }
+
+  deleteTeam(teamId: string): Promise<void> {
+    return this.restService.delete<void>(`${this.endpoint}/${teamId}`);
   }
 }

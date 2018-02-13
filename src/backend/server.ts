@@ -4,16 +4,19 @@ import bodyParser = require('body-parser');
 import mongoose = require('mongoose');
 import http = require('http');
 import io = require('socket.io');
-import { LoginPacket } from '../common/packets/login.packet';
-import { LoginResponse, LoginResponsePacket } from '../common/packets/login.response.packet';
-import { TeamDao } from './daos/team.dao';
 
 import Packet from '../common/packets/packet';
+import { LoginPacket } from '../common/packets/login.packet';
+import { LoginResponse, LoginResponsePacket } from '../common/packets/login.response.packet';
+
 import './daos/dao';
+import { TeamDao } from './daos/team.dao';
+import { AdminDao } from './daos/admin.dao';
+
 import divisionRoute from './routes/division.route';
 import problemRoute from './routes/problem.route';
 import teamRoute from './routes/team.route';
-import { AdminDao } from './daos/admin.dao';
+import adminRoute from './routes/admin.route';
 
 const app = express();
 app.use(morgan('dev'));
@@ -24,6 +27,7 @@ app.use(express.static('./dist/frontend'));
 app.use('/api/divisions', divisionRoute);
 app.use('/api/problems', problemRoute);
 app.use('/api/teams', teamRoute);
+app.use('/api/admins', adminRoute);
 
 const httpSocketServer = http.createServer(app);
 const socketServer = io(httpSocketServer);

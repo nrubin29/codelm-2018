@@ -2,37 +2,10 @@
   flex: 1;
 }
 
-.header {
-  display: flex;
-  margin-bottom: 1em;
-
-  & :first-child {
-    flex: 1;
-  }
-}
-
-h1 {
-  font-size: 3em;
-}
-
-input[type=button] {
-  font-size: 1.5em;
-}
-
-select {
-  float: right;
-  font-size: 1.5em;
-  margin-bottom: 0.5em;
-}
-
-li {
-  list-style: none;
-}
-
-td {
-  padding: 0.25em;
-}
-
 p {
   white-space: pre-wrap;
+}
+
+mat-chip-list {
+  margin-left: 0.5em;
 }

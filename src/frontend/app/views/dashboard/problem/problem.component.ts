@@ -50,10 +50,7 @@ export class ProblemComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.codeMirrors.changes.subscribe((codeMirrors: QueryList<CodemirrorComponent>) => {
-      codeMirrors.forEach(cm => {
-        cm.writeValue(this.codeSaverService.get(this.problem._id, cm.config.mode));
-        this.codeSaverService.mode = cm.config.mode;
-      });
+      codeMirrors.forEach(cm => cm.writeValue(this.codeSaverService.get(this.problem._id, cm.config.mode)));
     });
   }
 

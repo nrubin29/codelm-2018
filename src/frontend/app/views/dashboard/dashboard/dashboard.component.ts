@@ -1,33 +1,30 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SidebarComponent } from '../../../components/sidebar/sidebar.component';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import { ProblemModel } from '../../../../../common/models/problem.model';
+import { TeamService } from '../../../services/team.service';
+import { ProblemService } from '../../../services/problem.service';
+import { MatSidenav } from '@angular/material';
+import { TeamModel } from '../../../../../common/models/team.model';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
-  animations: [ // TODO: Make this work.
-    trigger('slideInOut', [
-      state('in', style({
-        // flex: '0',
-        // transform: 'translateX(-100%)',
-        display: 'none'
-      })),
-      state('out', style({
-        // flex: '1',
-        // transform: 'translateX(0)',
-        display: 'flex'
-      })),
-      transition('in => out', animate('400ms ease-in-out')),
-      transition('out => in', animate('400ms ease-in-out')),
-    ])
-  ]
+  styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  @ViewChild(SidebarComponent) sidebar: SidebarComponent;
+  private team: TeamModel;
+  private problems: ProblemModel[] = [];
+  @ViewChild(MatSidenav) private sideNav: MatSidenav;
 
-  constructor() { }
+  constructor(private problemService: ProblemService, private teamService: TeamService) { }
 
   ngOnInit() {
+    this.teamService.team.subscribe(team => {
+      this.team = team;
+      this.problemService.getProblems(this.team.division._id).then(problems => this.problems = problems);
+    });
+  }
+
+  toggle(): Promise<void> {
+    return this.sideNav.toggle();
   }
 }

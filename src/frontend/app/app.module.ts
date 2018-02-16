@@ -15,7 +15,6 @@ import { SubmitComponent } from './views/dashboard/submit/submit.component';
 import { SubmissionComponent } from './views/dashboard/submission/submission.component';
 import { FeedComponent } from './components/feed/feed.component';
 import { CardComponent } from './components/card/card.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -45,6 +44,11 @@ import { AdminsComponent } from './views/admin/admins/admins.component';
 import { EditAdminComponent } from './components/edit-admin/edit-admin.component';
 import { AdminService } from './services/admin.service';
 import { EditTeamComponent } from './components/edit-team/edit-team.component';
+import {
+  MatButtonModule,
+  MatCardModule, MatChipsModule, MatDividerModule, MatFormFieldModule, MatInputModule, MatListModule, MatSelectModule,
+  MatSidenavModule, MatTableModule, MatToolbarModule
+} from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -60,7 +64,6 @@ import { EditTeamComponent } from './components/edit-team/edit-team.component';
     SubmissionComponent,
     FeedComponent,
     CardComponent,
-    SidebarComponent,
     PluralizePipe,
     LeaderboardComponent,
     TeamComponent,
@@ -83,6 +86,18 @@ import { EditTeamComponent } from './components/edit-team/edit-team.component';
     CodemirrorModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    MatCardModule,
+    MatSidenavModule,
+    MatDividerModule,
+    MatListModule,
+    MatChipsModule,
+    MatSelectModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatListModule,
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [
     RestService,

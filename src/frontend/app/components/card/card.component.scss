@@ -1,20 +1,19 @@
-:host {
-  display: flex;
-}
-
-.card {
-  flex: 1;
-  border: thin solid #f0f0f0;
-  border-radius: 10px;
-  overflow: hidden;
+mat-card {
+  padding: 0 !important;
   margin-bottom: 1em;
 }
 
-.title {
+mat-card-header {
   background: #eee;
-  padding: 0.5em 1em;
+  padding: 12px 12px 0;
 }
 
-.content {
-  padding: 1em;
+mat-card-content {
+  &.pad-card {
+    padding: 20px !important;
+  }
+
+  &:not(.pad-card) {
+    padding: 0 20px 20px;
+  }
 }

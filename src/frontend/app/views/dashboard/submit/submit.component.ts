@@ -20,14 +20,17 @@ export class SubmitComponent implements OnInit {
     this.problemSubmission = this.problemService.problemSubmission;
     this.animation = Math.floor(Math.random() * 11);
 
-    this.dashboard.sidebar.toggle();
-
-    this.problemService.submit(this.problemSubmission).then(submissionId => {
-      this.teamService.refreshTeam().then(() => {
-        setTimeout(() => {
-          this.dashboard.sidebar.toggle();
-          this.router.navigate(['dashboard', 'submission', submissionId])
-        }, 5000);
+    this.dashboard.toggle().then(() => {
+      this.problemService.submit(this.problemSubmission).then(submissionId => {
+        this.teamService.refreshTeam().then(() => {
+          setTimeout(() => {
+            this.dashboard.toggle().then(() => {
+              setTimeout(() => {
+                this.router.navigate(['dashboard', 'submission', submissionId]);
+              }, 200);
+            });
+          }, 5000);
+        });
       });
     });
   }

@@ -2,40 +2,10 @@
   flex: 1;
 }
 
-.display-side {
-  display: flex;
-
-  & > * {
-    flex: 1;
-  }
-
-  & > :not(:last-child) {
-    margin-right: 1em;
-  }
+app-card:last-child > mat-card {
+  margin-bottom: 0;
 }
 
-.header {
-  display: flex;
-  margin-bottom: 1em;
-
-  & :first-child {
-    flex: 1;
-  }
-}
-
-.flex-horizontal {
-  display: flex;
-  align-items: center;
-
-  & :not(:last-child) {
-    margin-right: 1em;
-  }
-}
-
-h1 {
-  font-size: 3em;
-}
-
-td {
-  padding: 0.25em;
+.CodeMirror {
+  height: 100% !important;
 }

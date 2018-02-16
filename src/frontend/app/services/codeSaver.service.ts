@@ -24,7 +24,8 @@ export class CodeSaverService {
       return null;
     }
 
-    return this.data[problemId][mode]
+    this.mode = mode;
+    return this.data[problemId][mode];
   }
 
   getMode(language?: string) {

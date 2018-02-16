@@ -1,8 +1,12 @@
 <app-card>
   <img src="assets/logo.png">
   <form (submit)="login()" onsubmit="return false;">
-    <input name="username" [(ngModel)]="user.username" type="text" placeholder="Username">
-    <input name="password" [(ngModel)]="user.password" type="password" placeholder="Password">
-    <input type="submit">
+    <mat-form-field color="accent">
+      <input matInput name="username" [(ngModel)]="user.username" type="text" placeholder="Username">
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <input matInput name="password" [(ngModel)]="user.password" type="password" placeholder="Password">
+    </mat-form-field>
+    <button mat-raised-button color="accent" type="submit">Log In</button>
   </form>
 </app-card>

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TeamService } from '../../services/team.service';
 import { AuthService } from '../../services/auth.service';
 import { LoginResponse } from '../../../../common/packets/login.response.packet';
 

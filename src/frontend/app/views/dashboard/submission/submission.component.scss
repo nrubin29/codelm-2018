@@ -1,11 +1,13 @@
 :host {
   flex: 1;
-}
 
-app-card:last-child > mat-card {
-  margin-bottom: 0;
-}
+  & ::ng-deep {
+    & .CodeMirror {
+      height: 100% !important;
+    }
 
-.CodeMirror {
-  height: 100% !important;
+    & app-card:last-child > mat-card {
+      margin-bottom: 0;
+    }
+  }
 }

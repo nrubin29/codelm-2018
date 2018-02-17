@@ -1,14 +1,12 @@
-<table>
-  <thead>
-    <tr>
-      <th>Team</th>
-      <th>Score</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let team of teams">
-      <td><a [routerLink]="['team', team._id]">{{team.username}}</a></td>
-      <td>{{team.score}}</td>
-    </tr>
-  </tbody>
-</table>
+<mat-table [dataSource]="teams">
+  <ng-container matColumnDef="team">
+    <mat-header-cell *matHeaderCellDef>Team</mat-header-cell>
+    <mat-cell *matCellDef="let element"><a [routerLink]="['team', element._id]">{{element.username}}</a></mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="score">
+    <mat-header-cell *matHeaderCellDef>Score</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{element.score}}</mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="['team', 'score']"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: ['team', 'score'];"></mat-row>
+</mat-table>

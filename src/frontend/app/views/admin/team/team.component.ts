@@ -19,18 +19,13 @@ export class TeamComponent implements OnInit {
   constructor(private teamService: TeamService, private problemService: ProblemService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(params => {
-      this.team = null;
-      this.teamService.getTeam(params['id']).then(team => {
-        this.team = team;
-        this.problemService.getProblems(team.division._id).then(problems => {
-          this.problems = problems;
-          for (let problem of problems) {
-            this.problemSubmissions[problem._id] = team.submissions.filter(submission => submission.problem._id === problem._id);
-          }
-        });
-      }).catch(console.log);
+    this.activatedRoute.data.subscribe(data => {
+      const teamAndProblems = data['team'];
+      this.team = teamAndProblems[0];
+      this.problems = teamAndProblems[1];
+      for (let problem of this.problems) {
+        this.problemSubmissions[problem._id] = this.team.submissions.filter(submission => submission.problem._id === problem._id);
+      }
     });
   }
-
 }

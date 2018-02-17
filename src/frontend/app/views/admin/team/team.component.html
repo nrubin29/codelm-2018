@@ -1,36 +1,39 @@
-<div class="main" *ngIf="team">
-  <app-card title="Team Info" class="team">
+<div class="flex display-side container">
+  <app-card title="Team Info">
     <div class="container">
-      <table>
-        <tr>
-          <th>ID</th>
-          <td>{{team._id}}</td>
-        </tr>
-        <tr>
-          <th>Username</th>
-          <td>{{team.username}}</td>
-        </tr>
-        <tr>
-          <th>Members</th>
-          <td>{{team.members}}</td>
-        </tr>
-        <tr>
-          <th>Division</th>
-          <td>{{team.division.name}}</td>
-        </tr>
-        <tr>
-          <th>Score</th>
-          <td>{{team.score}}</td>
-        </tr>
-      </table>
+      <mat-table #table [dataSource]="[team]">
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element._id}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="username">
+          <mat-header-cell *matHeaderCellDef>Username</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.username}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="members">
+          <mat-header-cell *matHeaderCellDef>Members</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.members}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="division">
+          <mat-header-cell *matHeaderCellDef>Division</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.division.name}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="score">
+          <mat-header-cell *matHeaderCellDef>Score</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.score}}</mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="['id', 'username', 'members', 'division', 'score']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['id', 'username', 'members', 'division', 'score'];"></mat-row>
+      </mat-table>
     </div>
   </app-card>
   <app-card title="Submissions">
-    <ul>
-      <li *ngFor="let problem of problems">
-        <p>{{problem.title}}</p>
-        <p *ngFor="let submission of problemSubmissions[problem._id]"><a [routerLink]="['/admin', 'submission', submission._id]">{{submission.result}}</a></p>
-      </li>
-    </ul>
+    <mat-list>
+      <ng-container *ngFor="let problem of problems; let i = index">
+        <h3 mat-subheader>{{problem.title}}</h3>
+        <mat-list-item *ngFor="let submission of problemSubmissions[problem._id]"><a [routerLink]="['/admin', 'submission', submission._id]">{{submission.result}}</a></mat-list-item>
+        <mat-divider *ngIf="i !== problems.length - 1"></mat-divider>
+      </ng-container>
+    </mat-list>
   </app-card>
 </div>

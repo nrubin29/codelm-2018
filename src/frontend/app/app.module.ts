@@ -7,8 +7,6 @@ import { LoginComponent } from './views/login/login.component';
 import { DashboardComponent } from './views/dashboard/dashboard/dashboard.component';
 import { ProblemComponent } from './views/dashboard/problem/problem.component';
 import { CodemirrorModule } from 'ng2-codemirror';
-import { TabsComponent } from './components/tabs/tabs.component';
-import { PaneComponent } from './components/pane/pane.component';
 import { StandingsComponent } from './views/dashboard/standings/standings.component';
 import { AdminComponent } from './views/admin/admin/admin.component';
 import { SubmitComponent } from './views/dashboard/submit/submit.component';
@@ -23,7 +21,6 @@ import { InMemoryDataService } from './in-memory-data.service';
 import { RestService } from './services/rest.service';
 import { ProblemService } from './services/problem.service';
 import { SubmissionService } from './services/submission.service';
-import { SocketGuard } from './guards/socket.guard';
 import { SocketService } from './services/socket.service';
 import { TeamService } from './services/team.service';
 import { CodeSaverService } from './services/codesaver.service';
@@ -36,18 +33,17 @@ import { ProblemsComponent } from './views/admin/problems/problems.component';
 import { EditProblemComponent } from './components/edit-problem/edit-problem.component';
 import { DivisionsComponent } from './views/admin/divisions/divisions.component';
 import { EditDivisionComponent } from './components/edit-division/edit-division.component';
-import { AdminSidebarComponent } from './components/admin-sidebar/admin-sidebar.component';
 import { AuthService } from './services/auth.service';
-import { AdminGuard } from './guards/admin.guard';
-import { TeamGuard } from './guards/team.guard';
 import { AdminsComponent } from './views/admin/admins/admins.component';
 import { EditAdminComponent } from './components/edit-admin/edit-admin.component';
 import { AdminService } from './services/admin.service';
 import { EditTeamComponent } from './components/edit-team/edit-team.component';
 import {
   MatButtonModule,
-  MatCardModule, MatChipsModule, MatDividerModule, MatFormFieldModule, MatInputModule, MatListModule, MatSelectModule,
-  MatSidenavModule, MatTableModule, MatToolbarModule
+  MatCardModule, MatChipsModule, MatDialogModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatInputModule,
+  MatListModule,
+  MatSelectModule,
+  MatSidenavModule, MatTableModule, MatTabsModule, MatToolbarModule
 } from '@angular/material';
 
 @NgModule({
@@ -56,8 +52,6 @@ import {
     LoginComponent,
     DashboardComponent,
     ProblemComponent,
-    TabsComponent,
-    PaneComponent,
     StandingsComponent,
     AdminComponent,
     SubmitComponent,
@@ -72,7 +66,6 @@ import {
     EditProblemComponent,
     DivisionsComponent,
     EditDivisionComponent,
-    AdminSidebarComponent,
     AdminsComponent,
     EditAdminComponent,
     EditTeamComponent,
@@ -97,7 +90,10 @@ import {
     MatListModule,
     MatTableModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatTabsModule,
+    MatIconModule,
+    MatDialogModule
   ],
   providers: [
     RestService,
@@ -111,6 +107,7 @@ import {
     AdminService,
     PluralizePipe,
   ],
+  entryComponents: [EditProblemComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

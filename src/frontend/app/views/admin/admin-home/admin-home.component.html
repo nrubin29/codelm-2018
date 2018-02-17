@@ -1,5 +1,7 @@
-<app-tabs>
-  <app-pane *ngFor="let division of divisions" [title]="division.name">
-    <app-leaderboard [division]="division"></app-leaderboard>
-  </app-pane>
-</app-tabs>
+<mat-tab-group>
+  <mat-tab *ngFor="let division of divisions" [label]="division.name">
+    <div class="container">
+      <app-leaderboard [division]="division"></app-leaderboard>
+    </div>
+  </mat-tab>
+</mat-tab-group>

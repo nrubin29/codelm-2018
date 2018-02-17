@@ -24,9 +24,6 @@
     "@angular/platform-browser": "^5.2.0",
     "@angular/platform-browser-dynamic": "^5.2.0",
     "@angular/router": "^5.2.0",
-    "@fortawesome/fontawesome": "^1.1.2",
-    "@fortawesome/fontawesome-free-regular": "^5.0.4",
-    "@fortawesome/fontawesome-pro-regular": "^5.0.4",
     "core-js": "^2.5.3",
     "express": "^4.16.2",
     "fs-extra": "^5.0.0",
@@ -38,7 +35,9 @@
     "socket.io": "^2.0.4",
     "socket.io-client": "^2.0.4",
     "spinkit": "^1.2.5",
-    "zone.js": "^0.8.20"
+    "zone.js": "^0.8.20",
+    "mongoose": "^4.13.9",
+    "body-parser": "^1.18.2"
   },
   "devDependencies": {
     "@angular-devkit/schematics": "0.0.48",
@@ -57,12 +56,10 @@
     "@types/socket.io": "^1.4.31",
     "@types/socket.io-client": "^1.4.32",
     "angular-in-memory-web-api": "^0.5.2",
-    "body-parser": "^1.18.2",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "codelyzer": "~4.0.2",
     "mocha": "^5.0.0",
-    "mongoose": "^4.13.9",
     "ts-loader": "^3.3.1",
     "ts-node": "~4.1.0",
     "tslint": "~5.9.1",

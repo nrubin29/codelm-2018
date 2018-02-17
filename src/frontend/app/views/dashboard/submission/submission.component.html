@@ -27,7 +27,7 @@
                 </ng-container>
                 <ng-container matColumnDef="status">
                     <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
-                    <mat-cell *matCellDef="let element"><i class="material-icons">{{element.correct ? 'check_circle' : 'highlight_off'}}</i></mat-cell>
+                    <mat-cell *matCellDef="let element"><mat-icon>{{element.correct ? 'check_circle' : 'highlight_off'}}</mat-icon></mat-cell>
                 </ng-container>
                 <mat-header-row *matHeaderRowDef="['input', 'correctOutput', 'yourOutput', 'status']"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: ['input', 'correctOutput', 'yourOutput', 'status'];"></mat-row>

@@ -19,6 +19,8 @@ import { EditTeamComponent } from './components/edit-team/edit-team.component';
 import { SubmissionResolve } from './views/dashboard/submission/submission.resolve';
 import { ProblemResolve } from './views/dashboard/problem/problem.resolve';
 import { ProblemGuard } from './views/dashboard/problem/problem.guard';
+import { TeamResolve } from './views/admin/team/team.resolve';
+import { DivisionsProblemsResolve } from './views/admin/problems/divisions-problems.resolve';
 
 const routes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
@@ -34,10 +36,10 @@ const routes: Routes = [
   {path: 'admin', component: AdminComponent, canActivate: [SocketGuard, AdminGuard], children:
       [
         {path: '', component: AdminHomeComponent},
-        {path: 'team/:id', component: TeamComponent},
+        {path: 'team/:id', component: TeamComponent, resolve: {team: TeamResolve}},
         {path: 'submission/:id', component: SubmissionComponent, resolve: {submission: SubmissionResolve}},
         {path: 'divisions', component: DivisionsComponent},
-        {path: 'problems', component: ProblemsComponent},
+        {path: 'problems', component: ProblemsComponent, resolve: {divisionsAndProblems: DivisionsProblemsResolve}},
         {path: 'admins', component: AdminsComponent},
         {path: 'add-team', component: EditTeamComponent}
       ]
@@ -53,7 +55,9 @@ const routes: Routes = [
     AdminGuard,
     ProblemGuard,
     SubmissionResolve,
-    ProblemResolve
+    ProblemResolve,
+    TeamResolve,
+    DivisionsProblemsResolve
   ]
 })
 export class AppRoutingModule {}

@@ -1,9 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ProblemModel, TestCaseModel } from '../../../../common/models/problem.model';
 import { DivisionModel } from '../../../../common/models/division.model';
 import { FormArray, FormControl, FormGroup, NgForm } from '@angular/forms';
 import { ProblemService } from '../../services/problem.service';
-import { ProblemsComponent } from '../../views/admin/problems/problems.component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 @Component({
   selector: 'app-edit-problem',
@@ -11,16 +11,17 @@ import { ProblemsComponent } from '../../views/admin/problems/problems.component
   styleUrls: ['./edit-problem.component.scss']
 })
 export class EditProblemComponent implements OnInit {
-  @Input() problem: ProblemModel;
-  @Input() divisions: DivisionModel[];
+  problem: ProblemModel;
+  divisions: DivisionModel[];
 
   testCases: FormArray;
   formGroup: FormGroup;
 
-  constructor(private problemService: ProblemService, private problemsComponent: ProblemsComponent) { }
+  constructor(private problemService: ProblemService, private dialogRef: MatDialogRef<EditProblemComponent>, @Inject(MAT_DIALOG_DATA) private data: {problem: ProblemModel, divisions: DivisionModel[]}) { }
 
   ngOnInit() {
-    this.problem = this.problem ? this.problem : {_id: undefined, id: undefined, title: undefined, description: undefined, divisions: [], points: undefined, testCasesCaseSensitive: false, testCases: []};
+    this.divisions = this.data.divisions;
+    this.problem = this.data.problem ? this.data.problem : {_id: undefined, id: undefined, title: undefined, description: undefined, divisions: [], points: undefined, testCasesCaseSensitive: false, testCases: []};
     
     this.testCases = new FormArray(this.problem.testCases.map(testCase => this.createTestCaseGroup(testCase)));
 
@@ -36,18 +37,8 @@ export class EditProblemComponent implements OnInit {
     })
   }
 
-  submit(form: NgForm) {
-    this.problemService.addOrUpdateProblem(form.value).then(() => {
-      this.problemsComponent.reload();
-    }).catch(alert);
-  }
-
-  delete() {
-    if (confirm('Are you sure you want to delete this problem?')) {
-      this.problemService.deleteProblem(this.problem._id).then(() => {
-        this.problemsComponent.reload();
-      }).catch(alert);
-    }
+  get formValue() {
+    return this.formGroup.getRawValue();
   }
 
   private createTestCaseGroup(testCase?: TestCaseModel): FormGroup {
@@ -73,6 +64,6 @@ export class EditProblemComponent implements OnInit {
   }
 
   isDivisionSelected(division: DivisionModel) {
-    return this.problem ? this.problem.divisions.some(d => d._id == division._id) : false;
+    return this.problem.divisions.some(d => d._id == division._id);
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { DivisionModel } from '../../../../../common/models/division.model';
-import { DivisionService } from '../../../services/division.service';
+import { AdminService } from '../../../services/admin.service';
+import { AdminModel } from '../../../../../common/models/admin.model';
 
 @Component({
   selector: 'app-admin',
@@ -8,10 +8,13 @@ import { DivisionService } from '../../../services/division.service';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit {
-  constructor() { }
+  admin: AdminModel;
+
+  constructor(private adminService: AdminService) { }
 
   ngOnInit() {
-
+    this.adminService.admin.subscribe(admin => {
+      this.admin = admin;
+    });
   }
-
 }

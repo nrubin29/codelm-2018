@@ -1,24 +1,23 @@
 <div class="flex display-side">
   <div>
-    <app-tabs *ngIf="ready">
-      <app-pane *ngFor="let division of divisions" [title]="division.name">
-        <table>
-          <thead>
-          <tr>
-            <th>Number</th>
-            <th>Title</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let prob of problems[division._id]">
-            <td>{{prob.id}}</td>
-            <td><a (click)="problem = prob" href="javascript:void(0)">{{prob.title}}</a></td>
-          </tr>
-          </tbody>
-        </table>
-      </app-pane>
-    </app-tabs>
-    <input type="button" value="+" (click)="problem = null">
+    <mat-tab-group>
+      <mat-tab *ngFor="let division of divisions" [label]="division.name">
+        <div class="container">
+          <mat-table [dataSource]="division.problems">
+            <ng-container matColumnDef="number">
+              <mat-header-cell *matHeaderCellDef>Number</mat-header-cell>
+              <mat-cell *matCellDef="let element">{{element.id}}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="title">
+              <mat-header-cell *matHeaderCellDef>Title</mat-header-cell>
+              <mat-cell *matCellDef="let element"><a (click)="edit(element)" href="javascript:void(0)">{{element.title}}</a></mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="['number', 'title']"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: ['number', 'title'];"></mat-row>
+          </mat-table>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+    <input type="button" value="+" (click)="edit(null)">
   </div>
-  <app-edit-problem *ngIf="ready && problem !== undefined" [problem]="problem" [divisions]="divisions"></app-edit-problem>
 </div>

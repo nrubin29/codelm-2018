@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import 'rxjs/add/operator/debounceTime';
 import { ProblemModel } from '../../../../../common/models/problem.model';
@@ -14,7 +14,7 @@ import { CodeMirrorComponent } from '../../../components/code-mirror/code-mirror
   templateUrl: './problem.component.html',
   styleUrls: ['./problem.component.scss']
 })
-export class ProblemComponent implements OnInit, AfterViewInit {
+export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
   team: TeamModel;
   problem: ProblemModel;
   submissions: SubmissionModel[] = [];
@@ -48,6 +48,10 @@ export class ProblemComponent implements OnInit, AfterViewInit {
     codeMirror.change.debounceTime(5000).subscribe(() => {
       this.saveCode();
     })
+  }
+
+  ngOnDestroy() {
+    this.saveCode();
   }
 
   saveCode() {

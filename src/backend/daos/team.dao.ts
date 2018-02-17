@@ -44,6 +44,17 @@ const SubmissionSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
+export function sanitizeSubmission(submission: SubmissionModel): SubmissionModel {
+  submission.problem.testCases = submission.problem.testCases.filter(testCase => !testCase.hidden);
+  submission.problem.testCasesCaseSensitive = undefined;
+
+  if (submission.testCases) {
+    submission.testCases = submission.testCases.filter(testCase => !testCase.hidden);
+  }
+
+  return submission;
+}
+
 SubmissionSchema.virtual('points').get(function() {
   if (this.test) {
     return 0;
@@ -73,6 +84,13 @@ const TeamSchema = new mongoose.Schema({
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
 });
+
+export function sanitizeTeam(team: TeamModel): TeamModel {
+  team.password = undefined;
+  team.salt = undefined;
+  team.submissions = team.submissions.map(submission => sanitizeSubmission(submission));
+  return team;
+}
 
 TeamSchema.virtual('score').get(function() {
   return this.submissions.reduce(((previousValue: number, currentValue: any) => previousValue + currentValue.toObject().points), 0);

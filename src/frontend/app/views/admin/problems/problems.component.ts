@@ -7,6 +7,8 @@ import { EditProblemComponent } from '../../../components/edit-problem/edit-prob
 import { DialogResult } from '../../../dialog-result';
 import { ProblemService } from '../../../services/problem.service';
 
+// TODO: Split this into two components like how AdminHomeComponent has a bunch of LeaderboardComponents.
+
 @Component({
   selector: 'app-problems',
   templateUrl: './problems.component.html',

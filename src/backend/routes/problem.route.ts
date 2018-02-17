@@ -8,22 +8,40 @@ import { AdminDao } from '../daos/admin.dao';
 
 const router = Router();
 
-// TODO: Don't send hidden test cases unless user is admin.
-
 router.put('/', AdminDao.forceAdmin, (req, res) => {
   ProblemDao.addOrUpdateProblem(req.body as ProblemModel).then(problem => res.json(problem)).catch(console.error);
 });
 
 router.get('/:id', (req, res) => {
-  ProblemDao.getProblem(req.params.id).then(p => res.json(p)).catch(console.error)
+  ProblemDao.getProblem(req.params.id).then(problem => {
+    AdminDao.forceAdmin(req, res, () => {
+      if (!req.params.admin) {
+        problem.testCases = problem.testCases.filter(testCase => !testCase.hidden);
+        problem.testCasesCaseSensitive = undefined;
+      }
+
+      res.json(problem);
+    });
+  }).catch(console.error);
 });
 
 router.delete('/:id', AdminDao.forceAdmin, (req, res) => {
-  ProblemDao.deleteProblem(req.params.id).then(() => res.json(true)).catch(console.error)
+  ProblemDao.deleteProblem(req.params.id).then(() => res.json(true)).catch(console.error);
 });
 
 router.get('/division/:dId', (req, res) => {
-  ProblemDao.getProblemsForDivision(req.params.dId).then(p => res.json(p)).catch(console.error)
+  ProblemDao.getProblemsForDivision(req.params.dId).then(problems => {
+    AdminDao.forceAdmin(req, res, () => {
+      if (!req.params.admin) {
+        problems.forEach(problem => {
+          problem.testCases = problem.testCases.filter(testCase => !testCase.hidden);
+          problem.testCasesCaseSensitive = undefined;
+        });
+      }
+
+      res.json(problems);
+    });
+  }).catch(console.error);
 });
 
 router.post('/submit', TeamDao.forceTeam, (req, res) => {
@@ -53,7 +71,8 @@ router.post('/submit', TeamDao.forceTeam, (req, res) => {
       console.log(next);
     });
 
-    runner.run(problem.testCases).then(results => {
+    // TODO: Clean up redundant code.
+    runner.run(problem.testCases.filter(testCase => !problemSubmission.test || !testCase.hidden)).then(results => {
       sub.unsubscribe();
 
       TeamDao.addSubmission(req.params.team, {

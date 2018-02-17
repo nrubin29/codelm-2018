@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { TeamDao } from '../daos/team.dao';
+import { sanitizeSubmission, sanitizeTeam, TeamDao } from '../daos/team.dao';
 import { AdminDao } from '../daos/admin.dao';
 
 const router = Router();
 
 router.get('/', TeamDao.forceTeam, (req, res) => {
-  res.json(req.params.team);
+  res.json(sanitizeTeam(req.params.team));
 });
 
 router.get('/:id', AdminDao.forceAdmin, (req, res) => {
@@ -20,21 +20,19 @@ router.delete('/:id', AdminDao.forceAdmin, (req, res) => {
   TeamDao.deleteTeam(req.params.id).then(() => res.json(true)).catch(console.error);
 });
 
-// TODO: Don't send hidden test cases and other sensitive data unless user is admin.
-
 router.get('/submissions', TeamDao.forceTeam, (req, res) => {
-  res.json(req.params.team.submissions);
+  res.json(req.params.team.submissions.map(submission => sanitizeSubmission(submission)));
 });
 
 router.get('/submissions/:id', (req, res) => {
-  TeamDao.forceTeam(req, res, err => {
-    if (!err) {
-      res.json(req.params.team.submissions.find(t => t._id.toString() === req.params.id));
+  TeamDao.forceTeam(req, res, () => {
+    if (req.params.team) {
+      res.json(sanitizeSubmission(req.params.team.submissions.find(t => t._id.toString() === req.params.id)));
     }
 
     else {
-      AdminDao.forceAdmin(req, res, err => {
-        if (!err) {
+      AdminDao.forceAdmin(req, res, () => {
+        if (req.params.admin) {
           TeamDao.getSubmission(req.params.id).then(submission => res.json(submission));
         }
 

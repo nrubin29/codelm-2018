@@ -21,10 +21,12 @@ import { ProblemResolve } from './views/dashboard/problem/problem.resolve';
 import { ProblemGuard } from './views/dashboard/problem/problem.guard';
 import { TeamResolve } from './views/admin/team/team.resolve';
 import { DivisionsProblemsResolve } from './views/admin/problems/divisions-problems.resolve';
+import { DisconnectedComponent } from './views/disconnected/disconnected.component';
 
 const routes: Routes = [
-  {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
+  {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: 'login', component: LoginComponent},
+  {path: 'disconnected', component: DisconnectedComponent},
   {path: 'dashboard', component: DashboardComponent, canActivate: [SocketGuard, TeamGuard], children:
     [
       {path: '', component: StandingsComponent},

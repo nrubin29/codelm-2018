@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { SocketService } from '../services/socket.service';
 
 @Injectable()
@@ -12,7 +11,7 @@ export class SocketGuard implements CanActivate {
       return true;
     }
 
-    this.router.navigate(['/login']); // TODO: Replace this with a message that forces the user to go back to the login screen.
+    this.router.navigate(['/disconnected']);
     return false;
   }
 }

@@ -45,6 +45,7 @@ import {
   MatSelectModule,
   MatSidenavModule, MatTableModule, MatTabsModule, MatToolbarModule
 } from '@angular/material';
+import { DisconnectedComponent } from './views/disconnected/disconnected.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import {
     AdminsComponent,
     EditAdminComponent,
     EditTeamComponent,
+    DisconnectedComponent,
   ],
   imports: [
     BrowserModule,

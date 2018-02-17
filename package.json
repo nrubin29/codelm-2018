@@ -5,8 +5,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "webpack && ng build",
-    "build-prod": "webpack && ng build --env=prod",
+    "build": "webpack --config webpack.dev.js && ng build",
+    "build-prod": "webpack --config webpack.prod.js && ng build --env=prod",
     "test": "ng test",
     "lint": "ng lint",
     "webpack": ""
@@ -67,6 +67,8 @@
     "ts-node": "~4.1.0",
     "tslint": "~5.9.1",
     "typescript": ">=2.4.2 <2.6.0",
-    "webpack": "^3.10.0"
+    "uglifyjs-webpack-plugin": "^1.2.0",
+    "webpack": "^3.10.0",
+    "webpack-merge": "^4.1.1"
   }
 }

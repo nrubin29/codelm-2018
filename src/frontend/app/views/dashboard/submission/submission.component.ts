@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute} from '@angular/router';
 import { SubmissionModel } from '../../../../../common/models/submission.model';
 import { CodemirrorComponent } from 'ng2-codemirror';
@@ -11,37 +11,18 @@ import { CodeSaverService } from '../../../services/codesaver.service';
   templateUrl: './submission.component.html',
   styleUrls: ['./submission.component.scss']
 })
-export class SubmissionComponent implements OnInit, AfterViewInit, OnDestroy {
-  private sub: Subscription;
-
+export class SubmissionComponent implements OnInit {
   private submission: SubmissionModel;
   mode: string;
-  @ViewChildren(CodemirrorComponent) codeMirrors: QueryList<CodemirrorComponent>;
+  @ViewChild(CodemirrorComponent) codeMirror: CodemirrorComponent;
 
   constructor(private submissionService: SubmissionService, private codeSaverService: CodeSaverService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
-    // this.sub = this.activatedRoute.paramMap.switchMap((params: ParamMap) => params.get('id')).subscribe(id => {
-    //   this.submission = null;
-    //   this.submissionService.getSubmission(id).then(submission => this.submission = submission).catch(console.log)
-    // });
-
-    this.sub = this.activatedRoute.params.subscribe(params => {
-      this.submission = null;
-      this.submissionService.getSubmission(params['id']).then(submission => {
-        this.submission = submission;
-        this.mode = this.codeSaverService.getMode(submission.language);
-      }).catch(console.log);
-    })
-  }
-
-  ngAfterViewInit() {
-    this.codeMirrors.changes.subscribe((codeMirrors: QueryList<CodemirrorComponent>) => {
-      codeMirrors.first.writeValue(this.submission.code)
+    this.activatedRoute.data.subscribe(data => {
+      this.submission = data['submission'];
+      this.mode = this.codeSaverService.getMode(this.submission.language);
+      this.codeMirror.writeValue(this.submission.code);
     });
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 }

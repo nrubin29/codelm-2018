@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './views/login/login.component';
 import { DashboardComponent } from './views/dashboard/dashboard/dashboard.component';
 import { ProblemComponent } from './views/dashboard/problem/problem.component';
@@ -16,6 +16,9 @@ import { TeamGuard } from './guards/team.guard';
 import { AdminGuard } from './guards/admin.guard';
 import { AdminsComponent } from './views/admin/admins/admins.component';
 import { EditTeamComponent } from './components/edit-team/edit-team.component';
+import { SubmissionResolve } from './views/dashboard/submission/submission.resolve';
+import { ProblemResolve } from './views/dashboard/problem/problem.resolve';
+import { ProblemGuard } from './views/dashboard/problem/problem.guard';
 
 const routes: Routes = [
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
@@ -23,16 +26,16 @@ const routes: Routes = [
   {path: 'dashboard', component: DashboardComponent, canActivate: [SocketGuard, TeamGuard], children:
     [
       {path: '', component: StandingsComponent},
-      {path: 'problem/:id', component: ProblemComponent},
+      {path: 'problem/:id', component: ProblemComponent, canActivate: [ProblemGuard], resolve: {problem: ProblemResolve}},
       {path: 'submit', component: SubmitComponent},
-      {path: 'submission/:id', component: SubmissionComponent}
+      {path: 'submission/:id', component: SubmissionComponent, resolve: {submission: SubmissionResolve}}
     ]
   },
   {path: 'admin', component: AdminComponent, canActivate: [SocketGuard, AdminGuard], children:
       [
         {path: '', component: AdminHomeComponent},
         {path: 'team/:id', component: TeamComponent},
-        {path: 'submission/:id', component: SubmissionComponent},
+        {path: 'submission/:id', component: SubmissionComponent, resolve: {submission: SubmissionResolve}},
         {path: 'divisions', component: DivisionsComponent},
         {path: 'problems', component: ProblemsComponent},
         {path: 'admins', component: AdminsComponent},
@@ -43,6 +46,14 @@ const routes: Routes = [
 
 @NgModule({
   imports: [ RouterModule.forRoot(routes, {useHash: true}) ],
-  exports: [ RouterModule ]
+  exports: [ RouterModule ],
+  providers: [
+    SocketGuard,
+    TeamGuard,
+    AdminGuard,
+    ProblemGuard,
+    SubmissionResolve,
+    ProblemResolve
+  ]
 })
 export class AppRoutingModule {}

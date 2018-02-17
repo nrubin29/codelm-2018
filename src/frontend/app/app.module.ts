@@ -108,10 +108,7 @@ import {
     SocketService,
     AuthService,
     CodeSaverService,
-    SocketGuard,
     AdminService,
-    TeamGuard,
-    AdminGuard,
     PluralizePipe,
   ],
   bootstrap: [AppComponent]

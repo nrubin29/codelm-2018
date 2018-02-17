@@ -2,30 +2,19 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class CodeSaverService {
-  data: any;
-  mode: string;
-
-  constructor() {
-    this.mode = 'text/x-python';
-    this.load();
-  }
+  mode: string = 'text/x-python';
 
   save(problemId: string, mode: string, code: string) {
-    if (!(problemId in this.data)) {
-      this.data[problemId] = {};
-    }
-
-    this.data[problemId][mode] = code;
-    window.localStorage.setItem('code', JSON.stringify(this.data));
+    const problem = JSON.parse(window.localStorage.getItem(problemId) || '{}');
+    problem[mode] = code;
+    window.localStorage.setItem(problemId, JSON.stringify(problem));
   }
 
   get(problemId: string, mode: string): string | null {
-    if (!(problemId in this.data)) {
-      return null;
-    }
-
     this.mode = mode;
-    return this.data[problemId][mode];
+
+    const problem = JSON.parse(window.localStorage.getItem(problemId) || '{}');
+    return problem[mode] || null;
   }
 
   getMode(language?: string) {
@@ -46,9 +35,5 @@ export class CodeSaverService {
       'text/x-java': 'java',
       'text/x-c++src': 'cpp'
     }[mode || this.mode];
-  }
-
-  private load() {
-    this.data = JSON.parse(window.localStorage.getItem('code')) || {};
   }
 }

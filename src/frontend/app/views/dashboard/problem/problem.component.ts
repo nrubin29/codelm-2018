@@ -27,31 +27,24 @@ export class ProblemComponent implements OnInit, AfterViewInit {
   constructor(private problemService: ProblemService, private teamService: TeamService, private codeSaverService: CodeSaverService, private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    this.language = this.codeSaverService.getLanguage();
-
     this.teamService.team.subscribe(team => this.team = team);
 
-    this.activatedRoute.params.subscribe(params => {
-      this.problem = null;
-      this.submissions = [];
-
-      this.problemService.getProblem(params['id']).then(problem => {
-        this.problem = problem;
-        this.submissions = this.team.submissions.filter(submission => submission.problem._id === problem._id);
-
-        // TODO: Is it safe to assume that points > 0 means success?
-        const solved = this.submissions.filter(submission => submission.points > 0);
-        if (solved.length > 0) {
-          this.router.navigate(['/dashboard', 'submission', solved[0]._id]);
-        }
-      }).catch(console.log);
+    this.activatedRoute.data.subscribe(data => {
+      this.problem = data['problem'];
+      this.submissions = this.team.submissions.filter(submission => submission.problem._id === this.problem._id);
+      this.language = this.codeSaverService.getLanguage();
     });
   }
 
   ngAfterViewInit() {
+    this.write(this.codeMirrors.first);
     this.codeMirrors.changes.subscribe((codeMirrors: QueryList<CodemirrorComponent>) => {
-      codeMirrors.forEach(cm => cm.writeValue(this.codeSaverService.get(this.problem._id, cm.config.mode)));
+      codeMirrors.forEach(cm => this.write(cm));
     });
+  }
+
+  private write(codeMirror: CodemirrorComponent) {
+    codeMirror.writeValue(this.codeSaverService.get(this.problem._id, codeMirror.config.mode));
   }
 
   saveCode() {

@@ -15,8 +15,8 @@ export class SocketService {
   connect(): Promise<void> {
     this.socket = io(location.protocol + '//' + location.hostname + environment.socketSuffix);
     this.socket.on('disconnect', () => {
-      // TODO: Display a message saying that it disconnected.
-      this.router.navigate(['/login']);
+      this.socket.close();
+      this.router.navigate(['/disconnected']);
     });
 
     return new Promise<void>((resolve, reject) => {
@@ -26,7 +26,7 @@ export class SocketService {
             observer.next(packet)
           });
           // return () => {
-          //     this.socket.off('event');
+          //     this.socket.off('packet');
           // }
         });
         resolve();
@@ -43,7 +43,6 @@ export class SocketService {
       throw new Error('Socket is not connected!');
     }
 
-    console.log(`Emitting packet ${JSON.stringify(packet)}`);
     this.socket.emit('packet', packet);
   }
 }

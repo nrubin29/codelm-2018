@@ -14,19 +14,6 @@
   font-family: 'Roboto Mono', monospace;
 }
 
-.CodeMirror {
-  border: thin solid #ddd;
-}
-
-.CodeMirror * {
-  @extend .mono;
-  cursor: text;
-}
-
-.CodeMirror-gutter {
-  cursor: default;
-}
-
 code {
   @extend .mono;
   white-space: pre;

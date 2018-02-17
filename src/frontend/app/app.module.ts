@@ -6,7 +6,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { LoginComponent } from './views/login/login.component';
 import { DashboardComponent } from './views/dashboard/dashboard/dashboard.component';
 import { ProblemComponent } from './views/dashboard/problem/problem.component';
-import { CodemirrorModule } from 'ng2-codemirror';
 import { StandingsComponent } from './views/dashboard/standings/standings.component';
 import { AdminComponent } from './views/admin/admin/admin.component';
 import { SubmitComponent } from './views/dashboard/submit/submit.component';
@@ -46,6 +45,7 @@ import {
   MatSidenavModule, MatTableModule, MatTabsModule, MatToolbarModule
 } from '@angular/material';
 import { DisconnectedComponent } from './views/disconnected/disconnected.component';
+import { CodeMirrorComponent } from './components/code-mirror/code-mirror.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +71,7 @@ import { DisconnectedComponent } from './views/disconnected/disconnected.compone
     EditAdminComponent,
     EditTeamComponent,
     DisconnectedComponent,
+    CodeMirrorComponent,
   ],
   imports: [
     BrowserModule,
@@ -78,7 +79,6 @@ import { DisconnectedComponent } from './views/disconnected/disconnected.compone
     ReactiveFormsModule,
     HttpClientModule,
     // HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService),
-    CodemirrorModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatCardModule,

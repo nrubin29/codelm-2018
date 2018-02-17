@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute} from '@angular/router';
 import { SubmissionModel } from '../../../../../common/models/submission.model';
-import { CodemirrorComponent } from 'ng2-codemirror';
 import { SubmissionService } from '../../../services/submission.service';
-import { Subscription } from 'rxjs/Subscription';
 import { CodeSaverService } from '../../../services/codesaver.service';
+import { CodeMirrorComponent } from '../../../components/code-mirror/code-mirror.component';
 
 @Component({
   selector: 'app-result',
@@ -14,7 +13,7 @@ import { CodeSaverService } from '../../../services/codesaver.service';
 export class SubmissionComponent implements OnInit {
   private submission: SubmissionModel;
   mode: string;
-  @ViewChild(CodemirrorComponent) codeMirror: CodemirrorComponent;
+  @ViewChild(CodeMirrorComponent) codeMirror: CodeMirrorComponent;
 
   constructor(private submissionService: SubmissionService, private codeSaverService: CodeSaverService, private activatedRoute: ActivatedRoute) { }
 

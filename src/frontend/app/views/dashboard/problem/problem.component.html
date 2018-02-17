@@ -38,9 +38,9 @@
       </mat-form-field>
     </form>
   </div>
-  <codemirror [config]="{ lineNumbers: true, mode: 'text/x-python' }" *ngIf="language === 'python'"></codemirror>
-  <codemirror [config]="{ lineNumbers: true, mode: 'text/x-java' }" *ngIf="language === 'java'"></codemirror>
-  <codemirror [config]="{ lineNumbers: true, mode: 'text/x-c++src' }" *ngIf="language === 'cpp'"></codemirror>
+  <app-code-mirror [config]="{ lineNumbers: true, mode: 'text/x-python' }" *ngIf="language === 'python'"></app-code-mirror>
+  <app-code-mirror [config]="{ lineNumbers: true, mode: 'text/x-java' }" *ngIf="language === 'java'"></app-code-mirror>
+  <app-code-mirror [config]="{ lineNumbers: true, mode: 'text/x-c++src' }" *ngIf="language === 'cpp'"></app-code-mirror>
   <br>
   <app-card title="Submissions" [pad]="false" *ngIf="submissions.length > 0">
     <mat-list>

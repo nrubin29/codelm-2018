@@ -3,8 +3,6 @@ import { AdminDao } from '../daos/admin.dao';
 
 const router = Router();
 
-// TODO: Don't send hidden data unless user is admin.
-
 router.get('/', AdminDao.forceAdmin, (req, res) => {
   AdminDao.getAdmins().then(admins => res.json(admins));
 });

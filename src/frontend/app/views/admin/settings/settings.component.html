@@ -1,0 +1,25 @@
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+        <span>Settings</span>
+    </mat-toolbar-row>
+</mat-toolbar>
+<div class="container">
+    <form #form="ngForm" [formGroup]="formGroup" (submit)="submit(form)" class="flex column">
+        <mat-form-field>
+            <mat-select placeholder="State" formControlName="state" required>
+                <mat-option *ngFor="let state of states" [value]="state">{{state}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput type="datetime-local" formControlName="end" placeholder="End Datetime">
+        </mat-form-field>
+        <!--<dp-day-time-calendar theme="dp-material" formControlName="end"></dp-day-time-calendar>-->
+        <!--<mat-form-field>-->
+            <!--<input matInput formControlName="end" placeholder="End Datetime" dpDayPicker [dpDayPicker]="{}" mode="daytime" theme="dp-material" attachTo=".mat-input-wrapper">-->
+        <!--</mat-form-field>-->
+        <br>
+        <button mat-raised-button color="accent" type="submit">Save</button>
+        <br>
+        <button mat-raised-button color="warn" type="button" (click)="reset()">Reset</button>
+    </form>
+</div>

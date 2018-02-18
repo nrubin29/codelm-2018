@@ -22,6 +22,8 @@ import { ProblemGuard } from './views/dashboard/problem/problem.guard';
 import { TeamResolve } from './views/admin/team/team.resolve';
 import { DivisionsProblemsResolve } from './views/admin/problems/divisions-problems.resolve';
 import { DisconnectedComponent } from './views/disconnected/disconnected.component';
+import { SettingsResolve } from './views/admin/settings/settings.resolve';
+import { SettingsComponent } from './views/admin/settings/settings.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -38,6 +40,7 @@ const routes: Routes = [
   {path: 'admin', component: AdminComponent, canActivate: [SocketGuard, AdminGuard], children:
       [
         {path: '', component: AdminHomeComponent},
+        {path: 'settings', component: SettingsComponent, resolve: {settings: SettingsResolve}},
         {path: 'team/:id', component: TeamComponent, resolve: {team: TeamResolve}},
         {path: 'submission/:id', component: SubmissionComponent, resolve: {submission: SubmissionResolve}},
         {path: 'divisions', component: DivisionsComponent},
@@ -59,7 +62,8 @@ const routes: Routes = [
     SubmissionResolve,
     ProblemResolve,
     TeamResolve,
-    DivisionsProblemsResolve
+    DivisionsProblemsResolve,
+    SettingsResolve
   ]
 })
 export class AppRoutingModule {}

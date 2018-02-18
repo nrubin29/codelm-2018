@@ -44,6 +44,7 @@ router.get('/division/:dId', (req, res) => {
   }).catch(console.error);
 });
 
+// TODO: Don't allow submit unless SettingsState matches team's DivisionType. (Write a permissions helper util for this)
 router.post('/submit', TeamDao.forceTeam, (req, res) => {
   const problemSubmission = req.body as ProblemSubmission;
 

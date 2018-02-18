@@ -12,7 +12,11 @@ import { LoginResponse, LoginResponsePacket } from '../common/packets/login.resp
 import './daos/dao';
 import { TeamDao } from './daos/team.dao';
 import { AdminDao } from './daos/admin.dao';
+import { SettingsDao } from './daos/settings.dao';
+import { DivisionType } from '../common/models/division.model';
+import { SettingsState } from '../common/models/settings.model';
 
+import settingsRoute from './routes/settings.route';
 import divisionRoute from './routes/division.route';
 import problemRoute from './routes/problem.route';
 import teamRoute from './routes/team.route';
@@ -24,6 +28,7 @@ app.use(bodyParser.urlencoded({extended: true})); // parse application/x-www-for
 app.use(bodyParser.json()); // parse application/json
 app.use(bodyParser.json({type: 'application/vnd.api+json'})); // Parse application/vnd.api+json as json
 app.use(express.static('./dist/frontend'));
+app.use('/api/settings', settingsRoute);
 app.use('/api/divisions', divisionRoute);
 app.use('/api/problems', problemRoute);
 app.use('/api/teams', teamRoute);
@@ -45,7 +50,9 @@ mongoose.connect('mongodb://localhost/codelm', {useMongoClient: true}).then(() =
           let loginPacket = packet as LoginPacket;
           // TODO: Clean this up.
           TeamDao.login(loginPacket.username, loginPacket.password).then(team => {
-            socket.emit('packet', new LoginResponsePacket(LoginResponse.SuccessTeam, team));
+            SettingsDao.getSettings().then(settings => {
+              socket.emit('packet', new LoginResponsePacket(team.division.type === DivisionType.Special || settings.state === SettingsState.Debug || (settings.state === SettingsState.Competition && team.division.type === DivisionType.Competition) || (settings.state === SettingsState.Preliminaries && team.division.type === DivisionType.Preliminaries) ? LoginResponse.SuccessTeam : LoginResponse.Closed, team));
+            }).catch(console.error);
           }).catch((response: LoginResponse | Error) => {
             if (response === LoginResponse.NotFound) {
               AdminDao.login(loginPacket.username, loginPacket.password).then(admin => {

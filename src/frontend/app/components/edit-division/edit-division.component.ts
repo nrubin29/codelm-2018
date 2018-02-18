@@ -4,6 +4,8 @@ import { DivisionModel } from '../../../../common/models/division.model';
 import { DivisionService } from '../../services/division.service';
 import { DivisionsComponent } from '../../views/admin/divisions/divisions.component';
 
+// TODO: Add `type` to the form.
+
 @Component({
   selector: 'app-edit-division',
   templateUrl: './edit-division.component.html',
@@ -17,7 +19,7 @@ export class EditDivisionComponent implements OnInit {
   constructor(private divisionService: DivisionService, private divisionsComponent: DivisionsComponent) { }
 
   ngOnInit() {
-    this.division = this.division ? this.division : {_id: undefined, name: undefined};
+    this.division = this.division ? this.division : {_id: undefined, name: undefined, type: undefined};
 
     this.formGroup = new FormGroup({
       _id: new FormControl(this.division._id),

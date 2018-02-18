@@ -46,6 +46,9 @@ import {
 } from '@angular/material';
 import { DisconnectedComponent } from './views/disconnected/disconnected.component';
 import { CodeMirrorComponent } from './components/code-mirror/code-mirror.component';
+import { SettingsComponent } from './views/admin/settings/settings.component';
+import { SettingsService } from './services/settings.service';
+import { DpDatePickerModule } from 'ng2-date-picker';
 
 @NgModule({
   declarations: [
@@ -72,6 +75,7 @@ import { CodeMirrorComponent } from './components/code-mirror/code-mirror.compon
     EditTeamComponent,
     DisconnectedComponent,
     CodeMirrorComponent,
+    SettingsComponent,
   ],
   imports: [
     BrowserModule,
@@ -95,7 +99,8 @@ import { CodeMirrorComponent } from './components/code-mirror/code-mirror.compon
     MatInputModule,
     MatTabsModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    DpDatePickerModule
   ],
   providers: [
     RestService,
@@ -107,6 +112,7 @@ import { CodeMirrorComponent } from './components/code-mirror/code-mirror.compon
     AuthService,
     CodeSaverService,
     AdminService,
+    SettingsService,
     PluralizePipe,
   ],
   entryComponents: [EditProblemComponent],

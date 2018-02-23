@@ -4,8 +4,8 @@ import { SettingsDao } from '../daos/settings.dao';
 
 const router = Router();
 
-// TODO: Don't require admin, sanitize SettingsModel object as needed, or send specific settings info when team logs in.
-router.get('/', AdminDao.forceAdmin, (req, res) => {
+// TODO: Sanitize SettingsModel object as needed.
+router.get('/', /*AdminDao.forceAdmin,*/ (req, res) => {
   SettingsDao.getSettings().then(settings => res.json(settings));
 });
 

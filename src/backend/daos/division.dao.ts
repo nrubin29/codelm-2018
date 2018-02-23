@@ -13,7 +13,11 @@ const Division = mongoose.model<DivisionDocumentType>('Division', DivisionSchema
 
 export class DivisionDao {
   static getDivisions(): Promise<DivisionModel[]> {
-    return Division.find().populate('problems').exec()
+    return Division.find().exec();
+  }
+
+  static getDivisionsOfType(divisionType: DivisionType): Promise<DivisionModel[]> {
+    return Division.find({type: divisionType}).exec();
   }
 
   static addOrUpdateDivision(division: DivisionModel): Promise<DivisionModel> {

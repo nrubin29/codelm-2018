@@ -74,7 +74,7 @@ SubmissionSchema.virtual('points').get(function() {
 });
 
 const TeamSchema = new mongoose.Schema({
-  username: String,
+  username: {type: String, unique: true},
   password: String,
   salt: String,
   members: String,
@@ -168,6 +168,34 @@ export class TeamDao {
     else {
       return Team.findByIdAndUpdate(team._id, team, {new: true}).exec();
     }
+  }
+
+  // TODO: Consolidate code between register() and addOrUpdateTeam()
+  static register(team: any): Promise<TeamModel> {
+    const salt = crypto.randomBytes(16).toString('hex');
+    const hash = crypto.pbkdf2Sync(team.password, new Buffer(salt), 1000, 64, 'sha512').toString('hex');
+
+    team.salt = salt;
+    team.password = hash;
+
+    // TODO: Check for valid division.
+
+    return new Promise<TeamModel>((resolve, reject) => {
+      Team.create(team as TeamModel).then(team => {
+        // This is needed to populate the necessary fields.
+        TeamDao.getTeam(team._id).then(team => {
+          resolve(team);
+        }).catch(reject);
+      }).catch(err => {
+        if (err.code !== undefined && err.code === 11000) { // It's a MongoError for not-unique username.
+          reject(LoginResponse.AlreadyExists);
+        }
+
+        else {
+          reject(err);
+        }
+      });
+    });
   }
 
   static deleteTeam(id: string): Promise<void> {

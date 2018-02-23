@@ -24,12 +24,20 @@ import { DivisionsProblemsResolve } from './views/admin/problems/divisions-probl
 import { DisconnectedComponent } from './views/disconnected/disconnected.component';
 import { SettingsResolve } from './views/admin/settings/settings.resolve';
 import { SettingsComponent } from './views/admin/settings/settings.component';
+import { RegisterComponent } from './views/register/register.component';
+import { DivisionsResolve } from './views/admin/divisions/divisions.resolve';
+import { EndComponent } from './views/dashboard/end/end.component';
+import { EndGuard } from './guards/end.guard';
+import { NotEndGuard } from './guards/not-end.guard';
+import { DisconnectGuard } from './guards/disconnect.guard';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
-  {path: 'login', component: LoginComponent},
-  {path: 'disconnected', component: DisconnectedComponent},
-  {path: 'dashboard', component: DashboardComponent, canActivate: [SocketGuard, TeamGuard], children:
+  {path: 'login', component: LoginComponent, canActivate: [EndGuard]},
+  {path: 'register', component: RegisterComponent, canActivate: [EndGuard], resolve: {divisions: DivisionsResolve}},
+  {path: 'disconnected', component: DisconnectedComponent, canActivate: [DisconnectGuard, EndGuard]},
+  {path: 'end', component: EndComponent, canActivate: [NotEndGuard]},
+  {path: 'dashboard', component: DashboardComponent, canActivate: [SocketGuard, TeamGuard, EndGuard], children:
     [
       {path: '', component: StandingsComponent},
       {path: 'problem/:id', component: ProblemComponent, canActivate: [ProblemGuard], resolve: {problem: ProblemResolve}},
@@ -59,11 +67,15 @@ const routes: Routes = [
     TeamGuard,
     AdminGuard,
     ProblemGuard,
+    EndGuard,
+    NotEndGuard,
+    DisconnectGuard,
     SubmissionResolve,
     ProblemResolve,
     TeamResolve,
     DivisionsProblemsResolve,
-    SettingsResolve
+    SettingsResolve,
+    DivisionsResolve
   ]
 })
 export class AppRoutingModule {}

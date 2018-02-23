@@ -1,12 +1,21 @@
 import { Router } from 'express';
 import { DivisionDao } from '../daos/division.dao';
-import { DivisionModel } from '../../common/models/division.model';
+import { DivisionModel, DivisionType } from '../../common/models/division.model';
 import { AdminDao } from '../daos/admin.dao';
 
 const router = Router();
 
-router.get('/', AdminDao.forceAdmin, (req, res) => {
-  DivisionDao.getDivisions().then(divisions => res.json(divisions));
+// TODO: If there is any sensitive Division data, don't send it.
+router.get('/', (req, res) => {
+  AdminDao.forceAdmin(req, res, () => {
+    if (req.params.admin) {
+      DivisionDao.getDivisions().then(divisions => res.json(divisions));
+    }
+
+    else {
+      DivisionDao.getDivisionsOfType(DivisionType.Preliminaries).then(divisions => res.json(divisions));
+    }
+  });
 });
 
 router.put('/', AdminDao.forceAdmin, (req, res) => {

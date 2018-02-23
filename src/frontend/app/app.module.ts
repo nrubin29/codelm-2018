@@ -49,6 +49,9 @@ import { CodeMirrorComponent } from './components/code-mirror/code-mirror.compon
 import { SettingsComponent } from './views/admin/settings/settings.component';
 import { SettingsService } from './services/settings.service';
 import { DpDatePickerModule } from 'ng2-date-picker';
+import { RegisterComponent } from './views/register/register.component';
+import { CountdownComponent } from './components/countdown/countdown.component';
+import { EndComponent } from './views/dashboard/end/end.component';
 
 @NgModule({
   declarations: [
@@ -76,6 +79,9 @@ import { DpDatePickerModule } from 'ng2-date-picker';
     DisconnectedComponent,
     CodeMirrorComponent,
     SettingsComponent,
+    RegisterComponent,
+    CountdownComponent,
+    EndComponent
   ],
   imports: [
     BrowserModule,

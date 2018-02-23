@@ -34,7 +34,7 @@ export class EditProblemComponent implements OnInit {
       points: new FormControl(this.problem.points),
       testCasesCaseSensitive: new FormControl(this.problem.testCasesCaseSensitive),
       testCases: this.testCases
-    })
+    });
   }
 
   get formValue() {

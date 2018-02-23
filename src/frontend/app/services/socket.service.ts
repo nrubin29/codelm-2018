@@ -14,10 +14,6 @@ export class SocketService {
 
   connect(): Promise<void> {
     this.socket = io(location.protocol + '//' + location.hostname + environment.socketSuffix);
-    this.socket.on('disconnect', () => {
-      this.socket.close();
-      this.router.navigate(['/disconnected']);
-    });
 
     return new Promise<void>((resolve, reject) => {
       this.socket.on('connect', () => {
@@ -31,6 +27,13 @@ export class SocketService {
         });
         resolve();
       });
+    });
+  }
+
+  listenOnDisconnect() {
+    this.socket.on('disconnect', () => {
+      this.socket.close();
+      this.router.navigate(['/disconnected']);
     });
   }
 

@@ -9,5 +9,9 @@
     & app-card:last-child > mat-card {
       margin-bottom: 0;
     }
+
+    & .mat-chip-list-wrapper {
+      justify-content: flex-end;
+    }
   }
 }

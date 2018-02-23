@@ -11,6 +11,7 @@ export class DivisionsComponent implements OnInit {
   divisions: DivisionModel[] = [];
   division: DivisionModel = undefined;
 
+  // TODO: Use the divisions resolve.
   constructor(private divisionService: DivisionService) { }
 
   ngOnInit() {

@@ -1,5 +1,6 @@
 import mongoose = require('mongoose');
 import { DefaultSettingsModel, SettingsModel, SettingsState } from '../../common/models/settings.model';
+import { Job, scheduleJob } from 'node-schedule';
 
 type SettingsType = SettingsModel & mongoose.Document;
 
@@ -11,6 +12,8 @@ const SettingsSchema = new mongoose.Schema({
 const Settings = mongoose.model<SettingsType>('Settings', SettingsSchema);
 
 export class SettingsDao {
+  private static job: Job;
+
   static getSettings(): Promise<SettingsModel> {
     return new Promise<SettingsModel>((resolve, reject) => {
       return Settings.findOne().exec().then(settings => {
@@ -29,7 +32,24 @@ export class SettingsDao {
 
   static updateSettings(settings: any): Promise<SettingsModel> {
     // TODO: If needed, send packet to kick connected teams.
-    return Settings.updateOne({}, settings, {upsert: true, new: true}).exec();
+    return new Promise<SettingsModel>((resolve, reject) => {
+      SettingsDao.getSettings().then((oldSettings: SettingsModel) => {
+        Settings.updateOne({}, settings, {upsert: true, new: true}).exec().then((newSettings: SettingsModel) => {
+          if (oldSettings.end !== newSettings.end) {
+            if (SettingsDao.job) {
+              SettingsDao.job.cancel();
+            }
+
+            SettingsDao.job = scheduleJob(settings.end, () => {
+              settings.state = SettingsState.End;
+              this.updateSettings(settings);
+            });
+          }
+
+          resolve(newSettings);
+        }).catch(reject);
+      });
+    });
   }
 
   static resetSettings(): Promise<SettingsModel> {

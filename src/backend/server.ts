@@ -7,6 +7,7 @@ import io = require('socket.io');
 
 import Packet from '../common/packets/packet';
 import { LoginPacket } from '../common/packets/login.packet';
+import { RegisterPacket } from '../common/packets/register.packet';
 import { LoginResponse, LoginResponsePacket } from '../common/packets/login.response.packet';
 
 import './daos/dao';
@@ -45,13 +46,19 @@ mongoose.connect('mongodb://localhost/codelm', {useMongoClient: true}).then(() =
     console.log('Started socket server');
 
     socketServer.on('connection', socket => {
+      // TODO: Move this logic to its own file.
       socket.on('packet', (packet: Packet) => {
         if (packet.name === 'login') {
           let loginPacket = packet as LoginPacket;
           // TODO: Clean this up.
           TeamDao.login(loginPacket.username, loginPacket.password).then(team => {
             SettingsDao.getSettings().then(settings => {
-              socket.emit('packet', new LoginResponsePacket(team.division.type === DivisionType.Special || settings.state === SettingsState.Debug || (settings.state === SettingsState.Competition && team.division.type === DivisionType.Competition) || (settings.state === SettingsState.Preliminaries && team.division.type === DivisionType.Preliminaries) ? LoginResponse.SuccessTeam : LoginResponse.Closed, team));
+              const response = team.division.type === DivisionType.Special || settings.state === SettingsState.Debug || (settings.state === SettingsState.Competition && team.division.type === DivisionType.Competition) || (settings.state === SettingsState.Preliminaries && team.division.type === DivisionType.Preliminaries) ? LoginResponse.SuccessTeam : LoginResponse.Closed;
+              socket.emit('packet', new LoginResponsePacket(response, response === LoginResponse.SuccessTeam ? team : undefined));
+
+              if (response === LoginResponse.Closed) {
+                socket.disconnect(true);
+              }
             }).catch(console.error);
           }).catch((response: LoginResponse | Error) => {
             if (response === LoginResponse.NotFound) {
@@ -64,11 +71,32 @@ mongoose.connect('mongodb://localhost/codelm', {useMongoClient: true}).then(() =
 
                 else {
                   socket.emit('packet', new LoginResponsePacket(response as LoginResponse));
+                  socket.disconnect(true);
                 }
               });
             }
 
             else if ((response as any).stack !== undefined) {
+              console.error(response);
+            }
+
+            else {
+              socket.emit('packet', new LoginResponsePacket(response as LoginResponse));
+              socket.disconnect(true);
+            }
+          });
+        }
+
+        else if (packet.name === 'register') {
+          let registerPacket = packet as RegisterPacket;
+          // TODO: Clean this up.
+          TeamDao.register(registerPacket.teamData).then(team => {
+            console.log(team);
+            SettingsDao.getSettings().then(settings => {
+              socket.emit('packet', new LoginResponsePacket(settings.state === SettingsState.Debug || (settings.state === SettingsState.Preliminaries && team.division.type === DivisionType.Preliminaries) ? LoginResponse.SuccessTeam : LoginResponse.Closed, team));
+            }).catch(console.error);
+          }).catch((response: LoginResponse | Error) => {
+            if ((response as any).stack !== undefined) {
               console.error(response);
             }
 

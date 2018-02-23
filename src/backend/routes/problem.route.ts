@@ -5,6 +5,7 @@ import { TeamDao, isTestCaseSubmissionCorrect } from '../daos/team.dao';
 import { ProblemSubmission } from '../../common/problem-submission';
 import { ProblemModel } from '../../common/models/problem.model';
 import { AdminDao } from '../daos/admin.dao';
+import uuid = require('uuid');
 
 const router = Router();
 
@@ -50,20 +51,21 @@ router.post('/submit', TeamDao.forceTeam, (req, res) => {
 
   ProblemDao.getProblem(problemSubmission.problemId).then(problem => {
     let runner: CodeRunner;
+    const folder = '/tmp/' + uuid();
 
     switch (problemSubmission.language) {
       case 'python': {
-        runner = new PythonRunner("/tmp/coderunner-test", [new CodeFile("main.py", problemSubmission.code)]);
+        runner = new PythonRunner(folder, [new CodeFile("main.py", problemSubmission.code)]);
         break;
       }
 
       case 'java': {
-        runner = new JavaRunner("/tmp/coderunner-test", [new CodeFile("Main.java", problemSubmission.code)]);
+        runner = new JavaRunner(folder, [new CodeFile("Main.java", problemSubmission.code)]);
         break;
       }
 
       case 'cpp': {
-        runner = new CppRunner("/tmp/coderunner-test", [new CodeFile("main.cpp", problemSubmission.code)]);
+        runner = new CppRunner(folder, [new CodeFile("main.cpp", problemSubmission.code)]);
         break;
       }
     }

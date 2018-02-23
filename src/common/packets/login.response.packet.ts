@@ -7,7 +7,8 @@ export const enum LoginResponse {
   SuccessAdmin = 'Success Admin',
   IncorrectPassword = 'Incorrect Password',
   NotFound = 'Account not found',
-  Closed = 'You cannot log in at this time'
+  Closed = 'You cannot log in at this time',
+  AlreadyExists = 'An account with that username already exists'
 }
 
 export class LoginResponsePacket extends Packet {

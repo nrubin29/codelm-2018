@@ -8,8 +8,10 @@
 <div class="flex display-side container">
     <div>
         <app-card title="Result">
-            <h2>{{submission.result}}</h2>
-            <h3>{{submission.points}} {{'point'|pluralize:submission.points}}</h3>
+            <div class="flex display-side horizontal">
+                <h2>{{submission.result}}</h2>
+                <mat-chip-list><mat-chip color="accent" selected="true">{{submission.points}} {{'point'|pluralize:submission.points}}</mat-chip></mat-chip-list>
+            </div>
         </app-card>
         <app-card title="IO" [pad]="false" *ngIf="submission.testCases.length > 0">
             <mat-table #table [dataSource]="submission.testCases">

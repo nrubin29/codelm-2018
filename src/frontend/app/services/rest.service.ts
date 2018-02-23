@@ -9,15 +9,15 @@ export class RestService {
   constructor(private http: HttpClient) { }
 
   private get headers(): HttpHeaders {
-    return new HttpHeaders().set('Authorization', 'Basic ' + this.authId)
+    return new HttpHeaders().set('Authorization', 'Basic ' + this.authId);
   }
 
   get<T>(endpoint: string): Promise<T> {
-    return this.http.get<T>(this.baseUrl + endpoint, {headers: this.headers}).toPromise()
+    return this.http.get<T>(this.baseUrl + endpoint, {headers: this.headers}).toPromise();
   }
 
   post<T>(endpoint: string, body: any): Promise<T> {
-    return this.http.post<T>(this.baseUrl + endpoint, body, {headers: this.headers}).toPromise()
+    return this.http.post<T>(this.baseUrl + endpoint, body, {headers: this.headers}).toPromise();
   }
 
   put<T>(endpoint: string, body: any): Promise<T> {

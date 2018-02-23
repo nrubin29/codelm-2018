@@ -9,10 +9,14 @@ import { TeamService } from '../../../services/team.service';
 })
 export class StandingsComponent implements OnInit {
   team: TeamModel;
+  link: string;
 
   constructor(private teamService: TeamService) { }
 
   ngOnInit() {
-    this.teamService.team.subscribe(team => this.team = team);
+    this.teamService.team.subscribe(team => {
+      this.team = team;
+      this.link = '/assets/' + team.division.name.split(new RegExp(/[\s/]/)).join('') + '.zip';
+    });
   }
 }

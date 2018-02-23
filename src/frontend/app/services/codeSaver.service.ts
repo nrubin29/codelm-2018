@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class CodeSaverService {
-  mode: string = 'text/x-python';
+  mode: string = 'text/x-java';
 
   save(problemId: string, mode: string, code: string) {
     const problem = JSON.parse(window.localStorage.getItem(problemId) || '{}');

@@ -1,7 +1,7 @@
 import _ = require('mocha');
 import chai = require('chai');
 import chaiAsPromised = require('chai-as-promised');
-import { PythonRunner, CodeFile, RunError, CppRunner } from './coderunner';
+import { PythonRunner, CodeFile, RunError, CppRunner, JavaRunner } from './coderunner';
 
 chai.use(chaiAsPromised);
 chai.should();
@@ -83,6 +83,62 @@ describe('CodeRunner', () => {
           hidden: false,
           input: "Peace",
           output: "Peace"
+        }
+      ]).should.eventually.be.fulfilled;
+    });
+  });
+
+  describe('#prettyRectangle', () => {
+    it('should succeed', () => {
+      const runner = new JavaRunner("coderunner-test", [new CodeFile("PrettyRectangle.java", `import java.util.Scanner;
+
+public class PrettyRectangle {
+
+	public static void main(String[] args) {
+		Scanner s = new Scanner(System.in);
+		
+		int n = s.nextInt();
+		
+		for (int i = 1; i<=n; i++){
+			for (int j = 1; j <=n; j++) {
+				if (i==1 || j==1 || i==n || j==n)
+					System.out.print("-");
+				else
+					System.out.print("!");
+			}
+			System.out.println( );
+		}
+	}
+}`)]);
+
+      runner.subject.subscribe(next => {
+        console.log(next);
+      });
+
+      return runner.run([
+        {
+          id: 1,
+          hidden: false,
+          input: "1",
+          output: "-"
+        },
+        {
+          id: 2,
+          hidden: false,
+          input: "2",
+          output: "--\n--"
+        },
+        {
+          id: 3,
+          hidden: false,
+          input: "3",
+          output: "---\n-!-\n---"
+        },
+        {
+          id: 4,
+          hidden: true,
+          input: "5",
+          output: "-----\n-!!!-\n-!!!-\n-!!!-\n-----"
         }
       ]).should.eventually.be.fulfilled;
     });

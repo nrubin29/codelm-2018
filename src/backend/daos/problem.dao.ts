@@ -26,7 +26,7 @@ export class ProblemDao {
   }
 
   static getProblemsForDivision(division: string): Promise<ProblemModel[]> {
-    return Problem.find({divisions: {_id: division}}).populate('divisions').exec()
+    return Problem.find({divisions: {_id: division}}).sort('id').populate('divisions').exec()
   }
 
   static addOrUpdateProblem(problem: ProblemModel): Promise<ProblemModel> {

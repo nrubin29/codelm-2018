@@ -4,16 +4,25 @@ import { TestCaseModel } from '../common/models/problem.model';
 import { Subject } from 'rxjs/Subject';
 import { TestCaseSubmissionModel } from '../common/models/submission.model';
 
-type RunResult = {output: string}
-export type TestCaseRunResult = TestCaseSubmissionModel & RunResult
+// This interface is used internally by runProcess().
+interface ProcessRunResult {
+  output: string;
+  error: string;
+}
 
-export type RunError = {stage: 'compile' | 'run', testCase?: number, error: string};
+interface RunResult {
+  output: string
+}
+
+export type TestCaseRunResult = TestCaseSubmissionModel & RunResult;
+
+export interface RunError {
+  stage: 'compile' | 'run';
+  testCase?: number;
+  error: string
+}
 
 export class CodeFile {
-  /*
-  This class represents a single code file. A CodeRunner can have multiple files.
-  */
-
   constructor(public name: string, public code: string) { }
 
   static fromFile(name: string, path: string): Promise<CodeFile> {
@@ -38,89 +47,85 @@ export class CodeRunner {
 
   }
 
-  // TODO: Refactor runProc and runTestCase to keep them DRY.
   protected runProc(cmd: string, args: string[]): Promise<RunResult> {
     return new Promise<RunResult>((resolve: (value: RunResult) => void, reject: (reason: RunError) => void) => {
-      try {
-        // TODO: Timeout!
-        const process = spawn(cmd, args, { cwd: this.folder });
-        const output: string[] = [];
-        const error: string[] = [];
+      this.runProcess(cmd, args).then(data => {
+        const {output, error} = data;
 
-        process.stdout.on('data', data => {
-          output.push(data.toString().replace(/^\s+|\s+$/g, ''));
-        });
+        if (error.length > 0) {
+          reject({
+            stage: 'compile',
+            error: error
+          });
+        }
 
-        process.stderr.on('data', data => {
-          error.push(data.toString().replace(/^\s+|\s+$/g, ''));
-        });
-
-        process.on('close', () => {
-          if (error.length > 0) {
-            reject({
-              stage: 'compile',
-              error: error.join('\n')
-            });
-          }
-
-          else {
-            resolve({
-              output: output.filter(line => line !== '').join('\n'),
-            });
-          }
-        });
-      }
-
-      catch (e) {
-        reject(e);
-      }
-    })
+        else {
+          resolve({
+            output: output
+          });
+        }
+      }).catch(reject);
+    });
   }
 
   protected runTestCaseProc(cmd: string, args: string[], testCase: TestCaseModel): Promise<TestCaseRunResult> {
     return new Promise<TestCaseRunResult>((resolve: (value: TestCaseRunResult) => void, reject: (reason: RunError) => void) => {
+      this.runProcess(cmd, args, testCase.input).then(data => {
+        const {output, error} = data;
+
+        if (error.length > 0) {
+          reject({
+            stage: 'run',
+            testCase: testCase.id,
+            error: error
+          });
+        }
+
+        else {
+          resolve({
+            id: testCase.id,
+            hidden: testCase.hidden,
+            input: testCase.input,
+            output: output,
+            correctOutput: testCase.output
+          });
+        }
+      }).catch(reject);
+    });
+  }
+
+  private runProcess(cmd: string, args: string[], input?: string): Promise<ProcessRunResult> {
+    return new Promise<ProcessRunResult>((resolve, reject) => {
       try {
         // TODO: Timeout!
         const process = spawn(cmd, args, { cwd: this.folder });
-        const output: string[] = [];
-        const error: string[] = [];
+        let output = '';
+        let error = '';
 
-        process.stdin.write(testCase.input + '\n');
-        process.stdin.end();
+        if (input) {
+          process.stdin.write(input + '\n');
+          process.stdin.end();
+        }
 
         process.stdout.on('data', data => {
-          output.push(data.toString().replace(/^\s+|\s+$/g, ''));
+          output += data.toString();
         });
 
         process.stderr.on('data', data => {
-          error.push(data.toString().replace(/^\s+|\s+$/g, ''));
+          error += data.toString();
         });
 
         process.on('close', () => {
-          if (error.length > 0) {
-            reject({
-              stage: 'run',
-              testCase: testCase.id,
-              error: error.join('\n')
-            });
-          }
-
-          else {
-            resolve({
-              id: testCase.id,
-              hidden: testCase.hidden,
-              input: testCase.input,
-              output: output.filter(line => line !== '').join('\n'),
-              correctOutput: testCase.output
-            });
-          }
+          output = output.replace(/^\s+|\s+$/g, '');
+          error = error.replace(/^\s+|\s+$/g, '');
+          resolve({output: output, error: error});
         });
       }
 
       catch (e) {
         reject(e);
       }
-    })
+    });
   }
 
   async run(testCases: TestCaseModel[]): Promise<TestCaseSubmissionModel[]> {

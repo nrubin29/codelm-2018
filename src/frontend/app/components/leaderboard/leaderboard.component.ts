@@ -15,6 +15,6 @@ export class LeaderboardComponent implements OnInit {
   constructor(private teamService: TeamService) { }
 
   ngOnInit() {
-    this.teamService.getTeamsForDivision(this.division._id).then(teams => this.teams = teams.sort(((a, b) => a.score - b.score)));
+    this.teamService.getTeamsForDivision(this.division._id).then(teams => this.teams = teams.sort(((a, b) => b.score - a.score)));
   }
 }

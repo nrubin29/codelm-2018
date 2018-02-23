@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { ProblemDao } from '../daos/problem.dao';
 import { CodeFile, CodeRunner, CppRunner, JavaRunner, PythonRunner, RunError } from '../coderunner';
-import { TeamDao, isTestCaseSubmissionCorrect } from '../daos/team.dao';
+import { TeamDao } from '../daos/team.dao';
 import { ProblemSubmission } from '../../common/problem-submission';
 import { ProblemModel } from '../../common/models/problem.model';
 import { AdminDao } from '../daos/admin.dao';
@@ -60,7 +60,7 @@ router.post('/submit', TeamDao.forceTeam, (req, res) => {
       }
 
       case 'java': {
-        runner = new JavaRunner(folder, [new CodeFile("Main.java", problemSubmission.code)]);
+        runner = new JavaRunner(folder, [new CodeFile(problem.title.split(' ').join('') + ".java", problemSubmission.code)]);
         break;
       }
 
@@ -70,31 +70,30 @@ router.post('/submit', TeamDao.forceTeam, (req, res) => {
       }
     }
 
-    const sub = runner.subject.subscribe(next => {
-      console.log(next);
-    });
+    // const sub = runner.subject.subscribe(next => {
+    //   console.log(next);
+    // });
 
     // TODO: Clean up redundant code.
+    // TODO: If an error occurs on a hidden test case, we don't want to show the error.
     runner.run(problem.testCases.filter(testCase => !problemSubmission.test || !testCase.hidden)).then(results => {
-      sub.unsubscribe();
+      // sub.unsubscribe();
 
       TeamDao.addSubmission(req.params.team, {
         problem: problem,
         language: problemSubmission.language,
         code: problemSubmission.code,
         testCases: results,
-        result: ((results.filter(result => isTestCaseSubmissionCorrect(result, problem)).length / results.length) * 100).toFixed(0) + '%',
         test: problemSubmission.test
       }).then(submissionId => {
         res.json(submissionId);
       });
     }).catch((err: RunError) => {
-      console.error(err);
+      // console.error(err);
       TeamDao.addSubmission(req.params.team, {
         problem: problem,
         language: problemSubmission.language,
         code: problemSubmission.code,
-        result: 'Error',
         error: err.error,
         test: problemSubmission.test
       }).then(submissionId => {

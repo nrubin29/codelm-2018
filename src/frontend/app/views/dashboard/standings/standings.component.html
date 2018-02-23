@@ -1,5 +1,5 @@
 <div class="main container">
-    <app-card title="Team Info" [pad]="false" class="team">
+    <app-card title="Team Info" [pad]="false">
         <div class="container">
             <mat-table #table [dataSource]="[team]">
                 <ng-container matColumnDef="id">
@@ -26,6 +26,9 @@
                 <mat-row *matRowDef="let row; columns: ['id', 'username', 'members', 'division', 'score'];"></mat-row>
             </mat-table>
         </div>
+    </app-card>
+    <app-card title="Starter Code">
+        <a mat-raised-button color="accent" [href]="link" target="_blank">Download Starter Code</a>
     </app-card>
     <!--<app-card title="Activity Feed">-->
         <!--<app-feed></app-feed>-->

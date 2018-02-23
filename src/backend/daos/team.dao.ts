@@ -19,7 +19,7 @@ const TestCaseSubmissionSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-export function isTestCaseSubmissionCorrect(testCase: TestCaseSubmissionModel, problem: ProblemModel) {
+function isTestCaseSubmissionCorrect(testCase: TestCaseSubmissionModel, problem: ProblemModel) {
   if (problem.testCasesCaseSensitive) {
     return testCase.output === testCase.correctOutput;
   }
@@ -35,10 +35,10 @@ const SubmissionSchema = new mongoose.Schema({
   problem: {type: mongoose.Schema.Types.ObjectId, ref: 'Problem'},
   language: String,
   code: String,
-  result: String,
   test: {type: Boolean, default: false},
   testCases: [TestCaseSubmissionSchema],
-  error: String
+  error: String,
+  overrideCorrect: {type: Boolean, default: false}
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
@@ -55,13 +55,32 @@ export function sanitizeSubmission(submission: SubmissionModel): SubmissionModel
   return submission;
 }
 
+SubmissionSchema.virtual('result').get(function() {
+  if (this.overrideCorrect) {
+    return 'Override correct';
+  }
+
+  else if (this.error) {
+    return 'Error';
+  }
+
+  else {
+    return ((this.testCases.filter(testCase => isTestCaseSubmissionCorrect(testCase, this.problem)).length / this.testCases.length) * 100).toFixed(0) + '%'
+  }
+});
+
+// TODO: Lock the question after a certain number of incorrect submissions or start taking away points.
 SubmissionSchema.virtual('points').get(function() {
   if (this.test) {
     return 0;
   }
 
+  else if (this.overrideCorrect) {
+    return this.problem.points;
+  }
+
   else if (this.error) {
-    return -1;
+    return 0;
   }
 
   else if (this.testCases.every(testCase => testCase.toObject().correct)) {
@@ -69,7 +88,7 @@ SubmissionSchema.virtual('points').get(function() {
   }
 
   else {
-    return -1;
+    return 0;
   }
 });
 

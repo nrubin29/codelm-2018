@@ -39,7 +39,8 @@ import { AdminService } from './services/admin.service';
 import { EditTeamComponent } from './components/edit-team/edit-team.component';
 import {
   MatButtonModule,
-  MatCardModule, MatChipsModule, MatDialogModule, MatDividerModule, MatFormFieldModule, MatIconModule, MatInputModule,
+  MatCardModule, MatCheckboxModule, MatChipsModule, MatDialogModule, MatDividerModule, MatFormFieldModule,
+  MatIconModule, MatInputModule,
   MatListModule,
   MatSelectModule,
   MatSidenavModule, MatTableModule, MatTabsModule, MatToolbarModule
@@ -106,6 +107,7 @@ import { EndComponent } from './views/dashboard/end/end.component';
     MatTabsModule,
     MatIconModule,
     MatDialogModule,
+    MatCheckboxModule,
     DpDatePickerModule
   ],
   providers: [

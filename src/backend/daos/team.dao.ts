@@ -38,7 +38,8 @@ const SubmissionSchema = new mongoose.Schema({
   test: {type: Boolean, default: false},
   testCases: [TestCaseSubmissionSchema],
   error: String,
-  overrideCorrect: {type: Boolean, default: false}
+  overrideCorrect: {type: Boolean, default: false},
+  datetime: {type: Date, default: Date.now}
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }

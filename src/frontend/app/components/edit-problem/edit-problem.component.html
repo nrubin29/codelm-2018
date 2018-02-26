@@ -1,41 +1,28 @@
 <h2 mat-dialog-title>{{problem.title ? problem.title : 'New Problem'}}</h2>
-<form #problemForm [formGroup]="formGroup">
+<form #problemForm="ngForm" [formGroup]="formGroup">
     <mat-dialog-content>
         <h3>Data</h3>
-        <table>
-            <tr>
-                <th>_id</th>
-                <td><input type="text" formControlName="_id" disabled></td>
-            </tr>
-            <tr>
-                <th>ID</th>
-                <td><input type="number" formControlName="id"></td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td><input type="text" formControlName="title"></td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td><textarea formControlName="description"></textarea></td>
-            </tr>
-            <tr>
-                <th>Divisions</th>
-                <td>
-                    <select multiple formControlName="divisions">
-                        <option *ngFor="let division of divisions" [value]="division._id" [selected]="isDivisionSelected(division)">{{division.name}}</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <th>Points</th>
-                <td><input type="number" formControlName="points"></td>
-            </tr>
-            <tr>
-                <th>Test Cases Case Sensitive?</th>
-                <td><input type="checkbox" formControlName="testCasesCaseSensitive"></td>
-            </tr>
-        </table>
+        <mat-form-field color="accent">
+            <input matInput formControlName="_id" type="text" placeholder="_id" disabled>
+        </mat-form-field>
+        <mat-form-field color="accent">
+            <input matInput formControlName="id" type="number" placeholder="ID">
+        </mat-form-field>
+        <mat-form-field color="accent">
+            <input matInput formControlName="title" type="text" placeholder="Title">
+        </mat-form-field>
+        <mat-form-field color="accent">
+            <textarea matInput formControlName="description" placeholder="description"></textarea>
+        </mat-form-field>
+        <mat-form-field color="accent">
+            <mat-select multiple placeholder="Division" formControlName="division">
+                <mat-option *ngFor="let division of divisions" [value]="division._id">{{division.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field color="accent">
+            <input matInput formControlName="points" type="number" placeholder="Points">
+        </mat-form-field>
+        <mat-checkbox formControlName="testCasesCaseSensitive">Test Cases Case Sensitive?</mat-checkbox>
         <h3>Test Cases <input type="button" value="+" class="inline" (click)="addTestCase()"></h3>
         <table>
             <thead>

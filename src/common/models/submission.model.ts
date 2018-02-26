@@ -20,6 +20,7 @@ interface BaseSubmissionModel {
   test: boolean;
   points?: number;
   overrideCorrect?: boolean;
+  datetime?: Date;
 }
 
 interface ErrorSubmissionModel extends BaseSubmissionModel {

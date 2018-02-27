@@ -21,6 +21,9 @@
       "styles": [
         "material.scss",
         "../../node_modules/codemirror/lib/codemirror.css",
+        "../../node_modules/froala-editor/css/froala_editor.pkgd.min.css",
+        "../../node_modules/froala-editor/css/froala_style.min.css",
+        "../../node_modules/font-awesome/css/font-awesome.css",
         "../../node_modules/spinkit/scss/spinners/1-rotating-plane.scss",
         "../../node_modules/spinkit/scss/spinners/2-double-bounce.scss",
         "../../node_modules/spinkit/scss/spinners/3-wave.scss",
@@ -34,7 +37,11 @@
         "../../node_modules/spinkit/scss/spinners/11-folding-cube.scss",
         "styles.scss"
       ],
-      "scripts": [],
+      "scripts": [
+        "../../node_modules/hammerjs/hammer.js",
+        "../../node_modules/jquery/dist/jquery.min.js",
+        "../../node_modules/froala-editor/js/froala_editor.pkgd.min.js"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",

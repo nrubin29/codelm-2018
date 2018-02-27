@@ -10,7 +10,7 @@
 <div class="container">
   <div class="flex display-side">
     <app-card title="Problem">
-      <p>{{problem.description}}</p>
+      <p [innerHtml]="problem.description"></p>
     </app-card>
     <app-card title="IO" [pad]="false">
       <mat-table #table [dataSource]="problem.testCases">

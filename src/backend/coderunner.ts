@@ -76,14 +76,12 @@ export class CodeRunner {
         if (error.length > 0) {
           reject({
             stage: 'run',
-            testCase: testCase.id,
             error: error
           });
         }
 
         else {
           resolve({
-            id: testCase.id,
             hidden: testCase.hidden,
             input: testCase.input,
             output: output,

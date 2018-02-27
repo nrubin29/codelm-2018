@@ -53,6 +53,7 @@ import { DpDatePickerModule } from 'ng2-date-picker';
 import { RegisterComponent } from './views/register/register.component';
 import { CountdownComponent } from './components/countdown/countdown.component';
 import { EndComponent } from './views/dashboard/end/end.component';
+import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 
 @NgModule({
   declarations: [
@@ -82,7 +83,7 @@ import { EndComponent } from './views/dashboard/end/end.component';
     SettingsComponent,
     RegisterComponent,
     CountdownComponent,
-    EndComponent
+    EndComponent,
   ],
   imports: [
     BrowserModule,
@@ -108,7 +109,9 @@ import { EndComponent } from './views/dashboard/end/end.component';
     MatIconModule,
     MatDialogModule,
     MatCheckboxModule,
-    DpDatePickerModule
+    DpDatePickerModule,
+    FroalaEditorModule.forRoot(),
+    FroalaViewModule.forRoot()
   ],
   providers: [
     RestService,

@@ -4,7 +4,6 @@ import { ProblemModel } from '../../common/models/problem.model';
 type ProblemType = ProblemModel & mongoose.Document;
 
 const TestCaseSchema = new mongoose.Schema({
-  id: Number,
   hidden: Boolean,
   input: String,
   output: String

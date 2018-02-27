@@ -9,7 +9,6 @@ import { ProblemModel } from '../../common/models/problem.model';
 type TeamType = TeamModel & mongoose.Document;
 
 const TestCaseSubmissionSchema = new mongoose.Schema({
-  id: Number,
   hidden: Boolean,
   input: String,
   correctOutput: String,

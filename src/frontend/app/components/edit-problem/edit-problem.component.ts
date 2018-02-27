@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ProblemModel, TestCaseModel } from '../../../../common/models/problem.model';
 import { DivisionModel } from '../../../../common/models/division.model';
-import { FormArray, FormControl, FormGroup, NgForm } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ProblemService } from '../../services/problem.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
@@ -22,7 +22,7 @@ export class EditProblemComponent implements OnInit {
   ngOnInit() {
     this.divisions = this.data.divisions;
     this.problem = this.data.problem ? this.data.problem : {_id: undefined, id: undefined, title: undefined, description: undefined, divisions: [], points: undefined, testCasesCaseSensitive: false, testCases: []};
-    
+
     this.testCases = new FormArray(this.problem.testCases.map(testCase => this.createTestCaseGroup(testCase)));
 
     this.formGroup = new FormGroup({
@@ -44,7 +44,6 @@ export class EditProblemComponent implements OnInit {
   private createTestCaseGroup(testCase?: TestCaseModel): FormGroup {
     if (!testCase) {
       testCase = {
-        id: undefined,
         input: '',
         output: '',
         hidden: false
@@ -52,7 +51,6 @@ export class EditProblemComponent implements OnInit {
     }
 
     return new FormGroup({
-      id: new FormControl(testCase.id),
       input: new FormControl(testCase.input),
       output: new FormControl(testCase.output),
       hidden: new FormControl(testCase.hidden)
@@ -61,9 +59,5 @@ export class EditProblemComponent implements OnInit {
 
   addTestCase(testCase?: TestCaseModel) {
     this.testCases.push(this.createTestCaseGroup(testCase))
-  }
-
-  isDivisionSelected(division: DivisionModel) {
-    return this.problem.divisions.some(d => d._id == division._id);
   }
 }

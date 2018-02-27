@@ -17,19 +17,16 @@ describe('CodeRunner', () => {
 
       return runner.run([
         {
-          id: 1,
           hidden: false,
           input: "Hello",
           output: "Hello"
         },
         {
-          id: 2,
           hidden: false,
           input: "Goodbye",
           output: "Goodbye"
         },
         {
-          id: 3,
           hidden: false,
           input: "Peace",
           output: "Peace"
@@ -48,7 +45,6 @@ describe('CodeRunner', () => {
 
       return runner.run([
         {
-          id: 1,
           hidden: false,
           input: "1",
           output: "1"
@@ -67,19 +63,16 @@ describe('CodeRunner', () => {
 
       return runner.run([
         {
-          id: 1,
           hidden: false,
           input: "Hello",
           output: "Hello"
         },
         {
-          id: 2,
           hidden: false,
           input: "Goodbye",
           output: "Goodbye"
         },
         {
-          id: 3,
           hidden: false,
           input: "Peace",
           output: "Peace"
@@ -117,25 +110,21 @@ public class PrettyRectangle {
 
       return runner.run([
         {
-          id: 1,
           hidden: false,
           input: "1",
           output: "-"
         },
         {
-          id: 2,
           hidden: false,
           input: "2",
           output: "--\n--"
         },
         {
-          id: 3,
           hidden: false,
           input: "3",
           output: "---\n-!-\n---"
         },
         {
-          id: 4,
           hidden: true,
           input: "5",
           output: "-----\n-!!!-\n-!!!-\n-!!!-\n-----"
@@ -163,19 +152,16 @@ int main ()
 
       return runner.run([
         {
-          id: 1,
           hidden: false,
           input: "1",
           output: "0"
         },
         {
-          id: 2,
           hidden: false,
           input: "2",
           output: "1"
         },
         {
-          id: 3,
           hidden: true,
           input: "100",
           output: "1"

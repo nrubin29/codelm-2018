@@ -13,7 +13,7 @@ $codelm-app-primary: mat-palette($mat-blue, 800, 700, 900);
 $codelm-app-accent:  mat-palette($mat-light-blue, 600, 500, 700);
 
 // The warn palette is optional (defaults to red).
-$codelm-app-warn:    mat-palette($mat-blue-grey);
+$codelm-app-warn:    mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $codelm-app-theme: mat-light-theme($codelm-app-primary, $codelm-app-accent, $codelm-app-warn);

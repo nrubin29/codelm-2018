@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { sanitizeSubmission, sanitizeTeam, TeamDao } from '../daos/team.dao';
+import { sanitizeTeam, TeamDao } from '../daos/team.dao';
 import { AdminDao } from '../daos/admin.dao';
 
 const router = Router();
@@ -18,30 +18,6 @@ router.put('/', AdminDao.forceAdmin, (req, res) => {
 
 router.delete('/:id', AdminDao.forceAdmin, (req, res) => {
   TeamDao.deleteTeam(req.params.id).then(() => res.json(true)).catch(console.error);
-});
-
-router.get('/submissions', TeamDao.forceTeam, (req, res) => {
-  res.json(req.params.team.submissions.map(submission => sanitizeSubmission(submission)));
-});
-
-router.get('/submissions/:id', (req, res) => {
-  TeamDao.forceTeam(req, res, () => {
-    if (req.params.team) {
-      res.json(sanitizeSubmission(req.params.team.submissions.find(t => t._id.toString() === req.params.id)));
-    }
-
-    else {
-      AdminDao.forceAdmin(req, res, () => {
-        if (req.params.admin) {
-          TeamDao.getSubmission(req.params.id).then(submission => res.json(submission));
-        }
-
-        else {
-          res.json(false);
-        }
-      })
-    }
-  });
 });
 
 router.get('/division/:id', AdminDao.forceAdmin, ((req, res) => {

@@ -31,8 +31,8 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.activatedRoute.data.subscribe(data => {
       this.problem = data['problem'];
+      this.submissions = data['submissions'].filter(submission => submission.problem._id === this.problem._id);
       this.problemNumber = this.problem.divisions.find(division => division.division._id == this.team.division._id).problemNumber;
-      this.submissions = this.team.submissions.filter(submission => submission.problem._id === this.problem._id);
       this.language = this.codeSaverService.getLanguage();
     });
   }

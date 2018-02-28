@@ -25,12 +25,12 @@ const Problem = mongoose.model<ProblemType>('Problem', new mongoose.Schema({
 
 export class ProblemDao {
   static getProblem(id: string): Promise<ProblemModel> {
-    return Problem.findById(id).populate('divisions.division').exec()
+    return Problem.findById(id).populate('divisions.division').exec();
   }
 
   static getProblemsForDivision(divisionId: string): Promise<ProblemModel[]> {
     // TODO: Sort based on problemNumber for given divisionId.
-    return Problem.find({'divisions.division': divisionId}).populate('divisions.division').exec()
+    return Problem.find({'divisions.division': divisionId}).populate('divisions.division').exec();
   }
 
   static addOrUpdateProblem(problem: ProblemModel): Promise<ProblemModel> {

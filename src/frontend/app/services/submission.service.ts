@@ -4,7 +4,7 @@ import { SubmissionModel } from '../../../common/models/submission.model';
 
 @Injectable()
 export class SubmissionService {
-  private endpoint = 'teams/submissions'; // TODO: When an admin is logged in, the endpoint would be teams/:id/submissions
+  private endpoint = 'submissions';
 
   constructor(private restService: RestService) { }
 
@@ -12,7 +12,11 @@ export class SubmissionService {
     return this.restService.get<SubmissionModel>(`${this.endpoint}/${id}`)
   }
 
-  getSubmissions(teamId: string): Promise<SubmissionModel[]> {
-    return this.restService.get<SubmissionModel[]>(`${this.endpoint}`)
+  getSubmissions(): Promise<SubmissionModel[]> {
+    return this.restService.get<SubmissionModel[]>(this.endpoint);
+  }
+
+  getSubmissionsForTeam(teamId: string): Promise<SubmissionModel[]> {
+    return this.restService.get<SubmissionModel[]>(`${this.endpoint}/team/${teamId}`)
   }
 }

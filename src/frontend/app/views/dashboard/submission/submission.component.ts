@@ -22,8 +22,7 @@ export class SubmissionComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.data.subscribe(data => {
       this.submission = data['submission'];
-      // TODO: If this submission is being viewed by an admin, TeamService's team won't have a value.
-      this.problemNumber = this.submission.problem.divisions.find(division => division.division._id == this.teamService.team.getValue().division._id).problemNumber;
+      this.problemNumber = this.submission.problem.divisions.find(division => division.division._id == this.submission.team.division._id).problemNumber;
       this.mode = this.codeSaverService.getMode(this.submission.language);
       this.codeMirror.writeValue(this.submission.code);
     });

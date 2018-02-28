@@ -30,6 +30,7 @@ import { EndComponent } from './views/dashboard/end/end.component';
 import { EndGuard } from './guards/end.guard';
 import { NotEndGuard } from './guards/not-end.guard';
 import { DisconnectGuard } from './guards/disconnect.guard';
+import { SubmissionsResolve } from './views/dashboard/problem/submissions.resolve';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -40,7 +41,7 @@ const routes: Routes = [
   {path: 'dashboard', component: DashboardComponent, canActivate: [SocketGuard, TeamGuard, EndGuard], children:
     [
       {path: '', component: StandingsComponent},
-      {path: 'problem/:id', component: ProblemComponent, canActivate: [ProblemGuard], resolve: {problem: ProblemResolve}},
+      {path: 'problem/:id', component: ProblemComponent, canActivate: [ProblemGuard], resolve: {problem: ProblemResolve, submissions: SubmissionsResolve}},
       {path: 'submit', component: SubmitComponent},
       {path: 'submission/:id', component: SubmissionComponent, resolve: {submission: SubmissionResolve}}
     ]
@@ -49,7 +50,7 @@ const routes: Routes = [
       [
         {path: '', component: AdminHomeComponent},
         {path: 'settings', component: SettingsComponent, resolve: {settings: SettingsResolve}},
-        {path: 'team/:id', component: TeamComponent, resolve: {team: TeamResolve}},
+        {path: 'team/:id', component: TeamComponent, resolve: {team: TeamResolve, submissions: SubmissionsResolve}},
         {path: 'submission/:id', component: SubmissionComponent, resolve: {submission: SubmissionResolve}},
         {path: 'divisions', component: DivisionsComponent},
         {path: 'problems', component: ProblemsComponent, resolve: {divisionsAndProblems: DivisionsProblemsResolve}},
@@ -75,7 +76,8 @@ const routes: Routes = [
     TeamResolve,
     DivisionsProblemsResolve,
     SettingsResolve,
-    DivisionsResolve
+    DivisionsResolve,
+    SubmissionsResolve
   ]
 })
 export class AppRoutingModule {}

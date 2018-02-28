@@ -21,7 +21,7 @@ export class EditTeamComponent implements OnInit {
   constructor(private divisionService: DivisionService, private teamService: TeamService, private router: Router) { }
 
   ngOnInit() {
-    this.team = this.team ? this.team : {_id: undefined, username: undefined, password: undefined, salt: undefined, members: undefined, division: undefined, submissions: undefined};
+    this.team = this.team ? this.team : {_id: undefined, username: undefined, password: undefined, salt: undefined, members: undefined, division: undefined};
     this.originalPassword = this.team.password;
 
     this.formGroup = new FormGroup({

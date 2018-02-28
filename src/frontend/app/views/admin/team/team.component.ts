@@ -21,10 +21,11 @@ export class TeamComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.data.subscribe(data => {
       const teamAndProblems = data['team'];
+      const submissions = data['submissions'];
       this.team = teamAndProblems[0];
       this.problems = teamAndProblems[1];
       for (let problem of this.problems) {
-        this.problemSubmissions[problem._id] = this.team.submissions.filter(submission => submission.problem._id === problem._id);
+        this.problemSubmissions[problem._id] = submissions.filter(submission => submission.problem._id === problem._id);
       }
     });
   }

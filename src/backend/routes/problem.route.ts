@@ -6,6 +6,7 @@ import { ProblemSubmission } from '../../common/problem-submission';
 import { ProblemModel } from '../../common/models/problem.model';
 import { AdminDao } from '../daos/admin.dao';
 import uuid = require('uuid');
+import { SubmissionDao } from '../daos/submission.dao';
 
 const router = Router();
 
@@ -79,25 +80,27 @@ router.post('/submit', TeamDao.forceTeam, (req, res) => {
     runner.run(problem.testCases.filter(testCase => !problemSubmission.test || !testCase.hidden)).then(results => {
       // sub.unsubscribe();
 
-      TeamDao.addSubmission(req.params.team, {
+      SubmissionDao.addSubmission({
+        team: req.params.team,
         problem: problem,
         language: problemSubmission.language,
         code: problemSubmission.code,
         testCases: results,
         test: problemSubmission.test
-      }).then(submissionId => {
-        res.json(submissionId);
+      }).then(submission => {
+        res.json(submission._id);
       });
     }).catch((err: RunError) => {
       // console.error(err);
-      TeamDao.addSubmission(req.params.team, {
+      SubmissionDao.addSubmission({
+        team: req.params.team,
         problem: problem,
         language: problemSubmission.language,
         code: problemSubmission.code,
         error: err.error,
         test: problemSubmission.test
-      }).then(submissionId => {
-        res.json(submissionId);
+      }).then(submission => {
+        res.json(submission._id);
       });
     });
   })

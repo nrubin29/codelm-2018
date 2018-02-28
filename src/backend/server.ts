@@ -39,6 +39,7 @@ mongoose.connect('mongodb://localhost/codelm', {useMongoClient: true}).then(() =
 
     socketServer.on('connection', socket => {
       // TODO: Move this logic to its own file.
+      // TODO: Emit an error message on internal error.
       socket.on('packet', (packet: Packet) => {
         if (packet.name === 'login') {
           let loginPacket = packet as LoginPacket;

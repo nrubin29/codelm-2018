@@ -1,96 +1,12 @@
 import mongoose = require('mongoose');
 import crypto = require('crypto');
 import { TeamModel } from '../../common/models/team.model';
-import { SubmissionModel, TestCaseSubmissionModel } from '../../common/models/submission.model';
 import { LoginResponse } from '../../common/packets/login.response.packet';
 import { NextFunction, Request, Response } from 'express-serve-static-core';
-import { ProblemModel } from '../../common/models/problem.model';
+import { SubmissionDao } from './submission.dao';
+import { NativeError } from "mongoose";
 
 type TeamType = TeamModel & mongoose.Document;
-
-const TestCaseSubmissionSchema = new mongoose.Schema({
-  hidden: Boolean,
-  input: String,
-  correctOutput: String,
-  output: String
-}, {
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
-});
-
-function isTestCaseSubmissionCorrect(testCase: TestCaseSubmissionModel, problem: ProblemModel) {
-  if (problem.testCasesCaseSensitive) {
-    return testCase.output === testCase.correctOutput;
-  }
-
-  return testCase.output.toLowerCase() === testCase.correctOutput.toLowerCase();
-}
-
-TestCaseSubmissionSchema.virtual('correct').get(function() {
-  return isTestCaseSubmissionCorrect(this, this.parent().problem);
-});
-
-const SubmissionSchema = new mongoose.Schema({
-  problem: {type: mongoose.Schema.Types.ObjectId, ref: 'Problem'},
-  language: String,
-  code: String,
-  test: {type: Boolean, default: false},
-  testCases: [TestCaseSubmissionSchema],
-  error: String,
-  overrideCorrect: {type: Boolean, default: false},
-  datetime: {type: Date, default: Date.now}
-}, {
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
-});
-
-export function sanitizeSubmission(submission: SubmissionModel): SubmissionModel {
-  submission.problem.testCases = submission.problem.testCases.filter(testCase => !testCase.hidden);
-  submission.problem.testCasesCaseSensitive = undefined;
-
-  if (submission.testCases) {
-    submission.testCases = submission.testCases.filter(testCase => !testCase.hidden);
-  }
-
-  return submission;
-}
-
-SubmissionSchema.virtual('result').get(function() {
-  if (this.overrideCorrect) {
-    return 'Override correct';
-  }
-
-  else if (this.error) {
-    return 'Error';
-  }
-
-  else {
-    return ((this.testCases.filter(testCase => isTestCaseSubmissionCorrect(testCase, this.problem)).length / this.testCases.length) * 100).toFixed(0) + '%'
-  }
-});
-
-// TODO: Lock the question after a certain number of incorrect submissions or start taking away points.
-SubmissionSchema.virtual('points').get(function() {
-  if (this.test) {
-    return 0;
-  }
-
-  else if (this.overrideCorrect) {
-    return this.problem.points;
-  }
-
-  else if (this.error) {
-    return 0;
-  }
-
-  else if (this.testCases.every(testCase => testCase.toObject().correct)) {
-    return this.problem.points;
-  }
-
-  else {
-    return 0;
-  }
-});
 
 const TeamSchema = new mongoose.Schema({
   username: {type: String, unique: true},
@@ -98,7 +14,6 @@ const TeamSchema = new mongoose.Schema({
   salt: String,
   members: String,
   division: {type: mongoose.Schema.Types.ObjectId, ref: 'Division'},
-  submissions: [SubmissionSchema],
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
@@ -107,55 +22,63 @@ const TeamSchema = new mongoose.Schema({
 export function sanitizeTeam(team: TeamModel): TeamModel {
   team.password = undefined;
   team.salt = undefined;
-  team.submissions = team.submissions.map(submission => sanitizeSubmission(submission));
   return team;
 }
 
-TeamSchema.virtual('score').get(function() {
-  return this.submissions.reduce(((previousValue: number, currentValue: any) => previousValue + currentValue.toObject().points), 0);
-});
+// I don't really want this, but it might allow me to synchronously calculate the score. Too bad it doesn't work.
+// TeamSchema.virtual('submissions', {
+//   ref: 'Submission',
+//   localField: '_id',
+//   foreignField: 'team'
+// });
+
+// TODO: Since this doesn't work, I should a nicer way to calculate the score than what I have right now.
+// TeamSchema.virtual('score').get(function() {
+//   return new Promise<number>((resolve, reject) => {
+//     SubmissionDao.getSubmissionsForTeam(this._id).then(submissions => {
+//       resolve(submissions.reduce(((previousValue: number, currentValue: any) => previousValue + currentValue.toObject().points), 0));
+//     }).catch(reject);
+//   });
+// });
+
+function scoreFunction(doc: TeamType, next: (err?: NativeError) => void) {
+  // For some reason, doc can either be a TeamType or a TeamType[].
+
+  let docs = [];
+
+  if (Array.isArray(doc)) {
+    docs = doc;
+  }
+
+  else {
+    docs = [doc];
+  }
+
+  docs.forEach(doc => {
+    SubmissionDao.getScoreForTeam(doc._id).then(score => {
+      doc.set('score', score, {strict: false});
+      next();
+    }).catch(next);
+  });
+}
+
+TeamSchema.post('init', scoreFunction);
+TeamSchema.post('find', scoreFunction);
 
 const Team = mongoose.model<TeamType>('Team', TeamSchema);
 
 export class TeamDao {
-  private static readonly submissionsPopulationPath = {path: 'submissions.problem', model: 'Problem', populate: {path: 'divisions.division', model: 'Division'}};
-
   static getTeam(id: string): Promise<TeamModel> {
-    return Team.findById(id).populate('division').populate(TeamDao.submissionsPopulationPath).exec();
+    return Team.findById(id).populate('division').exec();
   }
 
   static getTeamsForDivision(divisionId: string): Promise<TeamModel[]> {
-    return Team.find({division: {_id: divisionId}}).populate('division').populate(TeamDao.submissionsPopulationPath).exec();
-  }
-
-  static addSubmission(team: TeamModel, submission: SubmissionModel): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      Team.findByIdAndUpdate(team._id, {$push: {submissions: submission}}, {new: true}).exec().then((team: TeamModel) => {
-        resolve(team.submissions[team.submissions.length - 1]._id);
-      }).catch(reject);
-    });
-  }
-
-  static getSubmission(submissionId: string): Promise<SubmissionModel> {
-    // TODO: Maybe make this nicer?
-    return new Promise<SubmissionModel>((resolve, reject) => {
-      Team.find().populate(TeamDao.submissionsPopulationPath).exec().then((teams: TeamModel[]) => {
-        for (let team of teams) {
-          let submission = team.submissions.filter(submission => submission._id == submissionId);
-          if (submission.length > 0) {
-            resolve(submission[0]);
-            return;
-          }
-        }
-
-        reject(`Could not find submission with id ${submissionId}`);
-      }).catch(reject);
-    });
+    return Team.find({division: {_id: divisionId}}).populate('division').exec();
   }
 
   static login(username: string, password: string): Promise<TeamModel> {
     return new Promise<TeamModel>((resolve, reject) => {
-      Team.findOne({username: username}).populate('division submissions.problem submissions.problem.divisions.division').then(team => {
+      Team.findOne({username: username}).populate('division').then(team => {
         if (!team) {
           reject(LoginResponse.NotFound);
         }

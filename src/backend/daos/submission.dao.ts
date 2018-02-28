@@ -1,6 +1,6 @@
 import mongoose = require('mongoose');
 import { SubmissionModel, TestCaseSubmissionModel } from '../../common/models/submission.model';
-import { ProblemModel } from '../../common/models/problem.model';
+import { ProblemModel, TestCaseOutputMode } from '../../common/models/problem.model';
 import { ModelPopulateOptions } from 'mongoose';
 
 type SubmissionType = SubmissionModel & mongoose.Document;
@@ -15,12 +15,28 @@ const TestCaseSubmissionSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-function isTestCaseSubmissionCorrect(testCase: TestCaseSubmissionModel, problem: ProblemModel) {
-  if (problem.testCasesCaseSensitive) {
-    return testCase.output === testCase.correctOutput;
-  }
+function toBoolean(str: string): boolean {
+  return str === 'true' || str === 'True' || str === '1';
+}
 
-  return testCase.output.toLowerCase() === testCase.correctOutput.toLowerCase();
+function isTestCaseSubmissionCorrect(testCase: TestCaseSubmissionModel, problem: ProblemModel): boolean {
+  switch (problem.testCaseOutputMode) {
+    case TestCaseOutputMode.CaseSensitive: {
+      return testCase.output === testCase.correctOutput;
+    }
+    case TestCaseOutputMode.CaseInsensitive: {
+      return testCase.output.toLowerCase() === testCase.correctOutput.toLowerCase();
+    }
+    case TestCaseOutputMode.Number: {
+      return parseFloat(testCase.output).toFixed(5) === parseFloat(testCase.correctOutput).toFixed(5);
+    }
+    case TestCaseOutputMode.Boolean: {
+      return toBoolean(testCase.output) === toBoolean(testCase.correctOutput);
+    }
+    default: {
+      throw new Error(`No support for output mode ${problem.testCaseOutputMode}`);
+    }
+  }
 }
 
 TestCaseSubmissionSchema.virtual('correct').get(function() {
@@ -44,7 +60,6 @@ const SubmissionSchema = new mongoose.Schema({
 
 export function sanitizeSubmission(submission: SubmissionModel): SubmissionModel {
   submission.problem.testCases = submission.problem.testCases.filter(testCase => !testCase.hidden);
-  submission.problem.testCasesCaseSensitive = undefined;
 
   if (submission.testCases) {
     submission.testCases = submission.testCases.filter(testCase => !testCase.hidden);

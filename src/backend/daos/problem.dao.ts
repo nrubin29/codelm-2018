@@ -1,5 +1,5 @@
 import mongoose = require('mongoose');
-import { ProblemModel } from '../../common/models/problem.model';
+import { ProblemModel, TestCaseOutputMode } from '../../common/models/problem.model';
 
 type ProblemType = ProblemModel & mongoose.Document;
 
@@ -19,7 +19,7 @@ const Problem = mongoose.model<ProblemType>('Problem', new mongoose.Schema({
   description: String,
   divisions: [ProblemDivisionSchema],
   points: Number,
-  testCasesCaseSensitive: {type: Boolean, default: true},
+  testCaseOutputMode: {type: String, default: TestCaseOutputMode.CaseSensitive},
   testCases: [TestCaseSchema]
 }));
 

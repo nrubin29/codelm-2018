@@ -1,9 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { ProblemDivision, ProblemModel, TestCaseModel } from '../../../../common/models/problem.model';
+import {
+  ProblemDivision, ProblemModel, TestCaseModel,
+  TestCaseOutputMode
+} from '../../../../common/models/problem.model';
 import { DivisionModel } from '../../../../common/models/division.model';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ProblemService } from '../../services/problem.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { SettingsState } from '../../../../common/models/settings.model';
 
 @Component({
   selector: 'app-edit-problem',
@@ -22,7 +26,7 @@ export class EditProblemComponent implements OnInit {
 
   ngOnInit() {
     this.divisionModels = this.data.divisions;
-    this.problem = this.data.problem ? this.data.problem : {_id: undefined, title: undefined, description: undefined, divisions: [], points: undefined, testCasesCaseSensitive: false, testCases: []};
+    this.problem = this.data.problem ? this.data.problem : {_id: undefined, title: undefined, description: undefined, divisions: [], points: undefined, testCaseOutputMode: undefined, testCases: []};
 
     this.testCases = new FormArray(this.problem.testCases.map(testCase => this.createTestCaseGroup(testCase)));
     this.divisions = new FormArray(this.problem.divisions.map(problemDivision => this.createProblemDivisionGroup(problemDivision)));
@@ -32,7 +36,7 @@ export class EditProblemComponent implements OnInit {
       title: new FormControl(this.problem.title),
       description: new FormControl(this.problem.description),
       points: new FormControl(this.problem.points),
-      testCasesCaseSensitive: new FormControl(this.problem.testCasesCaseSensitive),
+      testCaseOutputMode: new FormControl(this.problem.testCaseOutputMode),
       divisions: this.divisions,
       testCases: this.testCases
     });
@@ -78,5 +82,9 @@ export class EditProblemComponent implements OnInit {
 
   addDivision(problemDivision?: ProblemDivision) {
     this.divisions.push(this.createProblemDivisionGroup(problemDivision));
+  }
+
+  get testCaseOutputModes() {
+    return Object.keys(TestCaseOutputMode).map(key => TestCaseOutputMode[key]);
   }
 }

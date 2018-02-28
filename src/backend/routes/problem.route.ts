@@ -18,7 +18,6 @@ router.get('/:id', PermissionsUtil.requireAuth, (req, res) => {
   ProblemDao.getProblem(req.params.id).then(problem => {
     if (!req.params.admin) {
       problem.testCases = problem.testCases.filter(testCase => !testCase.hidden);
-      problem.testCasesCaseSensitive = undefined;
     }
 
     res.json(problem);
@@ -34,7 +33,6 @@ router.get('/division/:dId', PermissionsUtil.requireAuth, (req, res) => {
     if (!req.params.admin) {
       problems.forEach(problem => {
         problem.testCases = problem.testCases.filter(testCase => !testCase.hidden);
-        problem.testCasesCaseSensitive = undefined;
       });
     }
 

@@ -13,7 +13,11 @@
         <mat-form-field color="accent">
             <input matInput formControlName="points" type="number" placeholder="Points">
         </mat-form-field>
-        <mat-checkbox formControlName="testCasesCaseSensitive">Test Cases Case Sensitive?</mat-checkbox>
+        <mat-form-field color="accent">
+            <mat-select formControlName="testCaseOutputMode">
+                <mat-option *ngFor="let testCaseOutputMode of testCaseOutputModes" [value]="testCaseOutputMode">{{testCaseOutputMode}}</mat-option>
+            </mat-select>
+        </mat-form-field>
         <br>
         <div class="flex horizontal" style="margin: 1em 0">
             <h3 mat-dialog-title style="margin: 0">Divisions</h3>

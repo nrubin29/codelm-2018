@@ -1,19 +1,25 @@
 import { DivisionModel } from './division.model';
 
+export enum TestCaseOutputMode {
+  CaseSensitive = 'Case Sensitive',
+  CaseInsensitive = 'Case Insensitive',
+  Number = 'Number',
+  Boolean = 'Boolean'
+}
+
 export interface ProblemDivision {
   _id?: string;
   division: DivisionModel;
   problemNumber: number;
 }
 
-// TODO: Add a testCaseOutputMode field that handles case sensitive / insensitive and booleans: (true == True == 1) and (false == False == 0)
 export interface ProblemModel {
   _id?: string;
   title: string;
   description: string;
   divisions: ProblemDivision[];
   points: number;
-  testCasesCaseSensitive: boolean;
+  testCaseOutputMode: TestCaseOutputMode;
   testCases: TestCaseModel[];
 }
 

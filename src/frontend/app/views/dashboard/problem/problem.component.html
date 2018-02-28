@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <span>{{problem.id}}. {{problem.title}}</span>
+    <span>{{problemNumber}}. {{problem.title}}</span>
     <mat-chip-list><mat-chip color="accent" selected="true">{{problem.points}} {{'point'|pluralize:problem.points}}</mat-chip></mat-chip-list>
     <span class="spacer"></span>
     <button type="button" (click)="submitClicked(true)" mat-raised-button color="accent">Test</button>

@@ -6,22 +6,46 @@
             <input matInput readonly="readonly" formControlName="_id" type="text" placeholder="_id">
         </mat-form-field>
         <mat-form-field color="accent">
-            <input matInput formControlName="id" type="number" placeholder="ID">
-        </mat-form-field>
-        <mat-form-field color="accent">
             <input matInput formControlName="title" type="text" placeholder="Title">
         </mat-form-field>
         <div formControlName="description" [froalaEditor]></div>
         <br>
         <mat-form-field color="accent">
-            <mat-select multiple placeholder="Divisions" formControlName="divisions">
-                <mat-option *ngFor="let division of divisions" [value]="division._id">{{division.name}}</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <mat-form-field color="accent">
             <input matInput formControlName="points" type="number" placeholder="Points">
         </mat-form-field>
         <mat-checkbox formControlName="testCasesCaseSensitive">Test Cases Case Sensitive?</mat-checkbox>
+        <br>
+        <div class="flex horizontal" style="margin: 1em 0">
+            <h3 mat-dialog-title style="margin: 0">Divisions</h3>
+            <span class="spacer"></span>
+            <button mat-button (click)="addDivision()"><mat-icon>add</mat-icon></button>
+        </div>
+        <!-- TODO: Convert to a mat-table -->
+        <table>
+            <thead>
+            <tr>
+                <th>Division</th>
+                <th>Problem Number</th>
+            </tr>
+            </thead>
+            <tbody formArrayName="divisions">
+            <tr *ngFor="let _ of divisions.controls; index as i" [formGroupName]="i">
+                <td>
+                    <mat-form-field color="accent">
+                        <mat-select formControlName="division">
+                            <mat-option *ngFor="let division of divisionModels" [value]="division._id">{{division.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field color="accent">
+                        <input matInput formControlName="problemNumber" type="number">
+                    </mat-form-field>
+                </td>
+                <!-- TODO: Ability to delete division -->
+            </tr>
+            </tbody>
+        </table>
         <br>
         <div class="flex horizontal" style="margin: 1em 0">
             <h3 mat-dialog-title style="margin: 0">Test Cases</h3>

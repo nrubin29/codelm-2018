@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { ProblemModel, TestCaseModel } from '../../../../common/models/problem.model';
+import { ProblemDivision, ProblemModel, TestCaseModel } from '../../../../common/models/problem.model';
 import { DivisionModel } from '../../../../common/models/division.model';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ProblemService } from '../../services/problem.service';
@@ -12,27 +12,28 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 })
 export class EditProblemComponent implements OnInit {
   problem: ProblemModel;
-  divisions: DivisionModel[];
+  divisionModels: DivisionModel[];
 
   testCases: FormArray;
+  divisions: FormArray;
   formGroup: FormGroup;
 
   constructor(private problemService: ProblemService, private dialogRef: MatDialogRef<EditProblemComponent>, @Inject(MAT_DIALOG_DATA) private data: {problem: ProblemModel, divisions: DivisionModel[]}) { }
 
   ngOnInit() {
-    this.divisions = this.data.divisions;
-    this.problem = this.data.problem ? this.data.problem : {_id: undefined, id: undefined, title: undefined, description: undefined, divisions: [], points: undefined, testCasesCaseSensitive: false, testCases: []};
+    this.divisionModels = this.data.divisions;
+    this.problem = this.data.problem ? this.data.problem : {_id: undefined, title: undefined, description: undefined, divisions: [], points: undefined, testCasesCaseSensitive: false, testCases: []};
 
     this.testCases = new FormArray(this.problem.testCases.map(testCase => this.createTestCaseGroup(testCase)));
+    this.divisions = new FormArray(this.problem.divisions.map(problemDivision => this.createProblemDivisionGroup(problemDivision)));
 
     this.formGroup = new FormGroup({
       _id: new FormControl(this.problem._id),
-      id: new FormControl(this.problem.id),
       title: new FormControl(this.problem.title),
       description: new FormControl(this.problem.description),
-      divisions: new FormControl(this.problem.divisions.map(d => d._id)),
       points: new FormControl(this.problem.points),
       testCasesCaseSensitive: new FormControl(this.problem.testCasesCaseSensitive),
+      divisions: this.divisions,
       testCases: this.testCases
     });
   }
@@ -57,7 +58,25 @@ export class EditProblemComponent implements OnInit {
     });
   }
 
+  private createProblemDivisionGroup(problemDivision?: ProblemDivision): FormGroup {
+    if (!problemDivision) {
+      problemDivision = {
+        division: undefined,
+        problemNumber: undefined
+      };
+    }
+
+    return new FormGroup({
+      division: new FormControl(problemDivision.division ? problemDivision.division._id : ''),
+      problemNumber: new FormControl(problemDivision.problemNumber)
+    });
+  }
+
   addTestCase(testCase?: TestCaseModel) {
     this.testCases.push(this.createTestCaseGroup(testCase))
+  }
+
+  addDivision(problemDivision?: ProblemDivision) {
+    this.divisions.push(this.createProblemDivisionGroup(problemDivision));
   }
 }

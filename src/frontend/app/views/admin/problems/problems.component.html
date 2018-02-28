@@ -11,7 +11,7 @@
       <mat-table [dataSource]="division.problems">
         <ng-container matColumnDef="number">
           <mat-header-cell *matHeaderCellDef>Number</mat-header-cell>
-          <mat-cell *matCellDef="let element">{{element.id}}</mat-cell>
+          <mat-cell *matCellDef="let element">{{getProblemNumber(element, division)}}</mat-cell>
         </ng-container>
         <ng-container matColumnDef="title">
           <mat-header-cell *matHeaderCellDef>Title</mat-header-cell>

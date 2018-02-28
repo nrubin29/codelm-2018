@@ -118,12 +118,14 @@ TeamSchema.virtual('score').get(function() {
 const Team = mongoose.model<TeamType>('Team', TeamSchema);
 
 export class TeamDao {
+  private static readonly submissionsPopulationPath = {path: 'submissions.problem', model: 'Problem', populate: {path: 'divisions.division', model: 'Division'}};
+
   static getTeam(id: string): Promise<TeamModel> {
-    return Team.findById(id).populate('division submissions.problem').exec()
+    return Team.findById(id).populate('division').populate(TeamDao.submissionsPopulationPath).exec();
   }
 
-  static getTeamsForDivision(divisionId: string) {
-    return Team.find({division: {_id: divisionId}}).populate('division submissions.problem').exec();
+  static getTeamsForDivision(divisionId: string): Promise<TeamModel[]> {
+    return Team.find({division: {_id: divisionId}}).populate('division').populate(TeamDao.submissionsPopulationPath).exec();
   }
 
   static addSubmission(team: TeamModel, submission: SubmissionModel): Promise<string> {
@@ -136,8 +138,8 @@ export class TeamDao {
 
   static getSubmission(submissionId: string): Promise<SubmissionModel> {
     // TODO: Maybe make this nicer?
-    return new Promise((resolve, reject) => {
-      Team.find().populate('submissions.problem').exec().then((teams: TeamModel[]) => {
+    return new Promise<SubmissionModel>((resolve, reject) => {
+      Team.find().populate(TeamDao.submissionsPopulationPath).exec().then((teams: TeamModel[]) => {
         for (let team of teams) {
           let submission = team.submissions.filter(submission => submission._id == submissionId);
           if (submission.length > 0) {
@@ -153,7 +155,7 @@ export class TeamDao {
 
   static login(username: string, password: string): Promise<TeamModel> {
     return new Promise<TeamModel>((resolve, reject) => {
-      Team.findOne({username: username}).populate('division submissions.problem submissions.testCases.testCase').then(team => {
+      Team.findOne({username: username}).populate('division submissions.problem submissions.problem.divisions.division').then(team => {
         if (!team) {
           reject(LoginResponse.NotFound);
         }

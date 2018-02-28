@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material';
 import { EditProblemComponent } from '../../../components/edit-problem/edit-problem.component';
 import { DialogResult } from '../../../dialog-result';
 import { ProblemService } from '../../../services/problem.service';
+import { DivisionModel } from '../../../../../common/models/division.model';
 
 // TODO: Split this into two components like how AdminHomeComponent has a bunch of LeaderboardComponents.
 
@@ -57,5 +58,10 @@ export class ProblemsComponent implements OnInit {
         }
       }
     });
+  }
+
+  // TODO: Make this a utility function (or inject it into the ProblemModel) since this same line keeps getting repeated.
+  private getProblemNumber(problem: ProblemModel, division: DivisionModel) {
+    return problem.divisions.find(div => div.division._id == division._id).problemNumber;
   }
 }

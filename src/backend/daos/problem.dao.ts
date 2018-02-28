@@ -3,6 +3,11 @@ import { ProblemModel } from '../../common/models/problem.model';
 
 type ProblemType = ProblemModel & mongoose.Document;
 
+const ProblemDivisionSchema = new mongoose.Schema({
+  division: {type: mongoose.Schema.Types.ObjectId, ref: 'Division'},
+  problemNumber: Number
+});
+
 const TestCaseSchema = new mongoose.Schema({
   hidden: Boolean,
   input: String,
@@ -10,10 +15,9 @@ const TestCaseSchema = new mongoose.Schema({
 });
 
 const Problem = mongoose.model<ProblemType>('Problem', new mongoose.Schema({
-  id: Number,
   title: String,
   description: String,
-  divisions: [{type: mongoose.Schema.Types.ObjectId, ref: 'Division'}],
+  divisions: [ProblemDivisionSchema],
   points: Number,
   testCasesCaseSensitive: {type: Boolean, default: true},
   testCases: [TestCaseSchema]
@@ -21,11 +25,12 @@ const Problem = mongoose.model<ProblemType>('Problem', new mongoose.Schema({
 
 export class ProblemDao {
   static getProblem(id: string): Promise<ProblemModel> {
-    return Problem.findById(id).populate('divisions').exec()
+    return Problem.findById(id).populate('divisions.division').exec()
   }
 
-  static getProblemsForDivision(division: string): Promise<ProblemModel[]> {
-    return Problem.find({divisions: {_id: division}}).sort('id').populate('divisions').exec()
+  static getProblemsForDivision(divisionId: string): Promise<ProblemModel[]> {
+    // TODO: Sort based on problemNumber for given divisionId.
+    return Problem.find({'divisions.division': divisionId}).populate('divisions.division').exec()
   }
 
   static addOrUpdateProblem(problem: ProblemModel): Promise<ProblemModel> {

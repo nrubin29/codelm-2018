@@ -17,11 +17,7 @@ import { SettingsDao } from './daos/settings.dao';
 import { DivisionType } from '../common/models/division.model';
 import { SettingsState } from '../common/models/settings.model';
 
-import settingsRoute from './routes/settings.route';
-import divisionRoute from './routes/division.route';
-import problemRoute from './routes/problem.route';
-import teamRoute from './routes/team.route';
-import adminRoute from './routes/admin.route';
+import apiRoutes from './routes/route';
 
 const app = express();
 app.use(morgan('dev'));
@@ -29,11 +25,7 @@ app.use(bodyParser.urlencoded({extended: true})); // parse application/x-www-for
 app.use(bodyParser.json()); // parse application/json
 app.use(bodyParser.json({type: 'application/vnd.api+json'})); // Parse application/vnd.api+json as json
 app.use(express.static('./dist/frontend'));
-app.use('/api/settings', settingsRoute);
-app.use('/api/divisions', divisionRoute);
-app.use('/api/problems', problemRoute);
-app.use('/api/teams', teamRoute);
-app.use('/api/admins', adminRoute);
+app.use('/api', apiRoutes);
 
 const httpSocketServer = http.createServer(app);
 const socketServer = io(httpSocketServer);

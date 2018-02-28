@@ -145,11 +145,4 @@ export class TeamDao {
   static deleteTeam(id: string): Promise<void> {
     return Team.deleteOne({_id: id}).exec();
   }
-
-  static forceTeam(req: Request, res: Response, next: NextFunction) {
-    TeamDao.getTeam(req.header('Authorization').split(' ')[1]).then(team => {
-      req.params.team = team;
-      next();
-    }).catch(next);
-  };
 }

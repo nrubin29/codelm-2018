@@ -4,50 +4,45 @@ import { CodeFile, CodeRunner, CppRunner, JavaRunner, PythonRunner, RunError } f
 import { TeamDao } from '../daos/team.dao';
 import { ProblemSubmission } from '../../common/problem-submission';
 import { ProblemModel } from '../../common/models/problem.model';
-import { AdminDao } from '../daos/admin.dao';
 import uuid = require('uuid');
 import { SubmissionDao } from '../daos/submission.dao';
+import { PermissionsUtil } from '../permissions.util';
 
 const router = Router();
 
-router.put('/', AdminDao.forceAdmin, (req, res) => {
+router.put('/', PermissionsUtil.requireAdmin, (req, res) => {
   ProblemDao.addOrUpdateProblem(req.body as ProblemModel).then(problem => res.json(problem)).catch(console.error);
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', PermissionsUtil.requireAuth, (req, res) => {
   ProblemDao.getProblem(req.params.id).then(problem => {
-    AdminDao.forceAdmin(req, res, () => {
-      if (!req.params.admin) {
-        problem.testCases = problem.testCases.filter(testCase => !testCase.hidden);
-        problem.testCasesCaseSensitive = undefined;
-      }
+    if (!req.params.admin) {
+      problem.testCases = problem.testCases.filter(testCase => !testCase.hidden);
+      problem.testCasesCaseSensitive = undefined;
+    }
 
-      res.json(problem);
-    });
+    res.json(problem);
   }).catch(console.error);
 });
 
-router.delete('/:id', AdminDao.forceAdmin, (req, res) => {
+router.delete('/:id', PermissionsUtil.requireAdmin, (req, res) => {
   ProblemDao.deleteProblem(req.params.id).then(() => res.json(true)).catch(console.error);
 });
 
-router.get('/division/:dId', (req, res) => {
+router.get('/division/:dId', PermissionsUtil.requireAuth, (req, res) => {
   ProblemDao.getProblemsForDivision(req.params.dId).then(problems => {
-    AdminDao.forceAdmin(req, res, () => {
-      if (!req.params.admin) {
-        problems.forEach(problem => {
-          problem.testCases = problem.testCases.filter(testCase => !testCase.hidden);
-          problem.testCasesCaseSensitive = undefined;
-        });
-      }
+    if (!req.params.admin) {
+      problems.forEach(problem => {
+        problem.testCases = problem.testCases.filter(testCase => !testCase.hidden);
+        problem.testCasesCaseSensitive = undefined;
+      });
+    }
 
-      res.json(problems);
-    });
+    res.json(problems);
   }).catch(console.error);
 });
 
-// TODO: Don't allow submit unless SettingsState matches team's DivisionType. (Write a permissions helper util for this)
-router.post('/submit', TeamDao.forceTeam, (req, res) => {
+router.post('/submit', PermissionsUtil.requireTeam, PermissionsUtil.requireAccess, (req, res) => {
   const problemSubmission = req.body as ProblemSubmission;
 
   ProblemDao.getProblem(problemSubmission.problemId).then(problem => {

@@ -66,11 +66,4 @@ export class AdminDao {
   static deleteAdmin(id: string): Promise<void> {
     return Admin.deleteOne({_id: id}).exec();
   }
-
-  static forceAdmin(req: Request, res: Response, next: NextFunction) {
-    AdminDao.getAdmin(req.header('Authorization').split(' ')[1]).then(admin => {
-      req.params.admin = admin;
-      next();
-    }).catch(next);
-  };
 }

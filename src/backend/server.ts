@@ -13,9 +13,8 @@ import { LoginResponse, LoginResponsePacket } from '../common/packets/login.resp
 import './daos/dao';
 import { TeamDao } from './daos/team.dao';
 import { AdminDao } from './daos/admin.dao';
-import { SettingsDao } from './daos/settings.dao';
-import { DivisionType } from '../common/models/division.model';
-import { SettingsState } from '../common/models/settings.model';
+
+import { PermissionsUtil } from './permissions.util';
 
 import apiRoutes from './routes/route';
 
@@ -43,16 +42,13 @@ mongoose.connect('mongodb://localhost/codelm', {useMongoClient: true}).then(() =
       socket.on('packet', (packet: Packet) => {
         if (packet.name === 'login') {
           let loginPacket = packet as LoginPacket;
-          // TODO: Clean this up.
           TeamDao.login(loginPacket.username, loginPacket.password).then(team => {
-            SettingsDao.getSettings().then(settings => {
-              const response = team.division.type === DivisionType.Special || settings.state === SettingsState.Debug || (settings.state === SettingsState.Competition && team.division.type === DivisionType.Competition) || (settings.state === SettingsState.Preliminaries && team.division.type === DivisionType.Preliminaries) ? LoginResponse.SuccessTeam : LoginResponse.Closed;
-              socket.emit('packet', new LoginResponsePacket(response, response === LoginResponse.SuccessTeam ? team : undefined));
+            const response = PermissionsUtil.hasAccess(team) ? LoginResponse.SuccessTeam : LoginResponse.Closed;
+            socket.emit('packet', new LoginResponsePacket(response, response === LoginResponse.SuccessTeam ? team : undefined));
 
-              if (response === LoginResponse.Closed) {
-                socket.disconnect(true);
-              }
-            }).catch(console.error);
+            if (response === LoginResponse.Closed) {
+              socket.disconnect(true);
+            }
           }).catch((response: LoginResponse | Error) => {
             if (response === LoginResponse.NotFound) {
               AdminDao.login(loginPacket.username, loginPacket.password).then(admin => {
@@ -82,12 +78,10 @@ mongoose.connect('mongodb://localhost/codelm', {useMongoClient: true}).then(() =
 
         else if (packet.name === 'register') {
           let registerPacket = packet as RegisterPacket;
-          // TODO: Clean this up.
+          // TODO: Clean merge this with the login code.
           TeamDao.register(registerPacket.teamData).then(team => {
-            console.log(team);
-            SettingsDao.getSettings().then(settings => {
-              socket.emit('packet', new LoginResponsePacket(settings.state === SettingsState.Debug || (settings.state === SettingsState.Preliminaries && team.division.type === DivisionType.Preliminaries) ? LoginResponse.SuccessTeam : LoginResponse.Closed, team));
-            }).catch(console.error);
+            const response = PermissionsUtil.hasAccess(team) ? LoginResponse.SuccessTeam : LoginResponse.Closed;
+            socket.emit('packet', new LoginResponsePacket(response, response === LoginResponse.SuccessTeam ? team : undefined));
           }).catch((response: LoginResponse | Error) => {
             if ((response as any).stack !== undefined) {
               console.error(response);

@@ -30,6 +30,7 @@
             <tr>
                 <th>Division</th>
                 <th>Problem Number</th>
+                <th>Delete</th>
             </tr>
             </thead>
             <tbody formArrayName="divisions">
@@ -46,7 +47,9 @@
                         <input matInput formControlName="problemNumber" type="number">
                     </mat-form-field>
                 </td>
-                <!-- TODO: Ability to delete division -->
+                <td>
+                    <button mat-button (click)="deleteDivision(i)"><mat-icon>delete</mat-icon></button>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -63,6 +66,7 @@
                 <th>Input</th>
                 <th>Output</th>
                 <th>Hidden</th>
+                <th>Delete</th>
             </tr>
             </thead>
             <tbody formArrayName="testCases">
@@ -78,7 +82,9 @@
                     </mat-form-field>
                 </td>
                 <td><mat-checkbox formControlName="hidden"></mat-checkbox></td>
-                <!-- TODO: Ability to delete test case -->
+                <td>
+                    <button mat-button (click)="deleteTestCase(i)"><mat-icon>delete</mat-icon></button>
+                </td>
             </tr>
             </tbody>
         </table>

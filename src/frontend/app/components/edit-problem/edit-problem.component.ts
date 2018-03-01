@@ -84,6 +84,14 @@ export class EditProblemComponent implements OnInit {
     this.divisions.push(this.createProblemDivisionGroup(problemDivision));
   }
 
+  deleteTestCase(index: number) {
+    this.testCases.removeAt(index);
+  }
+
+  deleteDivision(index: number) {
+    this.divisions.removeAt(index);
+  }
+
   get testCaseOutputModes() {
     return Object.keys(TestCaseOutputMode).map(key => TestCaseOutputMode[key]);
   }

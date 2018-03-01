@@ -14,7 +14,7 @@
             <input matInput formControlName="points" type="number" placeholder="Points">
         </mat-form-field>
         <mat-form-field color="accent">
-            <mat-select formControlName="testCaseOutputMode">
+            <mat-select formControlName="testCaseOutputMode" placeholder="Test Case Output Mode">
                 <mat-option *ngFor="let testCaseOutputMode of testCaseOutputModes" [value]="testCaseOutputMode">{{testCaseOutputMode}}</mat-option>
             </mat-select>
         </mat-form-field>

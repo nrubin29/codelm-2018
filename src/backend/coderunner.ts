@@ -1,5 +1,5 @@
 import fs = require('fs-extra');
-import { spawn } from 'child_process';
+import { execFile } from 'child_process';
 import { TestCaseModel } from '../common/models/problem.model';
 import { Subject } from 'rxjs/Subject';
 import { TestCaseSubmissionModel } from '../common/models/submission.model';
@@ -95,29 +95,20 @@ export class CodeRunner {
   private runProcess(cmd: string, args: string[], input?: string): Promise<ProcessRunResult> {
     return new Promise<ProcessRunResult>((resolve, reject) => {
       try {
-        // TODO: Timeout!
-        const process = spawn(cmd, args, { cwd: this.folder });
-        let output = '';
-        let error = '';
+        const process = execFile(cmd, args, { cwd: this.folder, timeout: 1000 }, (err: Error & {signal: string}, stdout, stderr) => {
+          let error;
+
+          if (err && err.signal === 'SIGTERM') {
+            error = 'Timed out';
+          }
+
+          resolve({output: stdout.replace(/^\s+|\s+$/g, ''), error: error ? error : stderr.replace(/^\s+|\s+$/g, '')});
+        });
 
         if (input) {
           process.stdin.write(input + '\n');
           process.stdin.end();
         }
-
-        process.stdout.on('data', data => {
-          output += data.toString();
-        });
-
-        process.stderr.on('data', data => {
-          error += data.toString();
-        });
-
-        process.on('close', () => {
-          output = output.replace(/^\s+|\s+$/g, '');
-          error = error.replace(/^\s+|\s+$/g, '');
-          resolve({output: output, error: error});
-        });
       }
 
       catch (e) {

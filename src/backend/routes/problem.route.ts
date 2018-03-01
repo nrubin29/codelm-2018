@@ -96,7 +96,7 @@ router.post('/submit', PermissionsUtil.requireTeam, PermissionsUtil.requireAcces
         res.json(submission._id);
       });
     });
-  })
+  });
 });
 
 export default router

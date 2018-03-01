@@ -53,6 +53,24 @@ describe('CodeRunner', () => {
     });
   });
 
+  describe('#timeout', () => {
+    it('should time out', () => {
+      const runner = new PythonRunner("coderunner-test", [new CodeFile("main.py", "while True: pass")]);
+
+      runner.subject.subscribe(next => {
+        console.log(next);
+      });
+
+      return runner.run([
+        {
+          hidden: false,
+          input: "",
+          output: ""
+        }
+      ]).should.eventually.be.rejected;
+    });
+  });
+
   describe('#echo', () => {
     it('should succeed', () => {
       const runner = new PythonRunner("coderunner-test", [new CodeFile("main.py", "print(input())")]);

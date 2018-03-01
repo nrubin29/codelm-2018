@@ -21,13 +21,11 @@ router.get('/:id', PermissionsUtil.requireAuth, (req, res) => {
     if (req.params.team) {
       // The toString() calls are needed because both _ids are objects.
       if (submission.team._id.toString() == req.params.team._id.toString()) {
-        console.log('match');
-
         res.json(sanitizeSubmission(submission));
       }
 
       else {
-        res.json(false);
+        res.sendStatus(403);
       }
     }
 
@@ -36,9 +34,13 @@ router.get('/:id', PermissionsUtil.requireAuth, (req, res) => {
     }
 
     else {
-      res.json(false);
+      res.sendStatus(403);
     }
   });
+});
+
+router.delete('/:id', PermissionsUtil.requireAdmin, (req, res) => {
+  SubmissionDao.deleteSubmission(req.params.id).then(() => res.json());
 });
 
 export default router

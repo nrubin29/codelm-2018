@@ -1,7 +1,6 @@
 import Packet from './packet';
 
 export class RegisterPacket extends Packet {
-
   constructor(public teamData: RegisterTeamData) {
     super('register');
   }

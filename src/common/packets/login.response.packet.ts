@@ -8,7 +8,8 @@ export const enum LoginResponse {
   IncorrectPassword = 'Incorrect Password',
   NotFound = 'Account not found',
   Closed = 'You cannot log in at this time',
-  AlreadyExists = 'An account with that username already exists'
+  AlreadyExists = 'An account with that username already exists',
+  Error = 'An internal error occurred.',
 }
 
 export class LoginResponsePacket extends Packet {

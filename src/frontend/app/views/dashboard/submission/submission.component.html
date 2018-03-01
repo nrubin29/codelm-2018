@@ -38,6 +38,9 @@
         <app-card title="Error" *ngIf="submission.error">
             <code>{{submission.error}}</code>
         </app-card>
+        <app-card title="Admin" *ngIf="admin">
+            <button mat-raised-button color="accent" (click)="delete()">Delete Submission</button>
+        </app-card>
     </div>
     <app-code-mirror [config]="{ lineNumbers: true, lineWrapping: true, mode: mode, readOnly: true }"></app-code-mirror>
 </div>

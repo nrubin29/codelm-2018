@@ -1,6 +1,8 @@
 import mongoose = require('mongoose');
 import { DefaultSettingsModel, SettingsModel, SettingsState } from '../../common/models/settings.model';
 import { Job, scheduleJob } from 'node-schedule';
+import { SocketManager } from '../socket.manager';
+import { UpdateSettingsPacket } from '../../common/packets/update.settings.packet';
 
 type SettingsType = SettingsModel & mongoose.Document;
 
@@ -46,6 +48,7 @@ export class SettingsDao {
             });
           }
 
+          SocketManager.instance.emitToAll(new UpdateSettingsPacket());
           resolve(newSettings);
         }).catch(reject);
       });
@@ -56,7 +59,8 @@ export class SettingsDao {
     return new Promise<SettingsModel>((resolve, reject) => {
       Settings.deleteOne({}).exec().then(() => {
         Settings.create(DefaultSettingsModel).then(settings => {
-          resolve(settings)
+          SocketManager.instance.emitToAll(new UpdateSettingsPacket());
+          resolve(settings);
         }).catch(reject);
       }).catch(reject);
     });

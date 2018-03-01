@@ -2,6 +2,8 @@ import mongoose = require('mongoose');
 import { SubmissionModel, TestCaseSubmissionModel } from '../../common/models/submission.model';
 import { ProblemModel, TestCaseOutputMode } from '../../common/models/problem.model';
 import { ModelPopulateOptions } from 'mongoose';
+import { SocketManager } from '../socket.manager';
+import { UpdateTeamPacket } from '../../common/packets/update.team.packet';
 
 type SubmissionType = SubmissionModel & mongoose.Document;
 
@@ -133,6 +135,13 @@ export class SubmissionDao {
   }
 
   static deleteSubmission(id: string): Promise<void> {
-    return Submission.deleteOne({_id: id}).exec();
+    return new Promise<void>((resolve, reject) => {
+      SubmissionDao.getSubmission(id).then(submission => {
+        Submission.deleteOne({_id: id}).exec().then(() => {
+          SocketManager.instance.emit(submission.team._id.toString(), new UpdateTeamPacket());
+          resolve();
+        }).catch(reject);
+      }).catch(reject);
+    });
   }
 }

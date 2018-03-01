@@ -4,6 +4,8 @@ import { TeamService } from '../../../services/team.service';
 import { ProblemService } from '../../../services/problem.service';
 import { MatSidenav } from '@angular/material';
 import { TeamModel } from '../../../../../common/models/team.model';
+import { SocketService } from '../../../services/socket.service';
+import Packet from '../../../../../common/packets/packet';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,9 +17,15 @@ export class DashboardComponent implements OnInit {
   private problems: ProblemModel[] = [];
   @ViewChild(MatSidenav) private sideNav: MatSidenav;
 
-  constructor(private problemService: ProblemService, private teamService: TeamService) { }
+  constructor(private problemService: ProblemService, private teamService: TeamService, private socketService: SocketService) { }
 
   ngOnInit() {
+    this.socketService.stream.subscribe((packet: Packet) => {
+      if (packet.name === 'updateTeam') {
+        this.teamService.refreshTeam();
+      }
+    });
+
     this.teamService.team.subscribe(team => {
       this.team = team;
       this.problemService.getProblems(this.team.division._id).then(problems => this.problems = problems);

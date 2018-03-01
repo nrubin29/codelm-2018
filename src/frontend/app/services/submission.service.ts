@@ -19,4 +19,8 @@ export class SubmissionService {
   getSubmissionsForTeam(teamId: string): Promise<SubmissionModel[]> {
     return this.restService.get<SubmissionModel[]>(`${this.endpoint}/team/${teamId}`)
   }
+
+  deleteSubmission(id: string): Promise<void> {
+    return this.restService.delete<void>(`${this.endpoint}/${id}`);
+  }
 }

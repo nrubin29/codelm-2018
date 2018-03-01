@@ -130,8 +130,12 @@ export class SubmissionDao {
     });
   }
 
-  static addSubmission(submission: SubmissionModel): Promise<SubmissionType> {
+  static addSubmission(submission: SubmissionModel): Promise<SubmissionModel> {
     return Submission.create(submission);
+  }
+
+  static updateSubmission(id: string, submission: SubmissionModel): Promise<SubmissionModel> {
+    return Submission.updateOne({_id: id}, submission, {new: true}).exec();
   }
 
   static deleteSubmission(id: string): Promise<void> {

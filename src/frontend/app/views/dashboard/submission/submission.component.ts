@@ -34,6 +34,15 @@ export class SubmissionComponent implements OnInit {
     }).catch(alert);
   }
 
+  overrideCorrect() {
+    const submission: SubmissionModel = {...this.submission};
+    submission.overrideCorrect = !submission.overrideCorrect;
+    this.submissionService.updateSubmission(submission).then(() => {
+      // TODO: Refresh view.
+      alert('Updated.');
+    }).catch(alert);
+  }
+
   get admin(): boolean {
     return !this.teamService.team.getValue();
   }

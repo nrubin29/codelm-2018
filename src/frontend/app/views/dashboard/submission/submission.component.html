@@ -40,6 +40,7 @@
         </app-card>
         <app-card title="Admin" *ngIf="admin">
             <button mat-raised-button color="accent" (click)="delete()">Delete Submission</button>
+            <button mat-raised-button color="accent" (click)="overrideCorrect()">Toggle override correct</button>
         </app-card>
     </div>
     <app-code-mirror [config]="{ lineNumbers: true, lineWrapping: true, mode: mode, readOnly: true }"></app-code-mirror>

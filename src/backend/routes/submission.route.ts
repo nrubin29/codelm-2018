@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { sanitizeSubmission, SubmissionDao } from '../daos/submission.dao';
 import { PermissionsUtil } from '../permissions.util';
+import { SubmissionModel } from '../../common/models/submission.model';
 
 const router = Router();
 
@@ -36,6 +37,12 @@ router.get('/:id', PermissionsUtil.requireAuth, (req, res) => {
     else {
       res.sendStatus(403);
     }
+  });
+});
+
+router.put('/:id', PermissionsUtil.requireAdmin, (req, res) => {
+  SubmissionDao.updateSubmission(req.params.id, req.body as SubmissionModel).then(submission => {
+    res.json(submission);
   });
 });
 

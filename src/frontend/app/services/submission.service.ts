@@ -20,6 +20,10 @@ export class SubmissionService {
     return this.restService.get<SubmissionModel[]>(`${this.endpoint}/team/${teamId}`)
   }
 
+  updateSubmission(submission: SubmissionModel): Promise<SubmissionModel> {
+    return this.restService.put<SubmissionModel>(`${this.endpoint}/${submission._id}`, submission);
+  }
+
   deleteSubmission(id: string): Promise<void> {
     return this.restService.delete<void>(`${this.endpoint}/${id}`);
   }

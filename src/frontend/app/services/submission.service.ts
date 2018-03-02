@@ -20,6 +20,10 @@ export class SubmissionService {
     return this.restService.get<SubmissionModel[]>(`${this.endpoint}/team/${teamId}`)
   }
 
+  getDisputedSubmissions(): Promise<SubmissionModel[]> {
+    return this.restService.get<SubmissionModel[]>(`${this.endpoint}/disputes`);
+  }
+
   updateSubmission(submission: SubmissionModel): Promise<SubmissionModel> {
     return this.restService.put<SubmissionModel>(`${this.endpoint}/${submission._id}`, submission);
   }

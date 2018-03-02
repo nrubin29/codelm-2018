@@ -54,7 +54,11 @@ const SubmissionSchema = new mongoose.Schema({
   testCases: [TestCaseSubmissionSchema],
   error: String,
   overrideCorrect: {type: Boolean, default: false},
-  datetime: {type: Date, default: Date.now}
+  datetime: {type: Date, default: Date.now},
+  dispute: {
+    open: Boolean,
+    message: String
+  }
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
@@ -113,12 +117,16 @@ export class SubmissionDao {
   private static readonly problemPopulationPath: ModelPopulateOptions = {path: 'problem', model: 'Problem', populate: {path: 'divisions.division', model: 'Division'}};
   private static readonly teamPopulationPath = {path: 'team', model: 'Team', populate: {path: 'division', model: 'Division'}};
 
-  static getSubmission(id: string): Promise<SubmissionModel> {
+  static getSubmission(id: string): Promise<SubmissionType> {
     return Submission.findById(id).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
   }
 
   static getSubmissionsForTeam(teamId: string): Promise<SubmissionModel[]> {
     return Submission.find({team: teamId}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
+  }
+
+  static getDisputedSubmissions(): Promise<SubmissionModel[]> {
+    return Submission.find({'dispute.open': true}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
   }
 
   static getScoreForTeam(teamId: string): Promise<number> {
@@ -135,7 +143,7 @@ export class SubmissionDao {
   }
 
   static updateSubmission(id: string, submission: SubmissionModel): Promise<SubmissionModel> {
-    return Submission.updateOne({_id: id}, submission, {new: true}).exec();
+    return Submission.findOneAndUpdate({_id: id}, submission, {new: true}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
   }
 
   static deleteSubmission(id: string): Promise<void> {

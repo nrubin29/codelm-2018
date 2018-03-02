@@ -17,6 +17,8 @@ export class SubmissionComponent implements OnInit {
   mode: string;
   @ViewChild(CodeMirrorComponent) codeMirror: CodeMirrorComponent;
 
+  disputeMessage: string;
+
   constructor(private submissionService: SubmissionService, private teamService: TeamService, private codeSaverService: CodeSaverService, private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
@@ -37,9 +39,33 @@ export class SubmissionComponent implements OnInit {
   overrideCorrect() {
     const submission: SubmissionModel = {...this.submission};
     submission.overrideCorrect = !submission.overrideCorrect;
-    this.submissionService.updateSubmission(submission).then(() => {
-      // TODO: Refresh view.
-      alert('Updated.');
+    this.submissionService.updateSubmission(submission).then(submission => {
+      this.submission = submission;
+    }).catch(alert);
+  }
+
+  sendDispute() {
+    if (!this.disputeMessage) {
+      alert('Please provide a message explaining your dispute.');
+    }
+
+    const submission: SubmissionModel = {...this.submission};
+    submission.dispute = {
+      open: true,
+      message: this.disputeMessage
+    };
+
+    this.submissionService.updateSubmission(submission).then(submission => {
+      this.submission = submission;
+    }).catch(alert);
+  }
+
+  resolveDispute() {
+    const submission: SubmissionModel = {...this.submission};
+    submission.dispute.open = false;
+
+    this.submissionService.updateSubmission(submission).then(submission => {
+      this.submission = submission;
     }).catch(alert);
   }
 

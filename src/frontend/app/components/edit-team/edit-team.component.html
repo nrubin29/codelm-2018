@@ -1,4 +1,4 @@
-<h1>{{team ? team.username : 'New Team'}}</h1>
+<h1>{{team.username ? team.username : 'New Team'}}</h1>
 <form #teamForm="ngForm" [formGroup]="formGroup" (submit)="submit(teamForm)">
   <table>
     <tr>

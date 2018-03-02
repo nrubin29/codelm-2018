@@ -11,6 +11,11 @@ export interface TestCaseSubmissionModel {
   correct?: boolean;
 }
 
+export interface DisputeModel {
+  open: boolean;
+  message: string;
+}
+
 interface BaseSubmissionModel {
   _id?: string;
   team: TeamModel;
@@ -22,6 +27,7 @@ interface BaseSubmissionModel {
   points?: number;
   overrideCorrect?: boolean;
   datetime?: Date;
+  dispute?: DisputeModel;
 }
 
 interface ErrorSubmissionModel extends BaseSubmissionModel {

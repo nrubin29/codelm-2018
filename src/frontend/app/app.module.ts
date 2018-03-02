@@ -54,6 +54,7 @@ import { RegisterComponent } from './views/register/register.component';
 import { CountdownComponent } from './components/countdown/countdown.component';
 import { EndComponent } from './views/dashboard/end/end.component';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+import { DisputesComponent } from './views/admin/disputes/disputes.component';
 
 @NgModule({
   declarations: [
@@ -84,6 +85,7 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
     RegisterComponent,
     CountdownComponent,
     EndComponent,
+    DisputesComponent,
   ],
   imports: [
     BrowserModule,

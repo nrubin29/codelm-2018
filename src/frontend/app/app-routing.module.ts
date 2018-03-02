@@ -31,6 +31,8 @@ import { EndGuard } from './guards/end.guard';
 import { NotEndGuard } from './guards/not-end.guard';
 import { DisconnectGuard } from './guards/disconnect.guard';
 import { SubmissionsResolve } from './views/dashboard/problem/submissions.resolve';
+import { DisputesComponent } from './views/admin/disputes/disputes.component';
+import { DisputesResolve } from './views/admin/disputes/disputes.resolve';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -52,6 +54,7 @@ const routes: Routes = [
         {path: 'settings', component: SettingsComponent, resolve: {settings: SettingsResolve}},
         {path: 'team/:id', component: TeamComponent, resolve: {team: TeamResolve, submissions: SubmissionsResolve}},
         {path: 'submission/:id', component: SubmissionComponent, resolve: {submission: SubmissionResolve}},
+        {path: 'disputes', component: DisputesComponent, resolve: {disputes: DisputesResolve}},
         {path: 'divisions', component: DivisionsComponent},
         {path: 'problems', component: ProblemsComponent, resolve: {divisionsAndProblems: DivisionsProblemsResolve}},
         {path: 'admins', component: AdminsComponent},
@@ -77,7 +80,8 @@ const routes: Routes = [
     DivisionsProblemsResolve,
     SettingsResolve,
     DivisionsResolve,
-    SubmissionsResolve
+    SubmissionsResolve,
+    DisputesResolve
   ]
 })
 export class AppRoutingModule {}

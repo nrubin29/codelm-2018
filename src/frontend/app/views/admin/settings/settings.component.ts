@@ -22,8 +22,7 @@ export class SettingsComponent implements OnInit {
 
       this.formGroup = new FormGroup({
         state: new FormControl(this.settings.state),
-        // end: new FormControl(moment(this.settings.end))
-        end: new FormControl(this.settings.end)
+        end: new FormControl(moment(this.settings.end))
       })
     });
   }

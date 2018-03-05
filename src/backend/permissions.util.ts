@@ -85,4 +85,25 @@ export class PermissionsUtil {
       }
     });
   }
+
+  // Same as requireAuth, but doesn't throw an error.
+  static requestAuth(req: Request, res: Response, next: NextFunction) {
+    PermissionsUtil.requireTeam(req, res, () => {
+      if (req.params.team) {
+        next();
+      }
+
+      else {
+        PermissionsUtil.requireAdmin(req, res, () => {
+          if (req.params.admin) {
+            next();
+          }
+
+          else {
+            next();
+          }
+        });
+      }
+    });
+  }
 }

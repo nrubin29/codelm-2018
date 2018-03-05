@@ -36,4 +36,16 @@ export class CodeSaverService {
       'text/x-c++src': 'cpp'
     }[mode || this.mode];
   }
+
+  getDocumentation(language?: string) {
+    if (language === undefined) {
+      language = this.getLanguage(this.mode);
+    }
+
+    return {
+      python: 'https://docs.python.org/3.5/index.html',
+      java: 'https://docs.oracle.com/javase/8/docs/api/',
+      cpp: 'http://www.cplusplus.com/reference/'
+    }[language];
+  }
 }

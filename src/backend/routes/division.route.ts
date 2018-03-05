@@ -6,7 +6,7 @@ import { FileArray, UploadedFile } from 'express-fileupload';
 
 const router = Router();
 
-router.get('/', PermissionsUtil.requireAuth, (req: Request, res: Response) => {
+router.get('/', PermissionsUtil.requestAuth, (req: Request, res: Response) => {
   if (req.params.admin) {
     DivisionDao.getDivisions().then(divisions => res.json(divisions));
   }

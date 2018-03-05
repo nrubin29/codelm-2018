@@ -71,6 +71,16 @@ app-dashboard, app-admin {
 
   &.right {
     justify-content: flex-end;
+    align-items: center;
+
+    & > :not(:last-child) {
+      margin-right: 1em;
+    }
+
+    // This fixes the button alignment in problem.component, but it might not be wanted elsewhere.
+    & > a[mat-raised-button] {
+      margin-bottom: 1em;
+    }
   }
 
   &.column {

@@ -4,7 +4,6 @@ import { PermissionsUtil } from '../permissions.util';
 
 const router = Router();
 
-// TODO: Sanitize SettingsModel object as needed.
 router.get('/', (req, res) => {
   SettingsDao.getSettings().then(settings => res.json(settings));
 });

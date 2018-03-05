@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import 'rxjs/add/operator/debounceTime';
 import { ProblemModel } from '../../../../../common/models/problem.model';
@@ -71,5 +71,9 @@ export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
       test: test
     };
     this.router.navigate(['dashboard', 'submit'])
+  }
+
+  get documentation() {
+    return this.codeSaverService.getDocumentation();
   }
 }

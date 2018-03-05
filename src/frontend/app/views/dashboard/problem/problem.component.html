@@ -37,6 +37,7 @@
         </mat-select>
       </mat-form-field>
     </form>
+    <a mat-raised-button color="accent" [href]="documentation" target="_blank">Documentation</a>
   </div>
   <app-code-mirror [config]="{ lineNumbers: true, lineWrapping: true, mode: 'text/x-python' }" *ngIf="language === 'python'"></app-code-mirror>
   <app-code-mirror [config]="{ lineNumbers: true, lineWrapping: true, mode: 'text/x-java' }" *ngIf="language === 'java'"></app-code-mirror>

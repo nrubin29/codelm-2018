@@ -31,6 +31,10 @@ export class RegisterComponent implements OnInit {
   }
 
   register(form: NgForm) {
+    if (!form.value.username || !form.value.password) {
+      alert('Please enter a username and password');
+    }
+
     this.authService.register(form.value).then((response: LoginResponse) => {
       if (response === LoginResponse.SuccessTeam) {
         this.router.navigate(['dashboard']);

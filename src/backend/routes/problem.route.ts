@@ -49,18 +49,23 @@ router.post('/submit', PermissionsUtil.requireTeam, PermissionsUtil.requireAcces
 
     switch (problemSubmission.language) {
       case 'python': {
-        runner = new PythonRunner(folder, [new CodeFile("main.py", problemSubmission.code)]);
+        runner = new PythonRunner(folder, [new CodeFile('main.py', problemSubmission.code)]);
         break;
       }
 
       case 'java': {
-        runner = new JavaRunner(folder, [new CodeFile(problem.title.split(' ').join('') + ".java", problemSubmission.code)]);
+        runner = new JavaRunner(folder, [new CodeFile(problem.title.split(' ').join('') + '.java', problemSubmission.code)]);
         break;
       }
 
       case 'cpp': {
-        runner = new CppRunner(folder, [new CodeFile("main.cpp", problemSubmission.code)]);
+        runner = new CppRunner(folder, [new CodeFile('main.cpp', problemSubmission.code)]);
         break;
+      }
+
+      default: {
+        res.sendStatus(400);
+        return;
       }
     }
 
@@ -84,7 +89,8 @@ router.post('/submit', PermissionsUtil.requireTeam, PermissionsUtil.requireAcces
         res.json(submission._id);
       });
     }).catch((err: RunError) => {
-      // console.error(err);
+      console.error(err);
+
       SubmissionDao.addSubmission({
         team: req.params.team,
         problem: problem,
@@ -96,6 +102,8 @@ router.post('/submit', PermissionsUtil.requireTeam, PermissionsUtil.requireAcces
         res.json(submission._id);
       });
     });
+  }).catch(() => {
+    res.sendStatus(400);
   });
 });
 

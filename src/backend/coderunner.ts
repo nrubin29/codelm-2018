@@ -36,7 +36,7 @@ export class CodeFile {
   }
 }
 
-export class CodeRunner {
+export abstract class CodeRunner {
   public subject: Subject<string | TestCaseRunResult>;
 
   constructor(public folder: string, public files: CodeFile[]) {
@@ -95,7 +95,7 @@ export class CodeRunner {
   private runProcess(cmd: string, args: string[], input?: string): Promise<ProcessRunResult> {
     return new Promise<ProcessRunResult>((resolve, reject) => {
       try {
-        const process = execFile(cmd, args, { cwd: this.folder, timeout: 1000 }, (err: Error & {signal: string}, stdout, stderr) => {
+        const process = execFile(cmd, args, { cwd: this.folder, timeout: 5000 }, (err: Error & {signal: string}, stdout, stderr) => {
           let error;
 
           if (err && err.signal === 'SIGTERM') {
@@ -121,19 +121,18 @@ export class CodeRunner {
     try {
       this.before();
 
-      await fs.remove(this.folder);
-
-      try {
-        await fs.mkdir(this.folder);
+      if (await fs.pathExists(this.folder)) {
+        await fs.remove(this.folder);
       }
-      catch {}
+
+      await fs.mkdir(this.folder);
 
       await Promise.all(this.files.map(file => file.mkfile(this.folder)));
 
-      this.subject.next("compiling");
+      this.subject.next('compiling');
       await this.compile();
 
-      this.subject.next("running");
+      this.subject.next('running');
 
       const results: TestCaseRunResult[] = [];
       for (let testCase of testCases) {
@@ -142,7 +141,7 @@ export class CodeRunner {
         this.subject.next(result);
       }
 
-      this.subject.next("cleaning up");
+      this.subject.next('cleaning up');
 
       return Promise.resolve(results);
     }
@@ -152,13 +151,8 @@ export class CodeRunner {
     }
   }
 
-  protected compile(): Promise<RunResult> {
-    return Promise.reject(new Error("compile() not implemented."));
-  }
-
-  protected runTestCase(testCase: TestCaseModel): Promise<TestCaseRunResult> {
-    return Promise.reject(new Error('runTestCase() not implemented.'));
-  }
+  protected abstract compile(): Promise<RunResult>;
+  protected abstract runTestCase(testCase: TestCaseModel): Promise<TestCaseRunResult>;
 }
 
 export class JavaRunner extends CodeRunner {

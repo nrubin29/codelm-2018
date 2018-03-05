@@ -78,6 +78,10 @@ export class TeamDao {
 
   static login(username: string, password: string): Promise<TeamModel> {
     return new Promise<TeamModel>((resolve, reject) => {
+      if (!username || !password) {
+        reject(LoginResponse.NotFound);
+      }
+
       Team.findOne({username: username}).populate('division').then(team => {
         if (!team) {
           reject(LoginResponse.NotFound);
@@ -116,6 +120,10 @@ export class TeamDao {
 
   // TODO: Consolidate code between register() and addOrUpdateTeam()
   static register(team: any): Promise<TeamModel> {
+    if (!team.username || !team.password) {
+      return Promise.reject(LoginResponse.NotFound);
+    }
+
     const salt = crypto.randomBytes(16).toString('hex');
     const hash = crypto.pbkdf2Sync(team.password, new Buffer(salt), 1000, 64, 'sha512').toString('hex');
 

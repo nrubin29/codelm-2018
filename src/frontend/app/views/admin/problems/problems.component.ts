@@ -34,27 +34,29 @@ export class ProblemsComponent implements OnInit {
       }
     });
 
-    ref.afterClosed().subscribe((r: [DialogResult, any]) => {
-      const result = r[0];
-      const data = r[1];
+    ref.afterClosed().subscribe((r?: [DialogResult, any]) => {
+      if (r) {
+        const result = r[0];
+        const data = r[1];
 
-      // TODO: Correctly update data or reload route.
-      if (result === 'save') {
-        this.problemService.addOrUpdateProblem(data).then(() => {
-          // this.divisions.filter(division => data.divisions.indexOf(division._id) !== -1).forEach(division => {
-          //   division.problems = division.problems.filter(problem => problem._id != data._id).concat(data);
-          // });
-        }).catch(alert);
-      }
-
-      else if (result === 'delete') {
-        // TODO: Replace this confirm with another dialog.
-        if (confirm('Are you sure you want to delete this problem?')) {
-          this.problemService.deleteProblem(data._id).then(() => {
+        // TODO: Correctly update data or reload route.
+        if (result === 'save') {
+          this.problemService.addOrUpdateProblem(data).then(() => {
             // this.divisions.filter(division => data.divisions.indexOf(division._id) !== -1).forEach(division => {
             //   division.problems = division.problems.filter(problem => problem._id != data._id).concat(data);
             // });
           }).catch(alert);
+        }
+
+        else if (result === 'delete') {
+          // TODO: Replace this confirm with another dialog.
+          if (confirm('Are you sure you want to delete this problem?')) {
+            this.problemService.deleteProblem(data._id).then(() => {
+              // this.divisions.filter(division => data.divisions.indexOf(division._id) !== -1).forEach(division => {
+              //   division.problems = division.problems.filter(problem => problem._id != data._id).concat(data);
+              // });
+            }).catch(alert);
+          }
         }
       }
     });

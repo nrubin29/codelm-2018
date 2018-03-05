@@ -1,6 +1,8 @@
 import express = require('express');
 import morgan = require('morgan');
 import bodyParser = require('body-parser');
+import path = require('path');
+import fileUpload = require('express-fileupload');
 import mongoose = require('mongoose');
 import http = require('http');
 import io = require('socket.io');
@@ -14,7 +16,9 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: true})); // parse application/x-www-form-urlencoded
 app.use(bodyParser.json()); // parse application/json
 app.use(bodyParser.json({type: 'application/vnd.api+json'})); // Parse application/vnd.api+json as json
-app.use(express.static('./dist/frontend'));
+app.use(fileUpload());
+app.use(express.static(path.join('.', 'files')));
+app.use(express.static(path.join('.', 'dist', 'frontend')));
 app.use('/api', apiRoutes);
 
 const httpSocketServer = http.createServer(app);

@@ -1,7 +1,7 @@
 export enum DivisionType {
-  Competition,
-  Preliminaries,
-  Special
+  Competition = 'Competition',
+  Preliminaries = 'Preliminaries',
+  Special = 'Special'
 }
 
 export interface DivisionModel {

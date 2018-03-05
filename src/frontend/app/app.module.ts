@@ -128,7 +128,10 @@ import { DisputesComponent } from './views/admin/disputes/disputes.component';
     SettingsService,
     PluralizePipe,
   ],
-  entryComponents: [EditProblemComponent],
+  entryComponents: [
+    EditProblemComponent,
+    EditDivisionComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

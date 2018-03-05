@@ -6,7 +6,7 @@ type DivisionDocumentType = DivisionModel & mongoose.Document;
 const DivisionSchema = new mongoose.Schema({
   id: Number,
   name: String,
-  type: {type: Number, default: DivisionType.Competition}
+  type: {type: String, default: DivisionType.Competition}
 });
 
 const Division = mongoose.model<DivisionDocumentType>('Division', DivisionSchema);

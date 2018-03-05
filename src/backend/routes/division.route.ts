@@ -1,12 +1,12 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { DivisionDao } from '../daos/division.dao';
 import { DivisionModel, DivisionType } from '../../common/models/division.model';
 import { PermissionsUtil } from '../permissions.util';
+import { FileArray, UploadedFile } from 'express-fileupload';
 
 const router = Router();
 
-// TODO: If there is any sensitive Division data, don't send it.
-router.get('/', PermissionsUtil.requireAuth, (req, res) => {
+router.get('/', PermissionsUtil.requireAuth, (req: Request, res: Response) => {
   if (req.params.admin) {
     DivisionDao.getDivisions().then(divisions => res.json(divisions));
   }
@@ -16,11 +16,28 @@ router.get('/', PermissionsUtil.requireAuth, (req, res) => {
   }
 });
 
-router.put('/', PermissionsUtil.requireAdmin, (req, res) => {
-  DivisionDao.addOrUpdateDivision(req.body as DivisionModel).then(problem => res.json(problem)).catch(console.error);
+router.put('/', PermissionsUtil.requireAdmin, (req: Request & {files?: FileArray}, res: Response) => {
+  DivisionDao.addOrUpdateDivision(req.body as DivisionModel).then(division => {
+    if (req.files) {
+      const file = req.files['starterCode'] as UploadedFile;
+      file.mv(`./files/files/${division._id}.zip`, err => {
+        if (err) {
+          res.json(err);
+        }
+
+        else {
+          res.json(division);
+        }
+      });
+    }
+
+    else {
+      res.json(division);
+    }
+  }).catch(console.error);
 });
 
-router.delete('/:id', PermissionsUtil.requireAdmin, (req, res) => {
+router.delete('/:id', PermissionsUtil.requireAdmin, (req: Request, res: Response) => {
   DivisionDao.deleteDivision(req.params.id).then(() => res.json(true)).catch(console.error)
 });
 

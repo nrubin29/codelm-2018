@@ -1,10 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, NgForm } from '@angular/forms';
-import { DivisionModel } from '../../../../common/models/division.model';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { DivisionModel, DivisionType } from '../../../../common/models/division.model';
 import { DivisionService } from '../../services/division.service';
-import { DivisionsComponent } from '../../views/admin/divisions/divisions.component';
-
-// TODO: Add `type` to the form.
+import { EditProblemComponent } from '../edit-problem/edit-problem.component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 @Component({
   selector: 'app-edit-division',
@@ -12,32 +11,32 @@ import { DivisionsComponent } from '../../views/admin/divisions/divisions.compon
   styleUrls: ['./edit-division.component.scss']
 })
 export class EditDivisionComponent implements OnInit {
-  @Input() division: DivisionModel;
+  division: DivisionModel;
 
   formGroup: FormGroup;
+  file: File;
 
-  constructor(private divisionService: DivisionService, private divisionsComponent: DivisionsComponent) { }
+  constructor(private divisionService: DivisionService, private dialogRef: MatDialogRef<EditProblemComponent>, @Inject(MAT_DIALOG_DATA) private data: {division: DivisionModel}) { }
 
   ngOnInit() {
-    this.division = this.division ? this.division : {_id: undefined, name: undefined, type: undefined};
+    this.division = this.data.division ? this.data.division : {_id: undefined, name: undefined, type: undefined};
 
     this.formGroup = new FormGroup({
       _id: new FormControl(this.division._id),
-      name: new FormControl(this.division.name)
+      name: new FormControl(this.division.name),
+      type: new FormControl(this.division.type)
     })
   }
 
-  submit(form: NgForm) {
-    this.divisionService.addOrUpdateDivision(form.value).then(() => {
-      this.divisionsComponent.reload();
-    }).catch(alert);
+  handleFile(files: FileList) {
+    this.file = files[0];
   }
 
-  delete() {
-    if (confirm('Are you sure you want to delete this division?')) {
-      this.divisionService.deleteDivision(this.division._id).then(() => {
-        this.divisionsComponent.reload();
-      }).catch(alert);
-    }
+  get formValue() {
+    return Object.assign({file: this.file}, this.formGroup.getRawValue());
+  }
+
+  get types(): DivisionType[] {
+    return Object.keys(DivisionType).map(key => DivisionType[key]);
   }
 }

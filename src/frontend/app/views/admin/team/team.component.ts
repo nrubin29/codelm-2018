@@ -5,6 +5,7 @@ import { TeamService } from '../../../services/team.service';
 import { SubmissionModel } from '../../../../../common/models/submission.model';
 import { ProblemModel } from '../../../../../common/models/problem.model';
 import { ProblemService } from '../../../services/problem.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-team',
@@ -28,5 +29,9 @@ export class TeamComponent implements OnInit {
         this.problemSubmissions[problem._id] = submissions.filter(submission => submission.problem._id === problem._id);
       }
     });
+  }
+
+  asMoment(date: Date): moment.Moment {
+    return moment(date);
   }
 }

@@ -17,11 +17,19 @@ const TestCaseSubmissionSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-function toBoolean(str: string): boolean {
+function isTrue(str: string): boolean {
   return str === 'true' || str === 'True' || str === '1';
 }
 
+function isFalse(str: string): boolean {
+  return str === 'false' || str === 'False' || str === '0';
+}
+
 function isTestCaseSubmissionCorrect(testCase: TestCaseSubmissionModel, problem: ProblemModel): boolean {
+  if (!testCase.output) {
+    return false;
+  }
+
   switch (problem.testCaseOutputMode) {
     case TestCaseOutputMode.CaseSensitive: {
       return testCase.output === testCase.correctOutput;
@@ -33,7 +41,7 @@ function isTestCaseSubmissionCorrect(testCase: TestCaseSubmissionModel, problem:
       return parseFloat(testCase.output).toFixed(5) === parseFloat(testCase.correctOutput).toFixed(5);
     }
     case TestCaseOutputMode.Boolean: {
-      return toBoolean(testCase.output) === toBoolean(testCase.correctOutput);
+      return (isTrue(testCase.output) && isTrue(testCase.correctOutput)) || (isFalse(testCase.output) && isFalse(testCase.correctOutput));
     }
     default: {
       throw new Error(`No support for output mode ${problem.testCaseOutputMode}`);

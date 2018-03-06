@@ -9,6 +9,8 @@ mat-card-header {
 }
 
 mat-card-content {
+  word-wrap: break-word;
+
   &.pad-card {
     padding: 20px !important;
   }

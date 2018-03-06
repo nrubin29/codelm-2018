@@ -54,6 +54,7 @@ app-dashboard, app-admin {
 
     & > *, & > app-card > mat-card {
       flex: 1;
+      max-width: 50%;
     }
 
     & > :not(:last-child) {

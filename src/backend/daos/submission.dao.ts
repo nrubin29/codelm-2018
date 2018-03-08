@@ -4,6 +4,7 @@ import { ProblemModel, TestCaseOutputMode } from '../../common/models/problem.mo
 import { ModelPopulateOptions } from 'mongoose';
 import { SocketManager } from '../socket.manager';
 import { UpdateTeamPacket } from '../../common/packets/update.team.packet';
+import { ProblemUtil } from '../../common/util/problem.util';
 
 type SubmissionType = SubmissionModel & mongoose.Document;
 
@@ -96,14 +97,14 @@ SubmissionSchema.virtual('result').get(function() {
   }
 });
 
-// TODO: Lock the question after a certain number of incorrect submissions or start taking away points.
+// TODO: Lock the question after a certain number of incorrect submissions.
 SubmissionSchema.virtual('points').get(function() {
   if (this.test) {
     return 0;
   }
 
   else if (this.overrideCorrect) {
-    return this.problem.points;
+    return ProblemUtil.getPoints(this.problem, this.team);
   }
 
   else if (this.error) {
@@ -111,7 +112,7 @@ SubmissionSchema.virtual('points').get(function() {
   }
 
   else if (this.testCases.every(testCase => testCase.toObject().correct)) {
-    return this.problem.points;
+    return ProblemUtil.getPoints(this.problem, this.team);
   }
 
   else {
@@ -123,7 +124,7 @@ const Submission = mongoose.model<SubmissionType>('Submission', SubmissionSchema
 
 export class SubmissionDao {
   private static readonly problemPopulationPath: ModelPopulateOptions = {path: 'problem', model: 'Problem', populate: {path: 'divisions.division', model: 'Division'}};
-  private static readonly teamPopulationPath = {path: 'team', model: 'Team', populate: {path: 'division', model: 'Division'}};
+  private static readonly teamPopulationPath: ModelPopulateOptions = {path: 'team', model: 'Team', populate: {path: 'division', model: 'Division'}};
 
   static getSubmission(id: string): Promise<SubmissionType> {
     return Submission.findById(id).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
@@ -140,7 +141,7 @@ export class SubmissionDao {
   static getScoreForTeam(teamId: string): Promise<number> {
     // This is needed because if the score is calculated in team.dao, there is circular population.
     return new Promise<number>((resolve, reject) => {
-      Submission.find({team: teamId}).populate(SubmissionDao.problemPopulationPath).exec().then(submissions => {
+      Submission.find({team: teamId}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec().then(submissions => {
         resolve(submissions.reduce(((previousValue: number, currentValue: any) => previousValue + currentValue.toObject().points), 0));
       }).catch(reject);
     });

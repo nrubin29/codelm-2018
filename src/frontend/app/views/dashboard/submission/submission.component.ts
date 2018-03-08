@@ -5,6 +5,7 @@ import { SubmissionService } from '../../../services/submission.service';
 import { CodeSaverService } from '../../../services/codesaver.service';
 import { CodeMirrorComponent } from '../../../components/code-mirror/code-mirror.component';
 import { TeamService } from '../../../services/team.service';
+import { ProblemUtil } from '../../../../../common/util/problem.util';
 
 @Component({
   selector: 'app-result',
@@ -24,7 +25,7 @@ export class SubmissionComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.data.subscribe(data => {
       this.submission = data['submission'];
-      this.problemNumber = this.submission.problem.divisions.find(division => division.division._id == this.submission.team.division._id).problemNumber;
+      this.problemNumber = ProblemUtil.getProblemNumberForTeam(this.submission.problem, this.submission.team);
       this.mode = this.codeSaverService.getMode(this.submission.language);
       this.codeMirror.writeValue(this.submission.code);
     });

@@ -11,6 +11,7 @@ export interface ProblemDivision {
   _id?: string;
   division: DivisionModel;
   problemNumber: number;
+  points: number;
 }
 
 export interface ProblemModel {
@@ -18,7 +19,6 @@ export interface ProblemModel {
   title: string;
   description: string;
   divisions: ProblemDivision[];
-  points: number;
   testCaseOutputMode: TestCaseOutputMode;
   testCases: TestCaseModel[];
 }

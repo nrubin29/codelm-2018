@@ -7,6 +7,7 @@ import { EditProblemComponent } from '../../../components/edit-problem/edit-prob
 import { DialogResult } from '../../../dialog-result';
 import { ProblemService } from '../../../services/problem.service';
 import { DivisionModel } from '../../../../../common/models/division.model';
+import { ProblemUtil } from '../../../../../common/util/problem.util';
 
 // TODO: Split this into two components like how AdminHomeComponent has a bunch of LeaderboardComponents.
 
@@ -62,8 +63,7 @@ export class ProblemsComponent implements OnInit {
     });
   }
 
-  // TODO: Make this a utility function (or inject it into the ProblemModel) since this same line keeps getting repeated.
-  private getProblemNumber(problem: ProblemModel, division: DivisionModel) {
-    return problem.divisions.find(div => div.division._id == division._id).problemNumber;
+  getProblemNumber(problem: ProblemModel, division: DivisionModel) {
+    return ProblemUtil.getProblemNumberForDivision(problem, division);
   }
 }

@@ -26,7 +26,7 @@ export class EditProblemComponent implements OnInit {
 
   ngOnInit() {
     this.divisionModels = this.data.divisions;
-    this.problem = this.data.problem ? this.data.problem : {_id: undefined, title: undefined, description: undefined, divisions: [], points: undefined, testCaseOutputMode: undefined, testCases: []};
+    this.problem = this.data.problem ? this.data.problem : {_id: undefined, title: undefined, description: undefined, divisions: [], testCaseOutputMode: undefined, testCases: []};
 
     this.testCases = new FormArray(this.problem.testCases.map(testCase => this.createTestCaseGroup(testCase)));
     this.divisions = new FormArray(this.problem.divisions.map(problemDivision => this.createProblemDivisionGroup(problemDivision)));
@@ -35,7 +35,6 @@ export class EditProblemComponent implements OnInit {
       _id: new FormControl(this.problem._id),
       title: new FormControl(this.problem.title),
       description: new FormControl(this.problem.description),
-      points: new FormControl(this.problem.points),
       testCaseOutputMode: new FormControl(this.problem.testCaseOutputMode),
       divisions: this.divisions,
       testCases: this.testCases
@@ -66,13 +65,15 @@ export class EditProblemComponent implements OnInit {
     if (!problemDivision) {
       problemDivision = {
         division: undefined,
-        problemNumber: undefined
+        problemNumber: undefined,
+        points: undefined
       };
     }
 
     return new FormGroup({
       division: new FormControl(problemDivision.division ? problemDivision.division._id : ''),
-      problemNumber: new FormControl(problemDivision.problemNumber)
+      problemNumber: new FormControl(problemDivision.problemNumber),
+      points: new FormControl(problemDivision.points),
     });
   }
 

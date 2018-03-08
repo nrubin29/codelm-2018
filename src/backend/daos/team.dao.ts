@@ -2,9 +2,7 @@ import mongoose = require('mongoose');
 import crypto = require('crypto');
 import { TeamModel } from '../../common/models/team.model';
 import { LoginResponse } from '../../common/packets/login.response.packet';
-import { NextFunction, Request, Response } from 'express-serve-static-core';
 import { SubmissionDao } from './submission.dao';
-import { NativeError } from "mongoose";
 
 type TeamType = TeamModel & mongoose.Document;
 
@@ -41,66 +39,40 @@ export function sanitizeTeam(team: TeamModel): TeamModel {
 //   });
 // });
 
-function scoreFunction(doc: TeamType, next: (err?: NativeError) => void) {
-  // For some reason, doc can either be a TeamType or a TeamType[].
-
-  let docs = [];
-
-  if (Array.isArray(doc)) {
-    docs = doc;
-  }
-
-  else {
-    docs = [doc];
-  }
-
-  docs.forEach(doc => {
-    SubmissionDao.getScoreForTeam(doc._id).then(score => {
-      doc.set('score', score, {strict: false});
-      next();
-    }).catch(next);
-  });
-}
-
-TeamSchema.post('init', scoreFunction);
-TeamSchema.post('find', scoreFunction);
-
 const Team = mongoose.model<TeamType>('Team', TeamSchema);
 
 export class TeamDao {
-  static getTeam(id: string): Promise<TeamModel> {
-    return Team.findById(id).populate('division').exec();
+  static async getTeam(id: string): Promise<TeamModel> {
+    return await TeamDao.addScore(await Team.findById(id).populate('division').exec());
   }
 
-  static getTeamsForDivision(divisionId: string): Promise<TeamModel[]> {
-    return Team.find({division: {_id: divisionId}}).populate('division').exec();
+  static async getTeamsForDivision(divisionId: string): Promise<TeamModel[]> {
+    return await TeamDao.addScores(await Team.find({division: {_id: divisionId}}).populate('division').exec());
   }
 
-  static login(username: string, password: string): Promise<TeamModel> {
-    return new Promise<TeamModel>((resolve, reject) => {
-      if (!username || !password) {
-        reject(LoginResponse.NotFound);
-      }
+  static async login(username: string, password: string): Promise<TeamModel> {
+    if (!username || !password) {
+      throw LoginResponse.NotFound;
+    }
 
-      Team.findOne({username: username}).populate('division').then(team => {
-        if (!team) {
-          reject(LoginResponse.NotFound);
-        }
+    const team = await Team.findOne({username: username}).populate('division');
 
-        const inputHash = crypto.pbkdf2Sync(password, new Buffer(team.salt), 1000, 64, 'sha512').toString('hex');
+    if (!team) {
+      throw LoginResponse.NotFound;
+    }
 
-        if (inputHash === team.password) {
-          resolve(team);
-        }
+    const inputHash = crypto.pbkdf2Sync(password, new Buffer(team.salt), 1000, 64, 'sha512').toString('hex');
 
-        else {
-          reject(LoginResponse.IncorrectPassword);
-        }
-      }).catch(reject);
-    })
+    if (inputHash === team.password) {
+      return await TeamDao.addScore(team);
+    }
+
+    else {
+      throw LoginResponse.IncorrectPassword;
+    }
   }
 
-  static addOrUpdateTeam(team: any): Promise<TeamModel> {
+  static async addOrUpdateTeam(team: any): Promise<TeamModel> {
     if (team.password) {
       const salt = crypto.randomBytes(16).toString('hex');
       const hash = crypto.pbkdf2Sync(team.password, new Buffer(salt), 1000, 64, 'sha512').toString('hex');
@@ -110,18 +82,18 @@ export class TeamDao {
     }
 
     if (!team._id) {
-      return Team.create(team as TeamModel);
+      return await TeamDao.addScore(await Team.create(team as TeamModel));
     }
 
     else {
-      return Team.findByIdAndUpdate(team._id, team, {new: true}).exec();
+      return await TeamDao.addScore(await Team.findByIdAndUpdate(team._id, team, {new: true}).exec());
     }
   }
 
   // TODO: Consolidate code between register() and addOrUpdateTeam()
-  static register(team: any): Promise<TeamModel> {
+  static async register(team: any): Promise<TeamModel> {
     if (!team.username || !team.password) {
-      return Promise.reject(LoginResponse.NotFound);
+      throw LoginResponse.NotFound;
     }
 
     const salt = crypto.randomBytes(16).toString('hex');
@@ -132,25 +104,33 @@ export class TeamDao {
 
     // TODO: Check for valid division.
 
-    return new Promise<TeamModel>((resolve, reject) => {
-      Team.create(team as TeamModel).then(team => {
-        // This is needed to populate the necessary fields.
-        TeamDao.getTeam(team._id).then(team => {
-          resolve(team);
-        }).catch(reject);
-      }).catch(err => {
-        if (err.code !== undefined && err.code === 11000) { // It's a MongoError for not-unique username.
-          reject(LoginResponse.AlreadyExists);
-        }
+    try {
+      const createdTeam = await Team.create(team as TeamModel);
+      return await TeamDao.getTeam(createdTeam._id);
+    }
 
-        else {
-          reject(err);
-        }
-      });
-    });
+    catch (err) {
+      if (err.code !== undefined && err.code === 11000) { // It's a MongoError for not-unique username.
+        throw LoginResponse.AlreadyExists;
+      }
+
+      else {
+        throw err;
+      }
+    }
   }
 
   static deleteTeam(id: string): Promise<void> {
     return Team.deleteOne({_id: id}).exec();
+  }
+
+  private static async addScore(team: TeamType): Promise<TeamType> {
+    const score = await SubmissionDao.getScoreForTeam(team._id);
+    team.set('score', score, {strict: false});
+    return team;
+  }
+
+  private static async addScores(teams: TeamType[]): Promise<TeamType[]> {
+    return await Promise.all(teams.map(async team => await TeamDao.addScore(team)));
   }
 }

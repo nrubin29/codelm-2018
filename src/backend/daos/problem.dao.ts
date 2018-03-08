@@ -5,7 +5,8 @@ type ProblemType = ProblemModel & mongoose.Document;
 
 const ProblemDivisionSchema = new mongoose.Schema({
   division: {type: mongoose.Schema.Types.ObjectId, ref: 'Division'},
-  problemNumber: Number
+  problemNumber: Number,
+  points: Number
 });
 
 const TestCaseSchema = new mongoose.Schema({
@@ -18,7 +19,6 @@ const Problem = mongoose.model<ProblemType>('Problem', new mongoose.Schema({
   title: String,
   description: String,
   divisions: [ProblemDivisionSchema],
-  points: Number,
   testCaseOutputMode: {type: String, default: TestCaseOutputMode.CaseSensitive},
   testCases: [TestCaseSchema]
 }));

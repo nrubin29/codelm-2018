@@ -10,15 +10,6 @@
         </mat-form-field>
         <div formControlName="description" [froalaEditor]></div>
         <br>
-        <mat-form-field color="accent">
-            <input matInput formControlName="points" type="number" placeholder="Points">
-        </mat-form-field>
-        <mat-form-field color="accent">
-            <mat-select formControlName="testCaseOutputMode" placeholder="Test Case Output Mode">
-                <mat-option *ngFor="let testCaseOutputMode of testCaseOutputModes" [value]="testCaseOutputMode">{{testCaseOutputMode}}</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <br>
         <div class="flex horizontal" style="margin: 1em 0">
             <h3 mat-dialog-title style="margin: 0">Divisions</h3>
             <span class="spacer"></span>
@@ -30,6 +21,7 @@
             <tr>
                 <th>Division</th>
                 <th>Problem Number</th>
+                <th>Points</th>
                 <th>Delete</th>
             </tr>
             </thead>
@@ -48,6 +40,11 @@
                     </mat-form-field>
                 </td>
                 <td>
+                    <mat-form-field color="accent">
+                        <input matInput formControlName="points" type="number">
+                    </mat-form-field>
+                </td>
+                <td>
                     <button mat-button (click)="deleteDivision(i)"><mat-icon>delete</mat-icon></button>
                 </td>
             </tr>
@@ -59,6 +56,11 @@
             <span class="spacer"></span>
             <button mat-button (click)="addTestCase()"><mat-icon>add</mat-icon></button>
         </div>
+        <mat-form-field color="accent">
+            <mat-select formControlName="testCaseOutputMode" placeholder="Test Case Output Mode">
+                <mat-option *ngFor="let testCaseOutputMode of testCaseOutputModes" [value]="testCaseOutputMode">{{testCaseOutputMode}}</mat-option>
+            </mat-select>
+        </mat-form-field>
         <!-- TODO: Convert to a mat-table -->
         <table>
             <thead>

@@ -7,24 +7,25 @@ import * as moment from 'moment';
 export class EndGuard implements CanActivate {
   constructor(private settingsService: SettingsService, private router: Router) {}
 
-  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-    return new Promise<boolean>(resolve => {
-      if (next.fragment === 'admin') {
-        resolve(true);
+  async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+    if (next.fragment === 'admin') {
+      return true;
+    }
+
+    try {
+      const settings = await this.settingsService.getSettings();
+
+      if (moment().isAfter(moment(settings.end))) {
+        this.router.navigate(['end']);
+        return false;
       }
 
-      else {
-        this.settingsService.getSettings().then(settings => {
-          if (moment().isAfter(moment(settings.end))) {
-            this.router.navigate(['end']);
-            resolve(false);
-          }
+      return true;
+    }
 
-          else {
-            resolve(true);
-          }
-        }).catch(() => resolve(true)); // For DisconnectedComponent, we won't be able to contact the server, so we let it load anyway.
-      }
-    });
+    catch {
+      // For DisconnectedComponent, we won't be able to contact the server, so we let it load anyway.
+      return true;
+    }
   }
 }

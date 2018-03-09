@@ -7,18 +7,16 @@ import * as moment from 'moment';
 export class NotEndGuard implements CanActivate {
   constructor(private settingsService: SettingsService, private router: Router) {}
 
-  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-    return new Promise<boolean>(resolve => {
-      this.settingsService.getSettings().then(settings => {
-        if (moment().isAfter(moment(settings.end))) {
-          resolve(true);
-        }
+  async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+    const settings = await this.settingsService.getSettings();
 
-        else {
-          this.router.navigate(['/']);
-          resolve(false);
-        }
-      });
-    });
+    if (moment().isAfter(moment(settings.end))) {
+      return true;
+    }
+
+    else {
+      this.router.navigate(['/']);
+      return false;
+    }
   }
 }

@@ -138,13 +138,10 @@ export class SubmissionDao {
     return Submission.find({'dispute.open': true}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
   }
 
-  static getScoreForTeam(teamId: string): Promise<number> {
+  static async getScoreForTeam(teamId: string): Promise<number> {
     // This is needed because if the score is calculated in team.dao, there is circular population.
-    return new Promise<number>((resolve, reject) => {
-      Submission.find({team: teamId}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec().then(submissions => {
-        resolve(submissions.reduce(((previousValue: number, currentValue: any) => previousValue + currentValue.toObject().points), 0));
-      }).catch(reject);
-    });
+    const submissions = await Submission.find({team: teamId}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
+    return submissions.reduce(((previousValue: number, currentValue: any) => previousValue + currentValue.toObject().points), 0);
   }
 
   static addSubmission(submission: SubmissionModel): Promise<SubmissionModel> {
@@ -155,14 +152,9 @@ export class SubmissionDao {
     return Submission.findOneAndUpdate({_id: id}, submission, {new: true}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
   }
 
-  static deleteSubmission(id: string): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      SubmissionDao.getSubmission(id).then(submission => {
-        Submission.deleteOne({_id: id}).exec().then(() => {
-          SocketManager.instance.emit(submission.team._id.toString(), new UpdateTeamPacket());
-          resolve();
-        }).catch(reject);
-      }).catch(reject);
-    });
+  static async deleteSubmission(id: string): Promise<void> {
+    const submission = await SubmissionDao.getSubmission(id);
+    await Submission.deleteOne({_id: id}).exec();
+    SocketManager.instance.emit(submission.team._id.toString(), new UpdateTeamPacket());
   }
 }

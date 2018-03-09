@@ -38,6 +38,7 @@ export class SocketManager {
     this.sockets.forEach((socket => socket.emit('packet', packet)));
   }
 
+  // TODO: Convert this to async/await (if socket.io supports it)
   protected constructor(private server: SocketIO.Server) {
     this.sockets = new Map<string, SocketIO.Socket>();
 

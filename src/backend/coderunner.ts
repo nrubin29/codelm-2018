@@ -25,10 +25,9 @@ export interface RunError {
 export class CodeFile {
   constructor(public name: string, public code: string) { }
 
-  static fromFile(name: string, path: string): Promise<CodeFile> {
-    return new Promise<CodeFile>((resolve, reject) => {
-      fs.readFile(path).then(data => resolve(new CodeFile(name, data.toString()))).catch(reject)
-    })
+  static async fromFile(name: string, path: string): Promise<CodeFile> {
+    const data = await fs.readFile(path);
+    return new CodeFile(name, data.toString());
   }
 
   mkfile(folderPath: string): Promise<void> {
@@ -47,49 +46,41 @@ export abstract class CodeRunner {
 
   }
 
-  protected runProc(cmd: string, args: string[]): Promise<RunResult> {
-    return new Promise<RunResult>((resolve: (value: RunResult) => void, reject: (reason: RunError) => void) => {
-      this.runProcess(cmd, args).then(data => {
-        const {output, error} = data;
+  protected async runProc(cmd: string, args: string[]): Promise<RunResult> {
+    const {output, error} = await this.runProcess(cmd, args);
 
-        if (error.length > 0) {
-          reject({
-            stage: 'compile',
-            error: error
-          });
-        }
+    if (error.length > 0) {
+      throw {
+        stage: 'compile',
+        error: error
+      };
+    }
 
-        else {
-          resolve({
-            output: output
-          });
-        }
-      }).catch(reject);
-    });
+    else {
+      return {
+        output: output,
+      };
+    }
   }
 
-  protected runTestCaseProc(cmd: string, args: string[], testCase: TestCaseModel): Promise<TestCaseRunResult> {
-    return new Promise<TestCaseRunResult>((resolve: (value: TestCaseRunResult) => void, reject: (reason: RunError) => void) => {
-      this.runProcess(cmd, args, testCase.input).then(data => {
-        const {output, error} = data;
+  protected async runTestCaseProc(cmd: string, args: string[], testCase: TestCaseModel): Promise<TestCaseRunResult> {
+    const {output, error} = await this.runProcess(cmd, args, testCase.input);
 
-        if (error.length > 0) {
-          reject({
-            stage: 'run',
-            error: error
-          });
-        }
+    if (error.length > 0) {
+      throw {
+        stage: 'run',
+        error: error
+      };
+    }
 
-        else {
-          resolve({
-            hidden: testCase.hidden,
-            input: testCase.input,
-            output: output,
-            correctOutput: testCase.output
-          });
-        }
-      }).catch(reject);
-    });
+    else {
+      return {
+        hidden: testCase.hidden,
+        input: testCase.input,
+        output: output,
+        correctOutput: testCase.output
+      };
+    }
   }
 
   private runProcess(cmd: string, args: string[], input?: string): Promise<ProcessRunResult> {

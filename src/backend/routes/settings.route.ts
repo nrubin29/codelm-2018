@@ -1,19 +1,20 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { SettingsDao } from '../daos/settings.dao';
 import { PermissionsUtil } from '../permissions.util';
 
 const router = Router();
 
-router.get('/', (req, res) => {
-  SettingsDao.getSettings().then(settings => res.json(settings));
+router.get('/', async (req: Request, res: Response) => {
+  res.json(await SettingsDao.getSettings());
 });
 
-router.put('/', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, (req, res) => {
-  SettingsDao.updateSettings(req.body).then(settings => res.json(settings)).catch(console.error);
+router.put('/', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
+  res.json(await SettingsDao.updateSettings(req.body));
 });
 
-router.delete('/', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, (req, res) => {
-  SettingsDao.resetSettings().then(() => res.json(true)).catch(console.error);
+router.delete('/', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
+  await SettingsDao.resetSettings();
+  res.json(true);
 });
 
 export default router

@@ -16,60 +16,42 @@ const Settings = mongoose.model<SettingsType>('Settings', SettingsSchema);
 export class SettingsDao {
   private static job: Job;
 
-  static getSettings(): Promise<SettingsModel> {
-    return new Promise<SettingsModel>((resolve, reject) => {
-      return Settings.findOne().exec().then(settings => {
-        if (settings) {
-          resolve(settings);
-        }
+  static async getSettings(): Promise<SettingsModel> {
+    const settings = await Settings.findOne().exec();
 
-        else {
-          Settings.create(DefaultSettingsModel).then(settings => {
-            resolve(settings);
-          }).catch(reject);
-        }
-      }).catch(reject);
-    });
+    if (settings) {
+      return settings;
+    }
+
+    else {
+      return await Settings.create(DefaultSettingsModel);
+    }
   }
 
-  static updateSettings(settings: any): Promise<SettingsModel> {
+  static async updateSettings(settings: any): Promise<SettingsModel> {
     // TODO: If needed, send packet to kick connected teams.
-    return new Promise<SettingsModel>((resolve, reject) => {
-      SettingsDao.getSettings().then((oldSettings: SettingsModel) => {
-        Settings.updateOne({}, settings, {upsert: true, new: true}).exec().then((newSettings: SettingsModel) => {
-          if (oldSettings.end !== newSettings.end) {
-            if (SettingsDao.job) {
-              SettingsDao.job.cancel();
-            }
+    const oldSettings = await SettingsDao.getSettings();
+    const newSettings: SettingsModel = await Settings.updateOne({}, settings, {upsert: true, new: true}).exec();
 
-            SettingsDao.job = scheduleJob(settings.end, () => {
-              settings.state = SettingsState.End;
-              this.updateSettings(settings);
-            });
-          }
+    if (oldSettings.end !== newSettings.end) {
+      if (SettingsDao.job) {
+        SettingsDao.job.cancel();
+      }
 
-          SocketManager.instance.emitToAll(new UpdateSettingsPacket());
-          resolve(newSettings);
-        }).catch(reject);
+      SettingsDao.job = scheduleJob(settings.end, () => {
+        settings.state = SettingsState.End;
+        this.updateSettings(settings);
       });
-    });
+    }
+
+    SocketManager.instance.emitToAll(new UpdateSettingsPacket());
+    return newSettings;
   }
 
-  static resetSettings(): Promise<SettingsModel> {
-    return new Promise<SettingsModel>((resolve, reject) => {
-      Settings.deleteOne({}).exec().then(() => {
-        Settings.create(DefaultSettingsModel).then(settings => {
-          SocketManager.instance.emitToAll(new UpdateSettingsPacket());
-          resolve(settings);
-        }).catch(reject);
-      }).catch(reject);
-    });
+  static async resetSettings(): Promise<SettingsModel> {
+    await Settings.deleteOne({}).exec();
+    const settings = await Settings.create(DefaultSettingsModel);
+    SocketManager.instance.emitToAll(new UpdateSettingsPacket());
+    return settings;
   }
-
-  // static forceAdmin(req: Request, res: Response, next: NextFunction) {
-  //   AdminDao.getAdmin(req.header('Authorization').split(' ')[1]).then(admin => {
-  //     req.params.admin = admin;
-  //     next();
-  //   }).catch(next);
-  // };
 }

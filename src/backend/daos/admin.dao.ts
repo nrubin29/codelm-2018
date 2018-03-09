@@ -17,32 +17,30 @@ const AdminSchema = new mongoose.Schema({
 const Admin = mongoose.model<AdminType>('Admin', AdminSchema);
 
 export class AdminDao {
-  static login(username: string, password: string): Promise<AdminModel> {
-    return new Promise<AdminModel>((resolve, reject) => {
-      Admin.findOne({username: username}).then(admin => {
-        if (!admin) {
-          reject(LoginResponse.NotFound);
-        }
-
-        const inputHash = crypto.pbkdf2Sync(password, new Buffer(admin.salt), 1000, 64, 'sha512').toString('hex');
-
-        if (inputHash === admin.password) {
-          resolve(admin);
-        }
-
-        else {
-          reject(LoginResponse.IncorrectPassword);
-        }
-      }).catch(reject);
-    })
-  }
-
   static getAdmin(id: string): Promise<AdminModel> {
     return Admin.findById(id).exec();
   }
 
   static getAdmins(): Promise<AdminModel[]> {
     return Admin.find().exec();
+  }
+
+  static async login(username: string, password: string): Promise<AdminModel> {
+    const admin = await Admin.findOne({username: username});
+
+    if (!admin) {
+      throw LoginResponse.NotFound;
+    }
+
+    const inputHash = crypto.pbkdf2Sync(password, new Buffer(admin.salt), 1000, 64, 'sha512').toString('hex');
+
+    if (inputHash === admin.password) {
+      return admin;
+    }
+
+    else {
+      throw LoginResponse.IncorrectPassword;
+    }
   }
 
   static addOrUpdateAdmin(admin: any): Promise<AdminModel> {

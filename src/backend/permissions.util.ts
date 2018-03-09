@@ -7,33 +7,37 @@ import { SettingsState } from '../common/models/settings.model';
 import { DivisionType } from '../common/models/division.model';
 
 export class PermissionsUtil {
-  static hasAccess(team: TeamModel): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      SettingsDao.getSettings().then(settings => {
-        resolve(
-          team.division.type === DivisionType.Special ||
-          settings.state === SettingsState.Debug ||
-          (settings.state === SettingsState.Competition && team.division.type === DivisionType.Competition) ||
-          (settings.state === SettingsState.Preliminaries && team.division.type === DivisionType.Preliminaries)
-        );
-      }).catch(reject);
-    });
+  static async hasAccess(team: TeamModel): Promise<boolean> {
+    const settings = await SettingsDao.getSettings();
+
+    return team.division.type === DivisionType.Special ||
+      settings.state === SettingsState.Debug ||
+      (settings.state === SettingsState.Competition && team.division.type === DivisionType.Competition) ||
+      (settings.state === SettingsState.Preliminaries && team.division.type === DivisionType.Preliminaries);
   }
 
-  static requireTeam(req: Request, res: Response, next: NextFunction) {
-    TeamDao.getTeam(req.header('Authorization').split(' ')[1]).then(team => {
-      req.params.team = team;
+  static async requireTeam(req: Request, res: Response, next: NextFunction) {
+    req.params.team = await TeamDao.getTeam(req.header('Authorization').split(' ')[1]);
+    next();
+  }
+
+  private static async requestTeam(req: Request, res: Response, next: NextFunction) {
+    try {
+      return await PermissionsUtil.requireTeam(req, res, next);
+    }
+
+    catch {
       next();
-    }).catch(next);
+    }
   }
 
-  static requireAccess(req: Request, res: Response, next: NextFunction) {
+  static async requireAccess(req: Request, res: Response, next: NextFunction) {
     if (!req.params.team) {
       next(new Error('No team found. Did you forget to use requireTeam?'));
     }
 
     else {
-      if (PermissionsUtil.hasAccess(req.params.team)) {
+      if (await PermissionsUtil.hasAccess(req.params.team)) {
         next();
       }
 
@@ -43,11 +47,19 @@ export class PermissionsUtil {
     }
   }
 
-  static requireAdmin(req: Request, res: Response, next: NextFunction) {
-    AdminDao.getAdmin(req.header('Authorization').split(' ')[1]).then(admin => {
-      req.params.admin = admin;
+  static async requireAdmin(req: Request, res: Response, next: NextFunction) {
+    req.params.admin = await AdminDao.getAdmin(req.header('Authorization').split(' ')[1]);
+    next();
+  }
+
+  static async requestAdmin(req: Request, res: Response, next: NextFunction) {
+    try {
+      return await PermissionsUtil.requireAdmin(req, res, next);
+    }
+
+    catch {
       next();
-    }).catch(next);
+    }
   }
 
   static requireSuperUser(req: Request, res: Response, next: NextFunction) {
@@ -66,41 +78,20 @@ export class PermissionsUtil {
     }
   }
 
-  static requireAuth(req: Request, res: Response, next: NextFunction) {
-    PermissionsUtil.requireTeam(req, res, () => {
+  static async requireAuth(req: Request, res: Response, next: NextFunction) {
+    await PermissionsUtil.requestTeam(req, res, async () => {
       if (req.params.team) {
         next();
       }
 
       else {
-        PermissionsUtil.requireAdmin(req, res, () => {
+        await PermissionsUtil.requestAdmin(req, res, () => {
           if (req.params.admin) {
             next();
           }
 
           else {
             next(new Error('No authentication.'));
-          }
-        });
-      }
-    });
-  }
-
-  // Same as requireAuth, but doesn't throw an error.
-  static requestAuth(req: Request, res: Response, next: NextFunction) {
-    PermissionsUtil.requireTeam(req, res, () => {
-      if (req.params.team) {
-        next();
-      }
-
-      else {
-        PermissionsUtil.requireAdmin(req, res, () => {
-          if (req.params.admin) {
-            next();
-          }
-
-          else {
-            next();
           }
         });
       }

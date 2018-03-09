@@ -6,39 +6,40 @@ import { FileArray, UploadedFile } from 'express-fileupload';
 
 const router = Router();
 
-router.get('/', PermissionsUtil.requestAuth, (req: Request, res: Response) => {
+router.get('/', PermissionsUtil.requestAdmin, async (req: Request, res: Response) => {
   if (req.params.admin) {
-    DivisionDao.getDivisions().then(divisions => res.json(divisions));
+    res.json(await DivisionDao.getDivisions());
   }
 
   else {
-    DivisionDao.getDivisionsOfType(DivisionType.Preliminaries).then(divisions => res.json(divisions));
+    res.json(await DivisionDao.getDivisionsOfType(DivisionType.Preliminaries));
   }
 });
 
-router.put('/', PermissionsUtil.requireAdmin, (req: Request & {files?: FileArray}, res: Response) => {
-  DivisionDao.addOrUpdateDivision(req.body as DivisionModel).then(division => {
-    if (req.files) {
-      const file = req.files['starterCode'] as UploadedFile;
-      file.mv(`./files/files/${division._id}.zip`, err => {
-        if (err) {
-          res.json(err);
-        }
+router.put('/', PermissionsUtil.requireAdmin, async (req: Request & {files?: FileArray}, res: Response) => {
+  const division = await DivisionDao.addOrUpdateDivision(req.body as DivisionModel);
 
-        else {
-          res.json(division);
-        }
-      });
-    }
+  if (req.files) {
+    const file = req.files['starterCode'] as UploadedFile;
+    file.mv(`./files/files/${division._id}.zip`, err => {
+      if (err) {
+        res.json(err);
+      }
 
-    else {
-      res.json(division);
-    }
-  }).catch(console.error);
+      else {
+        res.json(division);
+      }
+    });
+  }
+
+  else {
+    res.json(division);
+  }
 });
 
-router.delete('/:id', PermissionsUtil.requireAdmin, (req: Request, res: Response) => {
-  DivisionDao.deleteDivision(req.params.id).then(() => res.json(true)).catch(console.error)
+router.delete('/:id', PermissionsUtil.requireAdmin, async (req: Request, res: Response) => {
+  await DivisionDao.deleteDivision(req.params.id);
+  res.json(true);
 });
 
 export default router

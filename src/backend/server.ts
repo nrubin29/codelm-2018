@@ -7,6 +7,7 @@ import mongoose = require('mongoose');
 import http = require('http');
 import io = require('socket.io');
 
+import { SettingsDao } from './daos/settings.dao';
 import { SocketManager } from './socket.manager';
 import './daos/dao';
 import apiRoutes from './routes/route';
@@ -28,12 +29,23 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/codelm', {useMongoClient: true}).then(() => {
   console.log('Connected to MongoDB');
 
-  httpSocketServer.listen(4000, () => {
-    SocketManager.init(socketServer);
-    console.log('Started socket server');
+  SettingsDao.getSettings().then(settings => {
+    if (settings.end) {
+      SettingsDao.scheduleJob(settings);
+      console.log('Scheduled ending');
+    }
 
-    app.listen(8080, () => {
-      console.log('Listening on http://localhost:8080');
+    else {
+      console.log('Ending not set');
+    }
+
+    httpSocketServer.listen(4000, () => {
+      SocketManager.init(socketServer);
+      console.log('Started socket server');
+
+      app.listen(8080, () => {
+        console.log('Listening on http://localhost:8080');
+      });
     });
-  })
+  });
 }).catch(console.error);

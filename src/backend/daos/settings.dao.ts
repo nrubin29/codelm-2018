@@ -1,6 +1,6 @@
 import mongoose = require('mongoose');
 import { DefaultSettingsModel, SettingsModel, SettingsState } from '../../common/models/settings.model';
-import { Job, scheduleJob } from 'node-schedule';
+import { Job, scheduleJob as nodeScheduleJob } from 'node-schedule';
 import { SocketManager } from '../socket.manager';
 import { UpdateSettingsPacket } from '../../common/packets/update.settings.packet';
 
@@ -8,7 +8,7 @@ type SettingsType = SettingsModel & mongoose.Document;
 
 const SettingsSchema = new mongoose.Schema({
   state: {type: String, default: SettingsState.Closed},
-  end: {type: Date, default: Date.now}
+  end: Date
 });
 
 const Settings = mongoose.model<SettingsType>('Settings', SettingsSchema);
@@ -38,14 +38,18 @@ export class SettingsDao {
         SettingsDao.job.cancel();
       }
 
-      SettingsDao.job = scheduleJob(settings.end, () => {
-        settings.state = SettingsState.End;
-        this.updateSettings(settings);
-      });
+      SettingsDao.scheduleJob(newSettings);
     }
 
     SocketManager.instance.emitToAll(new UpdateSettingsPacket());
     return newSettings;
+  }
+
+  static scheduleJob(settings: SettingsModel) {
+    SettingsDao.job = nodeScheduleJob(settings.end, () => {
+      settings.state = SettingsState.End;
+      SettingsDao.updateSettings(settings);
+    });
   }
 
   static async resetSettings(): Promise<SettingsModel> {

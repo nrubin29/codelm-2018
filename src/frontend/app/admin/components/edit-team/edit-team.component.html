@@ -1,0 +1,31 @@
+<h1>{{team.username ? team.username : 'New Team'}}</h1>
+<form #teamForm="ngForm" [formGroup]="formGroup" (submit)="submit(teamForm)">
+  <table>
+    <tr>
+      <th>_id</th>
+      <td><input type="text" formControlName="_id" disabled></td>
+    </tr>
+    <tr>
+      <th>Username</th>
+      <td><input type="text" formControlName="username"></td>
+    </tr>
+    <tr>
+      <th>Password</th>
+      <td><input type="text" formControlName="password"></td>
+    </tr>
+    <tr>
+      <th>Members</th>
+      <td><input type="text" formControlName="members"></td>
+    </tr>
+    <tr>
+      <th>Division</th>
+      <td>
+        <select formControlName="division" *ngIf="divisions">
+          <option *ngFor="let division of divisions" [value]="division._id" [selected]="team.division && team.division._id === division._id">{{division.name}}</option>
+        </select>
+      </td>
+    </tr>
+  </table>
+  <input type="submit">
+  <input type="button" value="Delete" (click)="delete()" *ngIf="team._id">
+</form>

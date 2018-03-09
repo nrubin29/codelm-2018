@@ -1,0 +1,16 @@
+<mat-table [dataSource]="teams">
+  <ng-container matColumnDef="team">
+    <mat-header-cell *matHeaderCellDef>Team</mat-header-cell>
+    <mat-cell *matCellDef="let element"><a [routerLink]="['team', element._id]">{{element.username}}</a></mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="members">
+    <mat-header-cell *matHeaderCellDef>Members</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{element.members}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="score">
+    <mat-header-cell *matHeaderCellDef>Score</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{element.score}}</mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="['team', 'members', 'score']"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: ['team', 'members', 'score'];"></mat-row>
+</mat-table>

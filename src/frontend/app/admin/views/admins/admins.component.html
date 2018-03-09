@@ -1,0 +1,26 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Admins</span>
+    <span class="spacer"></span>
+    <button mat-raised-button color="accent" (click)="admin = null"><mat-icon>add</mat-icon></button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="flex display-side">
+  <table>
+    <thead>
+    <tr>
+      <th>Username</th>
+      <th>Name</th>
+      <th>Superuser</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let adm of admins">
+      <td>{{adm.username}}</td>
+      <td><a (click)="admin = adm" href="javascript:void(0)">{{adm.name}}</a></td>
+      <td><input type="checkbox" [checked]="adm.superUser" disabled></td>
+    </tr>
+    </tbody>
+  </table>
+  <app-edit-admin *ngIf="ready && admin !== undefined" [admin]="admin"></app-edit-admin>
+</div>

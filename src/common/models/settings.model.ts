@@ -9,6 +9,7 @@ export enum SettingsState {
 export interface SettingsModel {
   state: SettingsState;
   end: Date;
+  openRegistration: boolean;
 }
 
-export const DefaultSettingsModel: SettingsModel = Object.freeze({state: SettingsState.Closed, end: new Date()});
+export const defaultSettingsModel: SettingsModel = Object.freeze({state: SettingsState.Closed, end: new Date(), openRegistration: false});

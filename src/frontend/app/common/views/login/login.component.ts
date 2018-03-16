@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { LoginResponse } from '../../../../../common/packets/login.response.packet';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { SettingsModel } from '../../../../../common/models/settings.model';
 
 @Component({
   selector: 'app-login',
@@ -11,14 +12,19 @@ import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 })
 export class LoginComponent implements OnInit {
   formGroup: FormGroup;
+  settings: SettingsModel;
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private activatedRoute: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     this.formGroup = new FormGroup({
       username: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
     });
+
+    this.activatedRoute.data.subscribe(data => {
+      this.settings = data['settings'];
+    })
   }
 
   login(form: NgForm) {

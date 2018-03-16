@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { SettingsModel, SettingsState} from '../../../../../common/models/settings.model';
+import { SettingsModel, SettingsState } from '../../../../../common/models/settings.model';
 import { FormControl, FormGroup, NgForm } from '@angular/forms';
 import * as moment from 'moment';
 import { SettingsService } from '../../../services/settings.service';
@@ -22,7 +22,8 @@ export class SettingsComponent implements OnInit {
 
       this.formGroup = new FormGroup({
         state: new FormControl(this.settings.state),
-        end: new FormControl(moment(this.settings.end))
+        end: new FormControl(moment(this.settings.end)),
+        openRegistration: new FormControl(this.settings.openRegistration)
       })
     });
   }

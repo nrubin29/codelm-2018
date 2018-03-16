@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material';
 import { DialogResult } from '../../../dialog-result';
 import { ProblemService } from '../../../services/problem.service';
 import { DivisionModel } from '../../../../../common/models/division.model';
-import { ProblemUtil } from '../../../../../common/util/problem.util';
+import { ProblemUtil } from '../../../../../common/utils/problem.util';
 import { EditProblemComponent } from '../../components/edit-problem/edit-problem.component';
 
 // TODO: Split this into two components like how AdminHomeComponent has a bunch of LeaderboardComponents.

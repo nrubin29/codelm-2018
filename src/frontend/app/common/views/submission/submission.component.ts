@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubmissionModel } from '../../../../../common/models/submission.model';
 import { SubmissionService } from '../../../services/submission.service';
 import { CodeSaverService } from '../../../services/code-saver.service';
 import { CodeMirrorComponent } from '../../components/code-mirror/code-mirror.component';
 import { TeamService } from '../../../services/team.service';
-import { ProblemUtil } from '../../../../../common/util/problem.util';
+import { ProblemUtil } from '../../../../../common/utils/problem.util';
 
 @Component({
   selector: 'app-result',

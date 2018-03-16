@@ -1,3 +1,9 @@
+:host ::ng-deep {
+  .mat-line {
+    text-align: left;
+  }
+}
+
 mat-sidenav {
   padding: 1em;
   text-align: center;

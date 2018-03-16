@@ -5,7 +5,6 @@ import { AdminDao } from './daos/admin.dao';
 import Packet from '../common/packets/packet';
 import { PermissionsUtil } from './permissions.util';
 import { LoginResponse, LoginResponsePacket } from '../common/packets/login.response.packet';
-import { UserModel } from '../common/models/user.model';
 
 export class SocketManager {
   private static _instance: SocketManager;

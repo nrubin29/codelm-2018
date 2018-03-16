@@ -4,7 +4,7 @@ import { ProblemModel, TestCaseOutputMode } from '../../common/models/problem.mo
 import { ModelPopulateOptions } from 'mongoose';
 import { SocketManager } from '../socket.manager';
 import { UpdateTeamPacket } from '../../common/packets/update.team.packet';
-import { ProblemUtil } from '../../common/util/problem.util';
+import { ProblemUtil } from '../../common/utils/problem.util';
 
 type SubmissionType = SubmissionModel & mongoose.Document;
 

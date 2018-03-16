@@ -8,7 +8,7 @@ import { TeamService } from '../../../services/team.service';
 import { TeamModel } from '../../../../../common/models/team.model';
 import { CodeSaverService } from '../../../services/code-saver.service';
 import { CodeMirrorComponent } from '../../../common/components/code-mirror/code-mirror.component';
-import { ProblemUtil } from '../../../../../common/util/problem.util';
+import { ProblemUtil } from '../../../../../common/utils/problem.util';
 
 @Component({
   selector: 'app-problem',

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { ProblemService } from '../services/problem.service';
 import { SubmissionService } from '../services/submission.service';
+import { SubmissionUtil } from '../../../common/utils/submission.util';
 
 @Injectable()
 export class ProblemGuard implements CanActivate {
@@ -9,13 +10,11 @@ export class ProblemGuard implements CanActivate {
 
   async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     const problem = await this.problemService.getProblem(next.paramMap.get('id'));
-    let submissions = await this.submissionService.getSubmissions();
-    submissions = submissions.filter(submission => submission.problem._id === problem._id);
-    const solved = submissions.filter(submission => submission.points > 0);
+    const submissions = await this.submissionService.getSubmissions();
+    const solved = SubmissionUtil.getSolution(problem, submissions);
 
-    // TODO: Is it safe to assume that points > 0 means success?
-    if (solved.length > 0) {
-      this.router.navigate(['/dashboard', 'submission', solved[0]._id]);
+    if (solved) {
+      this.router.navigate(['/dashboard', 'submission', solved._id]);
       return false;
     }
 

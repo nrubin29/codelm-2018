@@ -3,10 +3,10 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from
 import { AdminService } from '../services/admin.service';
 
 @Injectable()
-export class AdminGuard implements CanActivate {
+export class SuperUserGuard implements CanActivate {
   constructor(private adminService: AdminService, private router: Router) {}
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    return this.adminService.admin.value != null;
+    return this.adminService.admin.value && this.adminService.admin.value.superUser;
   }
 }

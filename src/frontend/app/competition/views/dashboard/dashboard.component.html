@@ -16,7 +16,7 @@
         <a mat-line [routerLink]="['/dashboard']">Dashboard</a>
       </mat-list-item>
       <mat-list-item *ngFor="let problem of problems">
-        <mat-icon mat-list-icon>{{didSolve(problem) ? 'check_circle' : 'highlight_off'}}</mat-icon>
+        <mat-icon mat-list-icon>{{didSolve(problem) ? 'check_circle' : 'label'}}</mat-icon>
         <a mat-line [routerLink]="['problem', problem._id]">{{problem.title}}</a>
       </mat-list-item>
     </mat-nav-list>

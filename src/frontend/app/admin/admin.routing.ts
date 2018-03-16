@@ -18,18 +18,19 @@ import { SocketGuard } from '../guards/socket.guard';
 import { AdminGuard } from '../guards/admin.guard';
 import { AdminComponent } from './views/admin/admin.component';
 import { NgModule } from '@angular/core';
+import { SuperUserGuard } from '../guards/super-user.guard';
 
 const routes: Routes = [
   {path: 'admin', component: AdminComponent, canActivate: [SocketGuard, AdminGuard], children:
       [
         {path: '', component: AdminHomeComponent},
-        {path: 'settings', component: SettingsComponent, resolve: {settings: SettingsResolve}},
+        {path: 'settings', component: SettingsComponent, canActivate: [SuperUserGuard], resolve: {settings: SettingsResolve}},
         {path: 'team/:id', component: TeamComponent, resolve: {team: TeamResolve, submissions: SubmissionsResolve}},
         {path: 'submission/:id', component: SubmissionComponent, resolve: {submission: SubmissionResolve}},
         {path: 'disputes', component: DisputesComponent, resolve: {disputes: DisputesResolve}},
-        {path: 'divisions', component: DivisionsComponent},
-        {path: 'problems', component: ProblemsComponent, resolve: {divisionsAndProblems: DivisionsProblemsResolve}},
-        {path: 'admins', component: AdminsComponent},
+        {path: 'divisions', component: DivisionsComponent, canActivate: [SuperUserGuard]},
+        {path: 'problems', component: ProblemsComponent, canActivate: [SuperUserGuard], resolve: {divisionsAndProblems: DivisionsProblemsResolve}},
+        {path: 'admins', component: AdminsComponent, canActivate: [SuperUserGuard]},
         {path: 'add-team', component: EditTeamComponent}
       ]
   }
@@ -41,6 +42,7 @@ const routes: Routes = [
   providers: [
     SocketGuard,
     AdminGuard,
+    SuperUserGuard,
     SubmissionResolve,
     TeamResolve,
     DivisionsProblemsResolve,

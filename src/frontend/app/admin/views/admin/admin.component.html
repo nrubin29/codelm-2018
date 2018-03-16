@@ -8,13 +8,13 @@
         <br><br>
         <mat-divider></mat-divider>
         <br>
-        <mat-nav-list>
+        <mat-nav-list *ngIf="admin">
             <a [routerLink]="['/admin']" mat-list-item>Standings</a>
-            <a [routerLink]="['/admin', 'settings']" mat-list-item>Settings</a>
+            <a [routerLink]="['/admin', 'settings']" mat-list-item *ngIf="admin.superUser">Settings</a>
             <a [routerLink]="['/admin', 'disputes']" mat-list-item>Disputes</a>
-            <a [routerLink]="['/admin', 'divisions']" mat-list-item>Divisions</a>
-            <a [routerLink]="['/admin', 'problems']" mat-list-item>Problems</a>
-            <a [routerLink]="['/admin', 'admins']" mat-list-item>Admins</a>
+            <a [routerLink]="['/admin', 'divisions']" mat-list-item *ngIf="admin.superUser">Divisions</a>
+            <a [routerLink]="['/admin', 'problems']" mat-list-item *ngIf="admin.superUser">Problems</a>
+            <a [routerLink]="['/admin', 'admins']" mat-list-item *ngIf="admin.superUser">Admins</a>
             <a [routerLink]="['/admin', 'add-team']" mat-list-item>Add Team</a>
         </mat-nav-list>
     </mat-sidenav>

@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import { DivisionDao } from '../daos/division.dao';
 import { DivisionModel, DivisionType } from '../../common/models/division.model';
 import { PermissionsUtil } from '../permissions.util';
@@ -16,7 +16,7 @@ router.get('/', PermissionsUtil.requestAdmin, async (req: Request, res: Response
   }
 });
 
-router.put('/', PermissionsUtil.requireAdmin, async (req: Request & {files?: FileArray}, res: Response) => {
+router.put('/', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, async (req: Request & {files?: FileArray}, res: Response) => {
   const division = await DivisionDao.addOrUpdateDivision(req.body as DivisionModel);
 
   if (req.files) {
@@ -37,7 +37,7 @@ router.put('/', PermissionsUtil.requireAdmin, async (req: Request & {files?: Fil
   }
 });
 
-router.delete('/:id', PermissionsUtil.requireAdmin, async (req: Request, res: Response) => {
+router.delete('/:id', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
   await DivisionDao.deleteDivision(req.params.id);
   res.json(true);
 });

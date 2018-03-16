@@ -1,16 +1,16 @@
-import { Router, Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import { ProblemDao } from '../daos/problem.dao';
-import { CodeFile, CodeRunner, CppRunner, JavaRunner, PythonRunner, RunError } from '../coderunner';
+import { CodeFile, CodeRunner, CppRunner, JavaRunner, PythonRunner } from '../coderunner';
 import { ProblemSubmission } from '../../common/problem-submission';
 import { ProblemModel } from '../../common/models/problem.model';
-import uuid = require('uuid');
 import { SubmissionDao } from '../daos/submission.dao';
 import { PermissionsUtil } from '../permissions.util';
 import { SubmissionModel } from '../../common/models/submission.model';
+import uuid = require('uuid');
 
 const router = Router();
 
-router.put('/', PermissionsUtil.requireAdmin, async (req: Request, res: Response) => {
+router.put('/', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
   res.json(await ProblemDao.addOrUpdateProblem(req.body as ProblemModel));
 });
 
@@ -24,7 +24,7 @@ router.get('/:id', PermissionsUtil.requireAuth, async (req: Request, res: Respon
   res.json(problem);
 });
 
-router.delete('/:id', PermissionsUtil.requireAdmin, async (req: Request, res: Response) => {
+router.delete('/:id', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, async (req: Request, res: Response) => {
   await ProblemDao.deleteProblem(req.params.id);
   res.json(true);
 });

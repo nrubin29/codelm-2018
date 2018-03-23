@@ -1,8 +1,9 @@
-import Packet from './packet';
+import { ClientPacket } from './client.packet';
 
-export class RegisterPacket extends Packet {
-  constructor(public teamData: RegisterTeamData) {
-    super('register');
+export class RegisterPacket extends ClientPacket {
+
+  constructor(public teamData: RegisterTeamData, version: string) {
+    super('register', version);
   }
 }
 

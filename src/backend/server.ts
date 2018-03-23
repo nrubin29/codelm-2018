@@ -6,9 +6,9 @@ import fileUpload = require('express-fileupload');
 import mongoose = require('mongoose');
 import http = require('http');
 import io = require('socket.io');
-
 import { SettingsDao } from './daos/settings.dao';
 import { SocketManager } from './socket.manager';
+import { VERSION } from '../common/version';
 import './daos/dao';
 import apiRoutes from './routes/route';
 
@@ -24,6 +24,8 @@ app.use('/api', apiRoutes);
 
 const httpSocketServer = http.createServer(app);
 const socketServer = io(httpSocketServer);
+
+console.log(`Starting CodeLM server build ${VERSION}`);
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/codelm', {useMongoClient: true}).then(() => {

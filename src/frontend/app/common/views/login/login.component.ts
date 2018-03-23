@@ -4,6 +4,7 @@ import { AuthService } from '../../../services/auth.service';
 import { LoginResponse } from '../../../../../common/packets/login.response.packet';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { SettingsModel } from '../../../../../common/models/settings.model';
+import { VERSION } from '../../../../../common/version';
 
 @Component({
   selector: 'app-login',
@@ -47,5 +48,9 @@ export class LoginComponent implements OnInit {
 
   register() {
     this.router.navigate(['register']);
+  }
+
+  get version() {
+    return VERSION;
   }
 }

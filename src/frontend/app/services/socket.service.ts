@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
-import {Observable} from 'rxjs/Observable';
-import {Router} from '@angular/router';
-import {environment} from '../../environments/environment';
-import Packet from '../../../common/packets/packet';
+import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
+import { Packet } from '../../../common/packets/packet';
 
 @Injectable()
 export class SocketService {

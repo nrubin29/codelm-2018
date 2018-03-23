@@ -6,6 +6,7 @@ import { TeamService } from './team.service';
 import { RestService } from './rest.service';
 import { AdminService } from './admin.service';
 import { RegisterPacket, RegisterTeamData } from '../../../common/packets/register.packet';
+import { VERSION } from '../../../common/version';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +41,7 @@ export class AuthService {
           }
         });
 
-        this.socketService.emit(new LoginPacket(username, password));
+        this.socketService.emit(new LoginPacket(username, password, VERSION));
       }).catch(reject);
     });
   }
@@ -68,7 +69,7 @@ export class AuthService {
           }
         });
 
-        this.socketService.emit(new RegisterPacket(teamData));
+        this.socketService.emit(new RegisterPacket(teamData, VERSION));
       }).catch(reject);
     });
   }

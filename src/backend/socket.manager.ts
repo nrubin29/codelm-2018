@@ -2,9 +2,11 @@ import { RegisterPacket } from '../common/packets/register.packet';
 import { LoginPacket } from '../common/packets/login.packet';
 import { sanitizeTeam, TeamDao } from './daos/team.dao';
 import { AdminDao } from './daos/admin.dao';
-import Packet from '../common/packets/packet';
+import { Packet } from '../common/packets/packet';
 import { PermissionsUtil } from './permissions.util';
 import { LoginResponse, LoginResponsePacket } from '../common/packets/login.response.packet';
+import { VERSION } from '../common/version';
+import { isClientPacket } from '../common/packets/client.packet';
 
 export class SocketManager {
   private static _instance: SocketManager;
@@ -45,8 +47,15 @@ export class SocketManager {
       let _id;
 
       socket.on('packet', (packet: Packet) => {
+        if (isClientPacket(packet) && packet.version !== VERSION) {
+          socket.emit('packet', new LoginResponsePacket(LoginResponse.OutdatedClient));
+          socket.disconnect(true);
+          return;
+        }
+
         if (packet.name === 'login') {
           let loginPacket = packet as LoginPacket;
+
           TeamDao.login(loginPacket.username, loginPacket.password).then(team => {
             const response = PermissionsUtil.hasAccess(team) ? LoginResponse.SuccessTeam : LoginResponse.Closed;
             socket.emit('packet', new LoginResponsePacket(response, response === LoginResponse.SuccessTeam ? sanitizeTeam(team) : undefined));

@@ -1,4 +1,4 @@
-import Packet from './packet';
+import { Packet } from './packet';
 import { TeamModel } from '../models/team.model';
 import { AdminModel } from '../models/admin.model';
 
@@ -9,6 +9,7 @@ export const enum LoginResponse {
   NotFound = 'Account not found',
   Closed = 'You cannot log in at this time',
   AlreadyExists = 'An account with that username already exists',
+  OutdatedClient = 'Please refresh the page. If this error persists, clear your browser cache',
   Error = 'An internal error occurred.',
 }
 

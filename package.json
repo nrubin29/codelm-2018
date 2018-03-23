@@ -5,8 +5,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "webpack --config webpack.dev.js && ng build",
-    "build-prod": "webpack --config webpack.prod.js && ng build --env=prod",
+    "build": "node version.js && webpack --config webpack.dev.js && ng build",
+    "build-prod": "node version.js && webpack --config webpack.prod.js && ng build --env=prod",
     "test": "ng test",
     "lint": "ng lint",
     "webpack": ""

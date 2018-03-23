@@ -1,12 +1,11 @@
 import { Request, Response, Router } from 'express';
 import { ProblemDao } from '../daos/problem.dao';
-import { CodeFile, CodeRunner, CppRunner, JavaRunner, PythonRunner } from '../coderunner';
-import { ProblemSubmission } from '../../common/problem-submission';
+import { ClientProblemSubmission, ServerProblemSubmission } from '../../common/problem-submission';
 import { ProblemModel } from '../../common/models/problem.model';
 import { SubmissionDao } from '../daos/submission.dao';
 import { PermissionsUtil } from '../permissions.util';
-import { SubmissionModel } from '../../common/models/submission.model';
-import uuid = require('uuid');
+import { SubmissionModel, TestCaseSubmissionModel } from '../../common/models/submission.model';
+import { execFile } from "child_process";
 
 const router = Router();
 
@@ -29,10 +28,11 @@ router.delete('/:id', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuper
   res.json(true);
 });
 
-router.get('/division/:dId', PermissionsUtil.requireAuth, async (req: Request, res: Response) => {
-  const problems = await ProblemDao.getProblemsForDivision(req.params.dId);
+router.get('/division/:id', PermissionsUtil.requireAuth, async (req: Request, res: Response) => {
+  let problems = await ProblemDao.getProblemsForDivision(req.params.id);
 
   if (!req.params.admin) {
+    problems = problems.filter(problem => problem.divisions.findIndex(pD => pD.division._id.toString() === req.params.team.division._id.toString()) !== -1);
     problems.forEach(problem => {
       problem.testCases = problem.testCases.filter(testCase => !testCase.hidden);
     });
@@ -42,72 +42,65 @@ router.get('/division/:dId', PermissionsUtil.requireAuth, async (req: Request, r
 });
 
 router.post('/submit', PermissionsUtil.requireTeam, PermissionsUtil.requireAccess, async (req: Request, res: Response) => {
-  const problemSubmission = req.body as ProblemSubmission;
-
+  const problemSubmission = req.body as ClientProblemSubmission;
   const problem = await ProblemDao.getProblem(problemSubmission.problemId);
+  const serverProblemSubmission: ServerProblemSubmission = {
+    problemTitle: problem.title,
+    testCases: problem.testCases.filter(testCase => !problemSubmission.test || !testCase.hidden),
+    language: problemSubmission.language,
+    code: problemSubmission.code
+  };
 
-  let runner: CodeRunner;
-  const folder = '/tmp/' + uuid();
+  const process = execFile('docker', ['run', '-i', '--rm', '--cap-drop', 'ALL', '--net=none', 'coderunner'], async (err, stdout, stderr) => {
+    let submission: SubmissionModel;
 
-  switch (problemSubmission.language) {
-    case 'python': {
-      runner = new PythonRunner(folder, [new CodeFile('main.py', problemSubmission.code)]);
-      break;
+    if (stderr.length > 0) {
+      try {
+        const runError = JSON.parse(stderr);
+
+        submission = await SubmissionDao.addSubmission({
+          team: req.params.team,
+          problem: problem,
+          language: problemSubmission.language,
+          code: problemSubmission.code,
+          error: runError.error,
+          test: problemSubmission.test
+        });
+      }
+
+      catch {
+        console.error(stderr);
+        res.json(false);
+      }
     }
 
-    case 'java': {
-      runner = new JavaRunner(folder, [new CodeFile(problem.title.split(' ').join('') + '.java', problemSubmission.code)]);
-      break;
+    else {
+      try {
+        const testCaseSubmissions = JSON.parse(stdout) as TestCaseSubmissionModel[];
+
+        submission = await SubmissionDao.addSubmission({
+          team: req.params.team,
+          problem: problem,
+          language: problemSubmission.language,
+          code: problemSubmission.code,
+          testCases: testCaseSubmissions,
+          test: problemSubmission.test
+        });
+
+        res.json(false);
+      }
+
+      catch {
+        console.log(stdout);
+        res.json(false);
+      }
     }
 
-    case 'cpp': {
-      runner = new CppRunner(folder, [new CodeFile('main.cpp', problemSubmission.code)]);
-      break;
-    }
-
-    default: {
-      res.sendStatus(400);
-      return;
-    }
-  }
-
-  // const sub = runner.subject.subscribe(next => {
-  //   console.log(next);
-  // });
-
-  // TODO: Clean up redundant code.
-  // TODO: If an error occurs on a hidden test case, we don't want to show the error.
-  let submission: SubmissionModel;
-
-  try {
-    const results = await runner.run(problem.testCases.filter(testCase => !problemSubmission.test || !testCase.hidden));
-
-    submission = await SubmissionDao.addSubmission({
-      team: req.params.team,
-      problem: problem,
-      language: problemSubmission.language,
-      code: problemSubmission.code,
-      testCases: results,
-      test: problemSubmission.test
-    });
-  }
-
-  catch (err) {
-    console.error(err);
-
-    submission = await SubmissionDao.addSubmission({
-      team: req.params.team,
-      problem: problem,
-      language: problemSubmission.language,
-      code: problemSubmission.code,
-      error: err.error,
-      test: problemSubmission.test
-    });
-  }
-
-  finally {
     res.json(submission._id);
-  }
+  });
+
+  process.stdin.write(JSON.stringify(serverProblemSubmission) + '\n');
+  process.stdin.end();
 });
 
 export default router

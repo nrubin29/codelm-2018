@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { ProblemService } from '../../../services/problem.service';
-import { ProblemSubmission } from '../../../../../common/problem-submission';
+import { ClientProblemSubmission } from '../../../../../common/problem-submission';
 import { TeamService } from '../../../services/team.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { TeamService } from '../../../services/team.service';
   styleUrls: ['./submit.component.scss']
 })
 export class SubmitComponent implements OnInit {
-  problemSubmission: ProblemSubmission;
+  problemSubmission: ClientProblemSubmission;
   animation: number;
 
   constructor(private dashboard: DashboardComponent, private problemService: ProblemService, private teamService: TeamService, private router: Router) { }

@@ -5,6 +5,7 @@
 /files
 /tmp
 /out-tsc
+/src/coderunner/dist
 
 # dependencies
 /node_modules

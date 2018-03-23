@@ -2,14 +2,13 @@ import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
 import { ProblemModel } from '../../../common/models/problem.model';
 import { TestCaseSubmissionModel } from '../../../common/models/submission.model';
-import { ProblemSubmission } from '../../../common/problem-submission';
-import { DivisionModel } from '../../../common/models/division.model';
+import { ClientProblemSubmission } from '../../../common/problem-submission';
 
 @Injectable()
 export class ProblemService {
   private endpoint = 'problems';
 
-  private _problemSubmission: ProblemSubmission; // This holds a ProblemSubmission from problem.component and gives it to submit.component.
+  private _problemSubmission: ClientProblemSubmission; // This holds a ClientProblemSubmission from problem.component and gives it to submit.component.
 
   get problemSubmission() {
     const temp = this._problemSubmission;
@@ -17,7 +16,7 @@ export class ProblemService {
     return temp;
   }
 
-  set problemSubmission(value: ProblemSubmission) {
+  set problemSubmission(value: ClientProblemSubmission) {
     this._problemSubmission = value;
   }
 
@@ -31,7 +30,7 @@ export class ProblemService {
     return this.restService.get<ProblemModel[]>(`${this.endpoint}/division/${divisionId}`)
   }
 
-  submit(problemSubmission: ProblemSubmission): Promise<TestCaseSubmissionModel[]> {
+  submit(problemSubmission: ClientProblemSubmission): Promise<TestCaseSubmissionModel[]> {
     return this.restService.post<TestCaseSubmissionModel[]>(`${this.endpoint}/submit`, problemSubmission);
   }
 

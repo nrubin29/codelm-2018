@@ -2,10 +2,6 @@
     <app-card title="Team Info" [pad]="false">
         <div class="container">
             <mat-table #table [dataSource]="[team]">
-                <ng-container matColumnDef="id">
-                    <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
-                    <mat-cell *matCellDef="let element">{{element._id}}</mat-cell>
-                </ng-container>
                 <ng-container matColumnDef="username">
                     <mat-header-cell *matHeaderCellDef>Username</mat-header-cell>
                     <mat-cell *matCellDef="let element">{{element.username}}</mat-cell>
@@ -22,8 +18,8 @@
                     <mat-header-cell *matHeaderCellDef>Score</mat-header-cell>
                     <mat-cell *matCellDef="let element">{{element.score}}</mat-cell>
                 </ng-container>
-                <mat-header-row *matHeaderRowDef="['id', 'username', 'members', 'division', 'score']"></mat-header-row>
-                <mat-row *matRowDef="let row; columns: ['id', 'username', 'members', 'division', 'score'];"></mat-row>
+                <mat-header-row *matHeaderRowDef="['username', 'members', 'division', 'score']"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: ['username', 'members', 'division', 'score'];"></mat-row>
             </mat-table>
         </div>
     </app-card>

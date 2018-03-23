@@ -17,8 +17,14 @@ export class PermissionsUtil {
   }
 
   static async requireTeam(req: Request, res: Response, next: NextFunction) {
-    req.params.team = await TeamDao.getTeam(req.header('Authorization').split(' ')[1]);
-    next();
+    try {
+      req.params.team = await TeamDao.getTeam(req.header('Authorization').split(' ')[1]);
+      next();
+    }
+
+    catch {
+      next(new Error('No team found for given authorization.'));
+    }
   }
 
   private static async requestTeam(req: Request, res: Response, next: NextFunction) {
@@ -48,8 +54,14 @@ export class PermissionsUtil {
   }
 
   static async requireAdmin(req: Request, res: Response, next: NextFunction) {
-    req.params.admin = await AdminDao.getAdmin(req.header('Authorization').split(' ')[1]);
-    next();
+    try {
+      req.params.admin = await AdminDao.getAdmin(req.header('Authorization').split(' ')[1]);
+      next();
+    }
+
+    catch {
+      next(new Error('No admin found for given authorization.'));
+    }
   }
 
   static async requestAdmin(req: Request, res: Response, next: NextFunction) {

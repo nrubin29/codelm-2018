@@ -1,8 +1,7 @@
-import Docker = require('dockerode');
-import { execFile } from 'child_process';
-import { ServerProblemSubmission } from '../common/problem-submission';
+import {execFile} from 'child_process';
+import {ServerProblemSubmission} from '../common/problem-submission';
 import * as assert from 'assert';
-import { TestCaseSubmissionModel } from '../common/models/submission.model';
+import {TestCaseSubmissionModel} from '../common/models/submission.model';
 
 function spawnProcess(submission: ServerProblemSubmission, callback: (error: Error | null, stdout: string, stderr: string) => void) {
   const process = execFile('docker', ['run', '-i', '--rm', '--cap-drop', 'ALL', '--net=none', 'coderunner'], (err, stdout, stderr) => {

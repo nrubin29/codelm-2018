@@ -1,0 +1,17 @@
+<div class="flex display-side container">
+    <div class="fix-size">
+        <app-card title="score" *ngIf="!admin">
+            <p>{{submission.points}}</p>
+        </app-card>
+        <app-card title="Admin" *ngIf="admin">
+            <!-- TODO: Set score -->
+            <button mat-raised-button color="accent" (click)="delete()">Delete Submission</button>
+        </app-card>
+    </div>
+    <div>
+        <!-- TODO: Add a "download all" button -->
+        <app-card *ngFor="let file of submission.files" [title]="file.name">
+            <p [innerHtml]="file.contents"></p>
+        </app-card>
+    </div>
+</div>

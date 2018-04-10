@@ -1,6 +1,6 @@
+import { CodeFile, CppRunner, JavaRunner, PythonRunner } from './coderunner';
 import chai = require('chai');
 import chaiAsPromised = require('chai-as-promised');
-import { CodeFile, CppRunner, JavaRunner, PythonRunner } from './coderunner';
 
 chai.use(chaiAsPromised);
 chai.should();

@@ -1,77 +1,51 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import 'rxjs/add/operator/debounceTime';
-import { ProblemModel } from '../../../../../common/models/problem.model';
+import { isGradedProblem, ProblemModel } from '../../../../../common/models/problem.model';
 import { ProblemService } from '../../../services/problem.service';
 import { SubmissionModel } from '../../../../../common/models/submission.model';
 import { TeamService } from '../../../services/team.service';
 import { TeamModel } from '../../../../../common/models/team.model';
 import { CodeSaverService } from '../../../services/code-saver.service';
-import { CodeMirrorComponent } from '../../../common/components/code-mirror/code-mirror.component';
 import { ProblemUtil } from '../../../../../common/utils/problem.util';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'app-problem',
   templateUrl: './problem.component.html',
   styleUrls: ['./problem.component.scss']
 })
-export class ProblemComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ProblemComponent implements OnInit {
   team: TeamModel;
   problem: ProblemModel;
-  problemNumber: number;
   submissions: SubmissionModel[] = [];
 
-  @ViewChildren(CodeMirrorComponent) codeMirrors: QueryList<CodeMirrorComponent>;
-  language: string;
-  lastSaved: Date; // TODO: Either display this better or not at all.
+  problemNumber: number;
+  problemPoints: number;
+
+  enableTest = true;
+  buttonClicked: Subject<boolean>;
 
   constructor(private problemService: ProblemService, private teamService: TeamService, private codeSaverService: CodeSaverService, private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
+    this.buttonClicked = new Subject<boolean>();
+
     this.teamService.team.subscribe(team => this.team = team);
 
     this.activatedRoute.data.subscribe(data => {
       this.problem = data['problem'];
       this.submissions = data['submissions'].filter(submission => submission.problem._id === this.problem._id);
       this.problemNumber = ProblemUtil.getProblemNumberForTeam(this.problem, this.team);
-      this.language = this.codeSaverService.getLanguage();
+      this.problemPoints = ProblemUtil.getPoints(this.problem, this.team);
     });
-  }
-
-  ngAfterViewInit() {
-    this.subscribeTo(this.codeMirrors.first);
-
-    this.codeMirrors.changes.subscribe((codeMirrors: QueryList<CodeMirrorComponent>) => {
-      codeMirrors.forEach(cm => this.subscribeTo(cm));
-    });
-  }
-
-  private subscribeTo(codeMirror: CodeMirrorComponent) {
-    codeMirror.writeValue(this.codeSaverService.get(this.problem._id, codeMirror.config.mode));
-    codeMirror.change.debounceTime(5000).subscribe(() => {
-      this.saveCode();
-    })
-  }
-
-  ngOnDestroy() {
-    this.saveCode();
-  }
-
-  saveCode() {
-    this.codeSaverService.save(this.problem._id, this.codeMirrors.first.config.mode, this.codeMirrors.first.value);
-    this.lastSaved = new Date();
   }
 
   submitClicked(test: boolean) {
-    this.saveCode();
+    this.buttonClicked.next(test);
+  }
 
-    this.problemService.problemSubmission = {
-      problemId: this.problem._id,
-      language: this.language,
-      code: this.codeMirrors.first.value,
-      test: test
-    };
-    this.router.navigate(['dashboard', 'submit'])
+  get isGradedProblem() {
+    return isGradedProblem(this.problem);
   }
 
   get documentation() {

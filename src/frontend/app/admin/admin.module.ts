@@ -15,6 +15,7 @@ import { TeamComponent } from './views/team/team.component';
 import { DpDatePickerModule } from 'ng2-date-picker';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { SharedModule } from '../shared.module';
+import { EditGradedProblemComponent } from './components/edit-graded-problem/edit-graded-problem.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { SharedModule } from '../shared.module';
     DivisionsComponent,
     ProblemsComponent,
     SettingsComponent,
-    TeamComponent
+    TeamComponent,
+    EditGradedProblemComponent
   ],
   imports: [
     SharedModule,

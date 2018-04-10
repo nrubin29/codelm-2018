@@ -49,6 +49,7 @@ export class DashboardComponent implements OnInit {
   }
 
   didSolve(problem: ProblemModel) {
+    // TODO: These icons don't update when the team is refreshed.
     return SubmissionUtil.getSolution(problem, this.submissions);
   }
 }

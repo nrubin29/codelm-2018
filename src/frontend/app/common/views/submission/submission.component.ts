@@ -1,9 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SubmissionModel } from '../../../../../common/models/submission.model';
+import { isGradedSubmission, SubmissionModel } from '../../../../../common/models/submission.model';
 import { SubmissionService } from '../../../services/submission.service';
-import { CodeSaverService } from '../../../services/code-saver.service';
-import { CodeMirrorComponent } from '../../components/code-mirror/code-mirror.component';
 import { TeamService } from '../../../services/team.service';
 import { ProblemUtil } from '../../../../../common/utils/problem.util';
 
@@ -13,22 +11,21 @@ import { ProblemUtil } from '../../../../../common/utils/problem.util';
   styleUrls: ['./submission.component.scss']
 })
 export class SubmissionComponent implements OnInit {
-  private submission: SubmissionModel;
+  submission: SubmissionModel;
   problemNumber: number;
-  mode: string;
-  @ViewChild(CodeMirrorComponent) codeMirror: CodeMirrorComponent;
 
-  disputeMessage: string;
-
-  constructor(private submissionService: SubmissionService, private teamService: TeamService, private codeSaverService: CodeSaverService, private router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private submissionService: SubmissionService, private teamService: TeamService, private router: Router, private activatedRoute: ActivatedRoute) {
+  }
 
   ngOnInit() {
     this.activatedRoute.data.subscribe(data => {
       this.submission = data['submission'];
       this.problemNumber = ProblemUtil.getProblemNumberForTeam(this.submission.problem, this.submission.team);
-      this.mode = this.codeSaverService.getMode(this.submission.language);
-      this.codeMirror.writeValue(this.submission.code);
     });
+  }
+
+  get isGradedSubmission() {
+    return isGradedSubmission(this.submission);
   }
 
   delete() {
@@ -37,40 +34,7 @@ export class SubmissionComponent implements OnInit {
     }).catch(alert);
   }
 
-  overrideCorrect() {
-    const submission: SubmissionModel = {...this.submission} as SubmissionModel;
-    submission.overrideCorrect = !submission.overrideCorrect;
-    this.submissionService.updateSubmission(submission).then(submission => {
-      this.submission = submission;
-    }).catch(alert);
-  }
-
-  sendDispute() {
-    if (!this.disputeMessage) {
-      alert('Please provide a message explaining your dispute.');
-    }
-
-    const submission: SubmissionModel = {...this.submission} as SubmissionModel;
-    submission.dispute = {
-      open: true,
-      message: this.disputeMessage
-    };
-
-    this.submissionService.updateSubmission(submission).then(submission => {
-      this.submission = submission;
-    }).catch(alert);
-  }
-
-  resolveDispute() {
-    const submission: SubmissionModel = {...this.submission} as SubmissionModel;
-    submission.dispute.open = false;
-
-    this.submissionService.updateSubmission(submission).then(submission => {
-      this.submission = submission;
-    }).catch(alert);
-  }
-
-  get admin(): boolean {
+  get admin() {
     return !this.teamService.team.getValue();
   }
 }

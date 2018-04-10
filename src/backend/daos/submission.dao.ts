@@ -1,6 +1,6 @@
 import mongoose = require('mongoose');
-import { SubmissionModel, TestCaseSubmissionModel } from '../../common/models/submission.model';
-import { ProblemModel, TestCaseOutputMode } from '../../common/models/problem.model';
+import { isGradedSubmission, SubmissionModel, TestCaseSubmissionModel } from '../../common/models/submission.model';
+import { GradedProblemModel, TestCaseOutputMode } from '../../common/models/problem.model';
 import { ModelPopulateOptions } from 'mongoose';
 import { SocketManager } from '../socket.manager';
 import { UpdateTeamPacket } from '../../common/packets/update.team.packet';
@@ -26,7 +26,7 @@ function isFalse(str: string): boolean {
   return str === 'false' || str === 'False' || str === '0';
 }
 
-function isTestCaseSubmissionCorrect(testCase: TestCaseSubmissionModel, problem: ProblemModel): boolean {
+function isTestCaseSubmissionCorrect(testCase: TestCaseSubmissionModel, problem: GradedProblemModel): boolean {
   if (!testCase.output) {
     return false;
   }
@@ -54,11 +54,17 @@ TestCaseSubmissionSchema.virtual('correct').get(function() {
   return isTestCaseSubmissionCorrect(this, this.parent().problem);
 });
 
+const SubmissionFileSchema = new mongoose.Schema({
+  name: String,
+  contents: String
+});
+
 const SubmissionSchema = new mongoose.Schema({
   team: {type: mongoose.Schema.Types.ObjectId, ref: 'Team'},
   problem: {type: mongoose.Schema.Types.ObjectId, ref: 'Problem'},
   language: String,
   code: String,
+  files: [SubmissionFileSchema],
   test: {type: Boolean, default: false},
   testCases: [TestCaseSubmissionSchema],
   error: String,
@@ -74,10 +80,12 @@ const SubmissionSchema = new mongoose.Schema({
 });
 
 export function sanitizeSubmission(submission: SubmissionModel): SubmissionModel {
-  submission.problem.testCases = submission.problem.testCases.filter(testCase => !testCase.hidden);
+  if (isGradedSubmission(submission)) {
+    submission.problem.testCases = submission.problem.testCases.filter(testCase => !testCase.hidden);
 
-  if (submission.testCases) {
-    submission.testCases = submission.testCases.filter(testCase => !testCase.hidden);
+    if (submission.testCases) {
+      submission.testCases = submission.testCases.filter(testCase => !testCase.hidden);
+    }
   }
 
   return submission;
@@ -99,24 +107,30 @@ SubmissionSchema.virtual('result').get(function() {
 
 // TODO: Lock the question after a certain number of incorrect submissions.
 SubmissionSchema.virtual('points').get(function() {
-  if (this.test) {
-    return 0;
-  }
+  if (isGradedSubmission(this)) {
+    if (this.test) {
+      return 0;
+    }
 
-  else if (this.overrideCorrect) {
-    return ProblemUtil.getPoints(this.problem, this.team);
-  }
+    else if (this.overrideCorrect) {
+      return ProblemUtil.getPoints(this.problem, this.team);
+    }
 
-  else if (this.error) {
-    return 0;
-  }
+    else if (this.error) {
+      return 0;
+    }
 
-  else if (this.testCases.every(testCase => testCase.toObject().correct)) {
-    return ProblemUtil.getPoints(this.problem, this.team);
+    else if (this.testCases.every(testCase => testCase.toObject().correct)) {
+      return ProblemUtil.getPoints(this.problem, this.team);
+    }
+
+    else {
+      return 0;
+    }
   }
 
   else {
-    return 0;
+    return this.points;
   }
 });
 

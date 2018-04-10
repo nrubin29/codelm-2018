@@ -1,9 +1,19 @@
 import {
-  MatButtonModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDialogModule, MatDividerModule,
+  MatButtonModule,
+  MatCardModule,
+  MatCheckboxModule,
+  MatChipsModule,
+  MatDialogModule,
+  MatDividerModule,
   MatFormFieldModule,
-  MatIconModule, MatInputModule,
-  MatListModule, MatSelectModule, MatSidenavModule,
-  MatTableModule, MatTabsModule, MatToolbarModule
+  MatIconModule,
+  MatInputModule,
+  MatListModule,
+  MatSelectModule,
+  MatSidenavModule,
+  MatTableModule,
+  MatTabsModule,
+  MatToolbarModule
 } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -26,10 +36,14 @@ import { DivisionService } from './services/division.service';
 import { CodeSaverService } from './services/code-saver.service';
 import { CardComponent } from './common/components/card/card.component';
 import { CodeMirrorComponent } from './common/components/code-mirror/code-mirror.component';
+import { GradedSubmissionComponent } from './common/views/graded-submission/graded-submission.component';
+import { UploadSubmissionComponent } from './common/views/upload-submission/upload-submission.component';
 
 @NgModule({
   declarations: [
     SubmissionComponent,
+    GradedSubmissionComponent,
+    UploadSubmissionComponent,
     CardComponent,
     CodeMirrorComponent,
     PluralizePipe
@@ -73,6 +87,8 @@ import { CodeMirrorComponent } from './common/components/code-mirror/code-mirror
   ],
   exports: [
     SubmissionComponent,
+    GradedSubmissionComponent,
+    UploadSubmissionComponent,
     CardComponent,
     CodeMirrorComponent,
     PluralizePipe,

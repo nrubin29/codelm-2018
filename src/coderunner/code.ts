@@ -1,9 +1,9 @@
-import { CodeFile, CodeRunner, CppRunner, JavaRunner, PythonRunner } from "./coderunner";
-import { ServerProblemSubmission } from '../common/problem-submission';
+import { CodeFile, CodeRunner, CppRunner, JavaRunner, PythonRunner } from './coderunner';
+import { ServerGradedProblemSubmission } from '../common/problem-submission';
 
 const stdin = process.openStdin();
 stdin.once('data', data => {
-  const submission = JSON.parse(data) as ServerProblemSubmission;
+  const submission = JSON.parse(data) as ServerGradedProblemSubmission;
   let runner: CodeRunner;
 
   switch (submission.language) {

@@ -1,9 +1,9 @@
-import {execFile} from 'child_process';
-import {ServerProblemSubmission} from '../common/problem-submission';
+import { execFile } from 'child_process';
+import { ServerGradedProblemSubmission } from '../common/problem-submission';
 import * as assert from 'assert';
-import {TestCaseSubmissionModel} from '../common/models/submission.model';
+import { TestCaseSubmissionModel } from '../common/models/submission.model';
 
-function spawnProcess(submission: ServerProblemSubmission, callback: (error: Error | null, stdout: string, stderr: string) => void) {
+function spawnProcess(submission: ServerGradedProblemSubmission, callback: (error: Error | null, stdout: string, stderr: string) => void) {
   const process = execFile('docker', ['run', '-i', '--rm', '--cap-drop', 'ALL', '--net=none', 'coderunner'], (err, stdout, stderr) => {
     callback(err, stdout, stderr);
   });
@@ -15,7 +15,7 @@ function spawnProcess(submission: ServerProblemSubmission, callback: (error: Err
 describe('Docker', () => {
   describe('#container', () => {
     it('should spawn a container', done => {
-      const submission: ServerProblemSubmission = {
+      const submission: ServerGradedProblemSubmission = {
         problemTitle: 'Main',
         testCases: [
           {
@@ -35,7 +35,7 @@ describe('Docker', () => {
     });
 
     it('should echo', done => {
-      const submission: ServerProblemSubmission = {
+      const submission: ServerGradedProblemSubmission = {
         problemTitle: 'Main',
         testCases: [
           {
@@ -58,7 +58,7 @@ describe('Docker', () => {
     });
 
     it('should give an error', done => {
-      const submission: ServerProblemSubmission = {
+      const submission: ServerGradedProblemSubmission = {
         problemTitle: 'Main',
         testCases: [
           {
@@ -78,7 +78,7 @@ describe('Docker', () => {
     });
 
     it('should time out', done => {
-      const submission: ServerProblemSubmission = {
+      const submission: ServerGradedProblemSubmission = {
         problemTitle: 'Main',
         testCases: [
           {

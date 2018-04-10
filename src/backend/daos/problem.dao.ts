@@ -1,5 +1,5 @@
 import mongoose = require('mongoose');
-import { ProblemModel, TestCaseOutputMode } from '../../common/models/problem.model';
+import { isGradedProblem, ProblemModel, TestCaseOutputMode } from '../../common/models/problem.model';
 
 type ProblemType = ProblemModel & mongoose.Document;
 
@@ -18,10 +18,19 @@ const TestCaseSchema = new mongoose.Schema({
 const Problem = mongoose.model<ProblemType>('Problem', new mongoose.Schema({
   title: String,
   description: String,
+  type: String,
   divisions: [ProblemDivisionSchema],
   testCaseOutputMode: {type: String, default: TestCaseOutputMode.CaseSensitive},
   testCases: [TestCaseSchema]
 }));
+
+export function sanitizeProblem(problem: ProblemModel): ProblemModel {
+  if (isGradedProblem(problem)) {
+    problem.testCases = problem.testCases.filter(testCase => !testCase.hidden);
+  }
+
+  return problem;
+}
 
 export class ProblemDao {
   static getProblem(id: string): Promise<ProblemModel> {

@@ -14,12 +14,13 @@ export class DivisionService {
 
   addOrUpdateDivision(division: DivisionModel & {file?: File}): Promise<DivisionModel> {
     const formData = new FormData();
+
     if (division.file) {
       formData.append('starterCode', division.file, division.file.name);
       delete division.file;
     }
 
-    for (let key of Object.keys(division)) {
+    for (const key of Object.keys(division)) {
       formData.append(key, division[key]);
     }
 

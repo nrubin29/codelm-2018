@@ -1,5 +1,4 @@
 import { TestCaseModel } from './models/problem.model';
-import { SubmissionFileModel } from './models/submission.model';
 
 export interface ClientProblemSubmission {
   problemId: string;
@@ -12,7 +11,11 @@ export interface ClientGradedProblemSubmission extends ClientProblemSubmission {
 }
 
 export interface ClientUploadProblemSubmission extends ClientProblemSubmission {
-  files: SubmissionFileModel[];
+  files: FileList;
+}
+
+export function isUploadProblemSubmission(problemSubmission: ClientProblemSubmission): problemSubmission is ClientUploadProblemSubmission {
+  return (problemSubmission as any).files !== undefined;
 }
 
 export interface ServerGradedProblemSubmission {

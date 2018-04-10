@@ -1,7 +1,9 @@
 <app-card title="Problem">
     <p [innerHtml]="problem.description"></p>
 </app-card>
+<!-- TODO: Change documentation button to a dropdown (or have separate buttons) -->
 <div class="flex right">
     <a mat-raised-button color="accent" [href]="documentation" target="_blank">Documentation</a>
 </div>
-<input type="file" multiple>
+<!-- TODO: Inline upload and documentation button. -->
+<input type="file" multiple (change)="handleFiles($event.target.files)">

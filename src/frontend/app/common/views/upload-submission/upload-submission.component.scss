@@ -1,3 +1,9 @@
+:host ::ng-deep {
+  .mat-chip-list-wrapper {
+    justify-content: normal;
+  }
+}
+
 .fix-size {
   max-width: 50%;
 }

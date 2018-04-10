@@ -12,6 +12,7 @@ import { ClientUploadProblemSubmission } from '../../../../../common/problem-sub
 })
 export class UploadProblemComponent implements OnInit {
   @Input() problem: UploadProblemModel;
+  files: FileList;
 
   constructor(private problemService: ProblemService, private problemComponent: ProblemComponent, private router: Router) {
   }
@@ -19,15 +20,21 @@ export class UploadProblemComponent implements OnInit {
   ngOnInit() {
     this.problemComponent.enableTest = false;
     this.problemComponent.buttonClicked.subscribe(() => {
-      // TODO: Load files.
+      if (!this.files || this.files.length === 0) {
+        alert('You must upload at least one file.');
+        return;
+      }
 
       this.problemService.problemSubmission = {
         problemId: this.problem._id,
-        files: []
+        files: this.files
       } as ClientUploadProblemSubmission;
 
       this.router.navigate(['dashboard', 'submit']);
     });
   }
 
+  handleFiles(files: FileList) {
+    this.files = files;
+  }
 }

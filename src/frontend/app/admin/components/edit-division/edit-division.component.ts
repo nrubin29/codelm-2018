@@ -25,7 +25,7 @@ export class EditDivisionComponent implements OnInit {
       _id: new FormControl(this.division._id),
       name: new FormControl(this.division.name),
       type: new FormControl(this.division.type)
-    })
+    });
   }
 
   handleFile(files: FileList) {

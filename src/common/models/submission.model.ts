@@ -48,6 +48,7 @@ export interface SubmissionFileModel {
 export interface UploadSubmissionModel extends SubmissionModel {
   problem: UploadProblemModel;
   files: SubmissionFileModel[];
+  score: number;
 }
 
 export function isUploadSubmission(submission: SubmissionModel): submission is UploadSubmissionModel {

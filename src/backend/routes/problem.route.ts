@@ -1,16 +1,18 @@
 import { Request, Response, Router } from 'express';
 import { ProblemDao, sanitizeProblem } from '../daos/problem.dao';
-import {
-  ClientGradedProblemSubmission,
-  ClientProblemSubmission,
-  ClientUploadProblemSubmission,
-  ServerGradedProblemSubmission
-} from '../../common/problem-submission';
+import { ClientGradedProblemSubmission, ClientProblemSubmission, ServerGradedProblemSubmission } from '../../common/problem-submission';
 import { isGradedProblem, ProblemModel } from '../../common/models/problem.model';
 import { SubmissionDao } from '../daos/submission.dao';
 import { PermissionsUtil } from '../permissions.util';
-import { GradedSubmissionModel, SubmissionModel, TestCaseSubmissionModel } from '../../common/models/submission.model';
+import {
+  GradedSubmissionModel,
+  SubmissionFileModel,
+  SubmissionModel,
+  TestCaseSubmissionModel,
+  UploadSubmissionModel
+} from '../../common/models/submission.model';
 import { execFile } from 'child_process';
+import { FileArray, UploadedFile } from 'express-fileupload';
 
 const router = Router();
 
@@ -44,7 +46,7 @@ router.get('/division/:id', PermissionsUtil.requireAuth, async (req: Request, re
   res.json(problems);
 });
 
-router.post('/submit', PermissionsUtil.requireTeam, PermissionsUtil.requireAccess, async (req: Request, res: Response) => {
+router.post('/submit', PermissionsUtil.requireTeam, PermissionsUtil.requireAccess, async (req: Request & { files?: FileArray }, res: Response) => {
   const problemSubmission = req.body as ClientProblemSubmission;
   const problem = await ProblemDao.getProblem(problemSubmission.problemId);
 
@@ -73,16 +75,12 @@ router.post('/submit', PermissionsUtil.requireTeam, PermissionsUtil.requireAcces
             error: runError.error,
             test: gradedProblemSubmission.test
           } as GradedSubmissionModel);
-        }
-
-        catch {
+        } catch {
           console.error(stderr);
           res.json(false);
           return;
         }
-      }
-
-      else {
+      } else {
         try {
           const testCaseSubmissions = JSON.parse(stdout) as TestCaseSubmissionModel[];
 
@@ -111,9 +109,16 @@ router.post('/submit', PermissionsUtil.requireTeam, PermissionsUtil.requireAcces
   }
 
   else {
-    const uploadProblemSubmission = <ClientUploadProblemSubmission>problemSubmission;
-    // TODO: Store submission and return _id.
-    res.json(true);
+    const files = req.files['files'] as UploadedFile[];
+
+    const submission = await SubmissionDao.addSubmission({
+      team: req.params.team,
+      problem: problem,
+      files: files.map(file => <SubmissionFileModel>{name: file.name, contents: file.data.toString()}),
+      score: 0
+    } as UploadSubmissionModel);
+
+    res.json(submission._id);
   }
 });
 

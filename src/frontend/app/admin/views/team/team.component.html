@@ -31,6 +31,7 @@
     <mat-list>
       <ng-container *ngFor="let problem of problems; let i = index">
         <h3 mat-subheader>{{problem.title}}</h3>
+        <!-- TODO: Don't have result and test columns if problem is upload-style. -->
         <mat-table *ngIf="problemSubmissions[problem._id].length > 0" [dataSource]="problemSubmissions[problem._id]">
           <ng-container matColumnDef="result">
             <mat-header-cell *matHeaderCellDef>Result</mat-header-cell>

@@ -65,6 +65,7 @@ const SubmissionSchema = new mongoose.Schema({
   language: String,
   code: String,
   files: [SubmissionFileSchema],
+  score: Number,
   test: {type: Boolean, default: false},
   testCases: [TestCaseSubmissionSchema],
   error: String,
@@ -130,7 +131,7 @@ SubmissionSchema.virtual('points').get(function() {
   }
 
   else {
-    return this.points;
+    return this.score;
   }
 });
 

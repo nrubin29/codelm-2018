@@ -1,17 +1,22 @@
 <div class="flex display-side container">
     <div class="fix-size">
-        <app-card title="score" *ngIf="!admin">
-            <p>{{submission.points}}</p>
+      <app-card title="Score">
+        <mat-chip-list>
+          <mat-chip color="accent" selected="true">{{submission.points}}
+            {{'point'|pluralize:submission.points}}
+          </mat-chip>
+        </mat-chip-list>
         </app-card>
         <app-card title="Admin" *ngIf="admin">
             <!-- TODO: Set score -->
             <button mat-raised-button color="accent" (click)="delete()">Delete Submission</button>
         </app-card>
     </div>
-    <div>
+  <div class="fix-size">
         <!-- TODO: Add a "download all" button -->
+    <!-- TODO: Make these cards collapsible -->
         <app-card *ngFor="let file of submission.files" [title]="file.name">
-            <p [innerHtml]="file.contents"></p>
+          <code [innerHtml]="file.contents"></code>
         </app-card>
     </div>
 </div>

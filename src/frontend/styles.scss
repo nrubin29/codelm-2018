@@ -17,6 +17,7 @@
 code {
   @extend .mono;
   white-space: pre;
+  word-wrap: break-word;
 }
 
 .container {
@@ -94,6 +95,10 @@ mat-sidenav-container {
 
 mat-sidenav-content {
   height: 100vh;
+}
+
+.mat-expansion-panel-header-description, .mat-expansion-panel-header-title {
+  flex-basis: 0;
 }
 
 h1, h2, h3, h4, h5, h6 {

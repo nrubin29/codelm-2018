@@ -6,10 +6,15 @@ export enum SettingsState {
   Debug = 'Debug'
 }
 
+export interface ScheduleModel {
+  newState: SettingsState;
+  when: Date;
+}
+
 export interface SettingsModel {
   state: SettingsState;
-  end: Date;
+  schedule: ScheduleModel[];
   openRegistration: boolean;
 }
 
-export const defaultSettingsModel: SettingsModel = Object.freeze({state: SettingsState.Closed, end: new Date(), openRegistration: false});
+export const defaultSettingsModel: SettingsModel = Object.freeze({state: SettingsState.Closed, schedule: [], openRegistration: false});

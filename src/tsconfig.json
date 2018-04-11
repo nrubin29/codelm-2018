@@ -4,7 +4,9 @@
     "outDir": "../dist",
     "baseUrl": "./",
     "module": "commonjs",
-    "types": [],
+    "types": [
+      "node"
+    ],
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",

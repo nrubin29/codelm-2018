@@ -1,21 +1,26 @@
 import mongoose = require('mongoose');
 import { defaultSettingsModel, SettingsModel, SettingsState } from '../../common/models/settings.model';
-import { Job, scheduleJob as nodeScheduleJob } from 'node-schedule';
+import { Job, scheduleJob } from 'node-schedule';
 import { SocketManager } from '../socket.manager';
 import { UpdateSettingsPacket } from '../../common/packets/update.settings.packet';
 
 type SettingsType = SettingsModel & mongoose.Document;
 
+const ScheduleSchema = new mongoose.Schema({
+  newState: String,
+  when: Date
+});
+
 const SettingsSchema = new mongoose.Schema({
   state: {type: String, default: SettingsState.Closed},
-  end: Date,
+  schedule: [ScheduleSchema],
   openRegistration: {type: Boolean, default: false}
 });
 
 const Settings = mongoose.model<SettingsType>('Settings', SettingsSchema);
 
 export class SettingsDao {
-  private static job: Job;
+  private static jobs: Job[];
 
   static async getSettings(): Promise<SettingsModel> {
     const settings = await Settings.findOne().exec();
@@ -31,31 +36,40 @@ export class SettingsDao {
 
   static async updateSettings(settings: any): Promise<SettingsModel> {
     // TODO: If needed, send packet to kick connected teams.
-    const oldSettings = await SettingsDao.getSettings();
-    const newSettings: SettingsModel = await Settings.updateOne({}, settings, {upsert: true, new: true}).exec();
-
-    if (oldSettings.end !== newSettings.end) {
-      if (SettingsDao.job) {
-        SettingsDao.job.cancel();
-      }
-
-      SettingsDao.scheduleJob(newSettings);
-    }
-
+    const newSettings: SettingsModel = await Settings.findOneAndUpdate({}, settings, {upsert: true, new: true}).exec();
+    SettingsDao.scheduleJobs(newSettings);
     SocketManager.instance.emitToAll(new UpdateSettingsPacket());
     return newSettings;
   }
 
-  static scheduleJob(settings: SettingsModel) {
-    SettingsDao.job = nodeScheduleJob(settings.end, () => {
-      settings.state = SettingsState.End;
-      SettingsDao.updateSettings(settings);
+  private static resetJobs() {
+    if (SettingsDao.jobs !== undefined) {
+      SettingsDao.jobs.forEach(job => job.cancel());
+    }
+
+    SettingsDao.jobs = [];
+  }
+
+  static scheduleJobs(settings: SettingsModel): number {
+    SettingsDao.resetJobs();
+
+    settings.schedule.forEach(schedule => {
+      const job = scheduleJob(schedule.when, function (newState: SettingsState) {
+        Settings.updateOne({}, {$set: {state: newState}}).exec();
+      }.bind(null, schedule.newState));
+
+      if (job !== null) {
+        SettingsDao.jobs.push(job);
+      }
     });
+
+    return SettingsDao.jobs.length;
   }
 
   static async resetSettings(): Promise<SettingsModel> {
     await Settings.deleteOne({}).exec();
     const settings = await Settings.create(defaultSettingsModel);
+    SettingsDao.resetJobs();
     SocketManager.instance.emitToAll(new UpdateSettingsPacket());
     return settings;
   }

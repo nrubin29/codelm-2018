@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { SettingsModel, SettingsState } from '../../../../../common/models/settings.model';
-import { FormControl, FormGroup, NgForm } from '@angular/forms';
+import { ScheduleModel, SettingsModel, SettingsState } from '../../../../../common/models/settings.model';
+import { FormArray, FormControl, FormGroup, NgForm } from '@angular/forms';
 import * as moment from 'moment';
 import { SettingsService } from '../../../services/settings.service';
 
@@ -12,6 +12,8 @@ import { SettingsService } from '../../../services/settings.service';
 })
 export class SettingsComponent implements OnInit {
   settings: SettingsModel;
+
+  schedule: FormArray;
   formGroup: FormGroup;
 
   constructor(private settingsService: SettingsService, private activatedRoute: ActivatedRoute) { }
@@ -20,11 +22,13 @@ export class SettingsComponent implements OnInit {
     this.activatedRoute.data.subscribe(data => {
       this.settings = data['settings'];
 
+      this.schedule = new FormArray(this.settings.schedule.map(schedule => this.createScheduleGroup(schedule)));
+
       this.formGroup = new FormGroup({
         state: new FormControl(this.settings.state),
-        end: new FormControl(moment(this.settings.end)),
-        openRegistration: new FormControl(this.settings.openRegistration)
-      })
+        openRegistration: new FormControl(this.settings.openRegistration),
+        schedule: this.schedule,
+      });
     });
   }
 
@@ -43,6 +47,28 @@ export class SettingsComponent implements OnInit {
       alert('Reset');
       // TODO: Reload.
     }).catch(alert);
+  }
+
+  addSchedule(schedule?: ScheduleModel) {
+    this.schedule.push(this.createScheduleGroup(schedule));
+  }
+
+  deleteSchedule(index: number) {
+    this.schedule.removeAt(index);
+  }
+
+  private createScheduleGroup(schedule?: ScheduleModel): FormGroup {
+    if (!schedule) {
+      schedule = {
+        newState: undefined,
+        when: new Date()
+      };
+    }
+
+    return new FormGroup({
+      newState: new FormControl(schedule.newState),
+      when: new FormControl(moment(schedule.when)),
+    });
   }
 
   get states(): SettingsState[] {

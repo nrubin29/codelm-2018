@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
 import { SettingsDao } from '../daos/settings.dao';
 import { PermissionsUtil } from '../permissions.util';
 
@@ -17,4 +17,4 @@ router.delete('/', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUse
   res.json(true);
 });
 
-export default router
+export default router;

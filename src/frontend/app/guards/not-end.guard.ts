@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { SettingsService } from '../services/settings.service';
-import * as moment from 'moment';
+import { SettingsState } from '../../../common/models/settings.model';
 
 @Injectable()
 export class NotEndGuard implements CanActivate {
@@ -10,7 +10,7 @@ export class NotEndGuard implements CanActivate {
   async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     const settings = await this.settingsService.getSettings();
 
-    if (moment().isAfter(moment(settings.end))) {
+    if (settings.state === SettingsState.End) {
       return true;
     }
 

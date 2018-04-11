@@ -32,14 +32,7 @@ mongoose.connect('mongodb://localhost/codelm', {useMongoClient: true}).then(() =
   console.log('Connected to MongoDB');
 
   SettingsDao.getSettings().then(settings => {
-    if (settings.end) {
-      SettingsDao.scheduleJob(settings);
-      console.log('Scheduled ending');
-    }
-
-    else {
-      console.log('Ending not set');
-    }
+    console.log('Scheduled ' + SettingsDao.scheduleJobs(settings) + ' events.');
 
     httpSocketServer.listen(4000, () => {
       SocketManager.init(socketServer);

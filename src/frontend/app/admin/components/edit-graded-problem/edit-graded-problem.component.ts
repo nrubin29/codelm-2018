@@ -19,7 +19,6 @@ export class EditGradedProblemComponent implements OnInit {
   ngOnInit() {
     this.testCases = new FormArray((this.gradedProblem.testCases ? this.gradedProblem.testCases : []).map(testCase => this.createTestCaseGroup(testCase)));
 
-    // TODO: Have a FormGroup here and pass it to the parent (or figure out how to use formGroupName dynamically.
     const controls = {
       testCaseOutputMode: new FormControl(this.gradedProblem.testCaseOutputMode),
       testCases: this.testCases

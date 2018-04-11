@@ -59,32 +59,5 @@
         </mat-table>
       </mat-expansion-panel>
     </mat-accordion>
-    <!--<mat-list>-->
-    <!--<ng-container *ngFor="let problem of problems; let i = index">-->
-    <!--<h3 mat-subheader>{{problem.title}}</h3>-->
-    <!--&lt;!&ndash; TODO: Don't have result and test columns if problem is upload-style. &ndash;&gt;-->
-    <!--<mat-table *ngIf="problemSubmissions[problem._id].length > 0" [dataSource]="problemSubmissions[problem._id]">-->
-    <!--<ng-container matColumnDef="result">-->
-    <!--<mat-header-cell *matHeaderCellDef>Result</mat-header-cell>-->
-    <!--<mat-cell *matCellDef="let element"><a [routerLink]="['/admin', 'submission', element._id]">{{element.result}}</a></mat-cell>-->
-    <!--</ng-container>-->
-    <!--<ng-container matColumnDef="test">-->
-    <!--<mat-header-cell *matHeaderCellDef>Test</mat-header-cell>-->
-    <!--<mat-cell *matCellDef="let element">{{element.test ? 'Yes' : 'No'}}</mat-cell>-->
-    <!--</ng-container>-->
-    <!--<ng-container matColumnDef="points">-->
-    <!--<mat-header-cell *matHeaderCellDef>Points</mat-header-cell>-->
-    <!--<mat-cell *matCellDef="let element">{{element.points}}</mat-cell>-->
-    <!--</ng-container>-->
-    <!--<ng-container matColumnDef="datetime">-->
-    <!--<mat-header-cell *matHeaderCellDef>Datetime</mat-header-cell>-->
-    <!--<mat-cell *matCellDef="let element">{{asMoment(element.datetime)}}</mat-cell>-->
-    <!--</ng-container>-->
-    <!--<mat-header-row *matHeaderRowDef="['result', 'test', 'points', 'datetime']"></mat-header-row>-->
-    <!--<mat-row *matRowDef="let row; columns: ['result', 'test', 'points', 'datetime'];"></mat-row>-->
-    <!--</mat-table>-->
-    <!--<mat-divider *ngIf="i !== problems.length - 1"></mat-divider>-->
-    <!--</ng-container>-->
-    <!--</mat-list>-->
   </app-card>
 </div>

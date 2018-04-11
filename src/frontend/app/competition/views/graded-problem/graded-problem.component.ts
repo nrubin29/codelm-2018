@@ -20,7 +20,6 @@ export class GradedProblemComponent implements OnInit, AfterViewInit, OnDestroy 
 
   @ViewChildren(CodeMirrorComponent) codeMirrors: QueryList<CodeMirrorComponent>;
   language: string;
-  lastSaved: Date; // TODO: Either display this better or not at all.
 
   constructor(private problemService: ProblemService, private codeSaverService: CodeSaverService, private problemComponent: ProblemComponent, private router: Router) {
   }
@@ -64,6 +63,5 @@ export class GradedProblemComponent implements OnInit, AfterViewInit, OnDestroy 
 
   saveCode() {
     this.codeSaverService.save(this.problem._id, this.codeMirrors.first.config.mode, this.codeMirrors.first.value);
-    this.lastSaved = new Date();
   }
 }

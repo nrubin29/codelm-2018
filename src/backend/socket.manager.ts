@@ -11,6 +11,8 @@ import { isClientPacket } from '../common/packets/client.packet';
 export class SocketManager {
   private static _instance: SocketManager;
 
+  private sockets: Map<string, SocketIO.Socket>;
+
   static get instance(): SocketManager {
     if (!SocketManager._instance) {
       throw new Error('SocketManager has not been initialized.');
@@ -26,8 +28,6 @@ export class SocketManager {
 
     SocketManager._instance = new SocketManager(server);
   }
-
-  private sockets: Map<string, SocketIO.Socket>;
 
   public emit(userId: string, packet: Packet) {
     if (this.sockets.has(userId)) {
@@ -54,7 +54,7 @@ export class SocketManager {
         }
 
         if (packet.name === 'login') {
-          let loginPacket = packet as LoginPacket;
+          const loginPacket = packet as LoginPacket;
 
           TeamDao.login(loginPacket.username, loginPacket.password).then(team => {
             const response = PermissionsUtil.hasAccess(team) ? LoginResponse.SuccessTeam : LoginResponse.Closed;
@@ -102,7 +102,7 @@ export class SocketManager {
         }
 
         else if (packet.name === 'register') {
-          let registerPacket = packet as RegisterPacket;
+          const registerPacket = packet as RegisterPacket;
           // TODO: Merge this with the login code.
           TeamDao.register(registerPacket.teamData).then(team => {
             const response = PermissionsUtil.hasAccess(team) ? LoginResponse.SuccessTeam : LoginResponse.Closed;

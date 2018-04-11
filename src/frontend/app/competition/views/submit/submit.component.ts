@@ -13,10 +13,12 @@ import { TeamService } from '../../../services/team.service';
 export class SubmitComponent implements OnInit {
   problemSubmission: ClientProblemSubmission;
   animation: number;
+  finished: boolean;
 
   constructor(private dashboard: DashboardComponent, private problemService: ProblemService, private teamService: TeamService, private router: Router) { }
 
   ngOnInit() {
+    this.finished = false;
     this.problemSubmission = this.problemService.problemSubmission;
     this.animation = Math.floor(Math.random() * 11);
 
@@ -26,6 +28,7 @@ export class SubmitComponent implements OnInit {
           setTimeout(() => {
             this.dashboard.toggle().then(() => {
               setTimeout(() => {
+                this.finished = true;
                 this.router.navigate(['dashboard', 'submission', submissionId]);
               }, 200);
             });

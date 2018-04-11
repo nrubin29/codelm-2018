@@ -17,6 +17,10 @@ export class ProblemService {
     return temp;
   }
 
+  get peekProblemSubmission() {
+    return this._problemSubmission;
+  }
+
   set problemSubmission(value: ClientProblemSubmission) {
     this._problemSubmission = value;
   }

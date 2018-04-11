@@ -12,13 +12,14 @@ import { SubmitComponent } from './views/submit/submit.component';
 import { SubmissionComponent } from '../common/views/submission/submission.component';
 import { SubmissionResolve } from '../resolves/submission.resolve';
 import { NgModule } from '@angular/core';
+import { SubmittingGuard } from '../guards/submitting.guard';
 
 const routes: Routes = [
   {path: 'dashboard', component: DashboardComponent, canActivate: [SocketGuard, TeamGuard, EndGuard], children:
       [
         {path: '', component: StandingsComponent},
         {path: 'problem/:id', component: ProblemComponent, canActivate: [ProblemGuard], resolve: {problem: ProblemResolve, submissions: SubmissionsResolve}},
-        {path: 'submit', component: SubmitComponent},
+        {path: 'submit', component: SubmitComponent, canActivate: [SubmittingGuard], canDeactivate: [SubmittingGuard]},
         {path: 'submission/:id', component: SubmissionComponent, resolve: {submission: SubmissionResolve}}
       ]
   }
@@ -32,6 +33,7 @@ const routes: Routes = [
     TeamGuard,
     ProblemGuard,
     EndGuard,
+    SubmittingGuard,
     SubmissionResolve,
     ProblemResolve,
     SubmissionsResolve

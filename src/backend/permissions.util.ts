@@ -12,7 +12,8 @@ export class PermissionsUtil {
 
     return team.division.type === DivisionType.Special ||
       settings.state === SettingsState.Debug ||
-      (settings.state === SettingsState.Competition && team.division.type === DivisionType.Competition) ||
+      (settings.state === SettingsState.Graded && team.division.type === DivisionType.Competition) ||
+      (settings.state === SettingsState.Upload && team.division.type === DivisionType.Competition) ||
       (settings.state === SettingsState.Preliminaries && team.division.type === DivisionType.Preliminaries);
   }
 
@@ -25,16 +26,6 @@ export class PermissionsUtil {
 
     else {
       next(new Error('No team found for given authorization.'));
-    }
-  }
-
-  private static async requestTeam(req: Request, res: Response, next: NextFunction) {
-    try {
-      return await PermissionsUtil.requireTeam(req, res, next);
-    }
-
-    catch {
-      next();
     }
   }
 
@@ -67,13 +58,13 @@ export class PermissionsUtil {
   }
 
   static async requestAdmin(req: Request, res: Response, next: NextFunction) {
-    try {
-      return await PermissionsUtil.requireAdmin(req, res, next);
+    req.params.admin = await AdminDao.getAdmin(req.header('Authorization').split(' ')[1]);
+
+    if (!req.params.admin) {
+      delete req.params.admin;
     }
 
-    catch {
-      next();
-    }
+    next();
   }
 
   static requireSuperUser(req: Request, res: Response, next: NextFunction) {
@@ -93,22 +84,23 @@ export class PermissionsUtil {
   }
 
   static async requireAuth(req: Request, res: Response, next: NextFunction) {
-    await PermissionsUtil.requestTeam(req, res, async () => {
-      if (req.params.team) {
-        next();
-      }
+    const team = await TeamDao.getTeam(req.header('Authorization').split(' ')[1]);
 
-      else {
-        await PermissionsUtil.requestAdmin(req, res, () => {
-          if (req.params.admin) {
-            next();
-          }
+    if (team) {
+      req.params.team = team;
+      next();
+    }
 
-          else {
-            next(new Error('No authentication.'));
-          }
-        });
-      }
-    });
+    else {
+      await PermissionsUtil.requestAdmin(req, res, () => {
+        if (req.params.admin) {
+          next();
+        }
+
+        else {
+          next(new Error('No authentication.'));
+        }
+      });
+    }
   }
 }

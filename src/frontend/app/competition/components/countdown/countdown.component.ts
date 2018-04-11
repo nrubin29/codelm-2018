@@ -41,7 +41,7 @@ export class CountdownComponent implements OnInit {
       clearInterval(this.interval);
     }
 
-    this.end = moment(this.settings.schedule.filter(schedule => moment().isBefore(moment(schedule.when))).sort(schedule => schedule.when.getUTCDate())[0].when);
+    this.end = moment(this.settings.schedule.filter(schedule => moment().isBefore(moment(schedule.when))).sort(schedule => moment(schedule.when).unix())[0].when);
 
     const tick = () => {
       if (moment().isAfter(this.end)) {

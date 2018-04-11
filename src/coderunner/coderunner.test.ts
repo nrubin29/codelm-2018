@@ -1,3 +1,4 @@
+import * as _ from 'mocha';
 import { CodeFile, CppRunner, JavaRunner, PythonRunner } from './coderunner';
 import chai = require('chai');
 import chaiAsPromised = require('chai-as-promised');

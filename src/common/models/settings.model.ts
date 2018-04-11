@@ -1,6 +1,7 @@
 export enum SettingsState {
   Preliminaries = 'Preliminaries',
-  Competition = 'Competition',
+  Graded = 'Graded',
+  Upload = 'Upload',
   Closed = 'Closed',
   End = 'End',
   Debug = 'Debug'

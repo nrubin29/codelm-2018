@@ -57,17 +57,19 @@ export class SocketManager {
           const loginPacket = packet as LoginPacket;
 
           TeamDao.login(loginPacket.username, loginPacket.password).then(team => {
-            const response = PermissionsUtil.hasAccess(team) ? LoginResponse.SuccessTeam : LoginResponse.Closed;
-            socket.emit('packet', new LoginResponsePacket(response, response === LoginResponse.SuccessTeam ? sanitizeTeam(team) : undefined));
+            PermissionsUtil.hasAccess(team).then(access => {
+              const response = access ? LoginResponse.SuccessTeam : LoginResponse.Closed;
+              socket.emit('packet', new LoginResponsePacket(response, response === LoginResponse.SuccessTeam ? sanitizeTeam(team) : undefined));
 
-            if (response === LoginResponse.SuccessTeam) {
-              _id = team._id.toString();
-              this.sockets.set(_id, socket);
-            }
+              if (response === LoginResponse.SuccessTeam) {
+                _id = team._id.toString();
+                this.sockets.set(_id, socket);
+              }
 
-            else {
-              socket.disconnect(true);
-            }
+              else {
+                socket.disconnect(true);
+              }
+            });
           }).catch((response: LoginResponse | Error) => {
             if (response === LoginResponse.NotFound) {
               AdminDao.login(loginPacket.username, loginPacket.password).then(admin => {
@@ -105,8 +107,19 @@ export class SocketManager {
           const registerPacket = packet as RegisterPacket;
           // TODO: Merge this with the login code.
           TeamDao.register(registerPacket.teamData).then(team => {
-            const response = PermissionsUtil.hasAccess(team) ? LoginResponse.SuccessTeam : LoginResponse.Closed;
-            socket.emit('packet', new LoginResponsePacket(response, response === LoginResponse.SuccessTeam ? sanitizeTeam(team) : undefined));
+            PermissionsUtil.hasAccess(team).then(access => {
+              const response = access ? LoginResponse.SuccessTeam : LoginResponse.Closed;
+              socket.emit('packet', new LoginResponsePacket(response, response === LoginResponse.SuccessTeam ? sanitizeTeam(team) : undefined));
+
+              if (response === LoginResponse.SuccessTeam) {
+                _id = team._id.toString();
+                this.sockets.set(_id, socket);
+              }
+
+              else {
+                socket.disconnect(true);
+              }
+            });
           }).catch((response: LoginResponse | Error) => {
             if ((response as any).stack !== undefined) {
               console.error(response);

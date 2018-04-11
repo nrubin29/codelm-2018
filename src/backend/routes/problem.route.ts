@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { ProblemDao, sanitizeProblem } from '../daos/problem.dao';
 import { ClientGradedProblemSubmission, ClientProblemSubmission, ServerGradedProblemSubmission } from '../../common/problem-submission';
-import { isGradedProblem, ProblemModel } from '../../common/models/problem.model';
+import { isGradedProblem, ProblemModel, ProblemType } from '../../common/models/problem.model';
 import { SubmissionDao } from '../daos/submission.dao';
 import { PermissionsUtil } from '../permissions.util';
 import {
@@ -13,6 +13,8 @@ import {
 } from '../../common/models/submission.model';
 import { execFile } from 'child_process';
 import { FileArray, UploadedFile } from 'express-fileupload';
+import { SettingsDao } from '../daos/settings.dao';
+import { SettingsState } from '../../common/models/settings.model';
 
 const router = Router();
 
@@ -37,15 +39,26 @@ router.delete('/:id', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuper
 
 router.get('/division/:id', PermissionsUtil.requireAuth, async (req: Request, res: Response) => {
   let problems = await ProblemDao.getProblemsForDivision(req.params.id);
+  const settings = await SettingsDao.getSettings();
 
   if (!req.params.admin) {
     problems = problems.filter(problem => problem.divisions.findIndex(pD => pD.division._id.toString() === req.params.team.division._id.toString()) !== -1);
+
+    if (settings.state === SettingsState.Graded) {
+      problems = problems.filter(problem => settings.state === SettingsState.Graded && problem.type === ProblemType.Graded);
+    }
+
+    else if (settings.state === SettingsState.Upload) {
+      problems = problems.filter(problem => settings.state === SettingsState.Upload && problem.type === ProblemType.Upload);
+    }
+
     problems.forEach(problem => sanitizeProblem(problem));
   }
 
   res.json(problems);
 });
 
+// TODO: Split this into two routes, one for graded and one for upload.
 router.post('/submit', PermissionsUtil.requireTeam, PermissionsUtil.requireAccess, async (req: Request & { files?: FileArray }, res: Response) => {
   const problemSubmission = req.body as ClientProblemSubmission;
   const problem = await ProblemDao.getProblem(problemSubmission.problemId);

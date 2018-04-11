@@ -34,8 +34,6 @@ export class SettingsComponent implements OnInit {
 
   submit(form: NgForm) {
     const value = form.value;
-    // value.end = value.end.toDate();
-    value.end = new Date(value.end);
 
     this.settingsService.updateSettings(value).then(() => {
       alert('Updated');

@@ -1,3 +1,4 @@
+import * as _ from 'mocha';
 import { execFile } from 'child_process';
 import { ServerGradedProblemSubmission } from '../common/problem-submission';
 import * as assert from 'assert';

@@ -125,9 +125,15 @@ export class TeamDao {
   }
 
   private static async addScore(team: TeamType): Promise<TeamType> {
-    const score = await SubmissionDao.getScoreForTeam(team._id);
-    team.set('score', score, {strict: false});
-    return team;
+    if (team) {
+      const score = await SubmissionDao.getScoreForTeam(team._id);
+      team.set('score', score, {strict: false});
+      return team;
+    }
+
+    else {
+      return null;
+    }
   }
 
   private static async addScores(teams: TeamType[]): Promise<TeamType[]> {

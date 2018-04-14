@@ -8,7 +8,10 @@
       </mat-chip-list>
     </app-card>
     <app-card title="Admin" *ngIf="admin">
-      <!-- TODO: Set score -->
+      <mat-form-field color="accent">
+        <input matInput type="number" placeholder="Score" [(ngModel)]="score">
+      </mat-form-field>
+      <button mat-raised-button color="accent" (click)="setScore()">Set Score</button>
       <button mat-raised-button color="accent" (click)="delete()">Delete Submission</button>
     </app-card>
   </div>
@@ -19,6 +22,10 @@
         <mat-expansion-panel *ngFor="let file of submission.files">
           <mat-expansion-panel-header>
             <mat-panel-title>{{file.name}}</mat-panel-title>
+            <mat-panel-description *ngIf="admin"><a href="/api/submissions/{{submission._id}}/file/{{file.name}}"
+                                                    target="_blank">
+              <mat-icon>file_download</mat-icon>
+            </a></mat-panel-description>
           </mat-expansion-panel-header>
           <code [innerHtml]="file.contents"></code>
         </mat-expansion-panel>

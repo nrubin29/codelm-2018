@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { sanitizeSubmission, SubmissionDao } from '../daos/submission.dao';
 import { PermissionsUtil } from '../permissions.util';
-import { SubmissionModel } from '../../common/models/submission.model';
+import { isUploadSubmission, SubmissionModel, UploadSubmissionModel } from '../../common/models/submission.model';
 
 const router = Router();
 
@@ -23,7 +23,7 @@ router.get('/:id', PermissionsUtil.requireAuth, async (req: Request, res: Respon
 
   if (req.params.team) {
     // The toString() calls are needed because both _ids are objects.
-    if (submission.team._id.toString() == req.params.team._id.toString()) {
+    if (submission.team._id.toString() === req.params.team._id.toString()) {
       res.json(sanitizeSubmission(submission));
     }
 
@@ -34,6 +34,34 @@ router.get('/:id', PermissionsUtil.requireAuth, async (req: Request, res: Respon
 
   else if (req.params.admin) {
     res.json(submission);
+  }
+
+  else {
+    res.sendStatus(403);
+  }
+});
+
+// TODO: Protect this route.
+router.get('/:id/file/:fileName', async (req: Request, res: Response) => {
+  const submission: SubmissionModel = await SubmissionDao.getSubmission(req.params.id);
+
+  if (isUploadSubmission(submission)) {
+    const file = submission.files.find(f => f.name === req.params.fileName);
+
+    if (file) {
+      // TODO: Set Content-Type appropriately (because Safari appends .txt, but at least Chrome works).
+      res.set({
+        'Content-Disposition': `attachment; filename="${file.name}"`,
+        'Content-Type': 'text/plain',
+        'Content-Length': file.contents.length
+      });
+
+      res.send(file);
+    }
+
+    else {
+      res.sendStatus(403);
+    }
   }
 
   else {
@@ -65,4 +93,4 @@ router.delete('/:id', PermissionsUtil.requireAdmin, async (req: Request, res: Re
   res.json(true);
 });
 
-export default router
+export default router;

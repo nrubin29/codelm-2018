@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit {
         this.submissions = submissions;
 
         this.problemService.getProblems(this.team.division._id).then(problems => {
-          this.problems = problems
+          this.problems = problems;
         });
       });
     });
@@ -49,7 +49,6 @@ export class DashboardComponent implements OnInit {
   }
 
   didSolve(problem: ProblemModel) {
-    // TODO: These icons don't update when the team is refreshed.
     return SubmissionUtil.getSolution(problem, this.submissions);
   }
 }

@@ -4,6 +4,7 @@ import { ProblemComponent } from '../problem/problem.component';
 import { ProblemService } from '../../../services/problem.service';
 import { Router } from '@angular/router';
 import { ClientUploadProblemSubmission } from '../../../../../common/problem-submission';
+import { CodeSaverService } from '../../../services/code-saver.service';
 
 @Component({
   selector: 'app-upload-problem',
@@ -14,7 +15,7 @@ export class UploadProblemComponent implements OnInit {
   @Input() problem: UploadProblemModel;
   files: FileList;
 
-  constructor(private problemService: ProblemService, private problemComponent: ProblemComponent, private router: Router) {
+  constructor(private problemService: ProblemService, private problemComponent: ProblemComponent, private codeSaverService: CodeSaverService, private router: Router) {
   }
 
   ngOnInit() {
@@ -32,6 +33,10 @@ export class UploadProblemComponent implements OnInit {
 
       this.router.navigate(['dashboard', 'submit']);
     });
+  }
+
+  getDocumentation(language: string) {
+    return this.codeSaverService.getDocumentation(language);
   }
 
   handleFiles(files: FileList) {

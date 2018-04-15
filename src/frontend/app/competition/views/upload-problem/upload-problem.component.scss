@@ -1,3 +1,11 @@
+.display-side {
+  align-items: center;
+}
+
 input[type="file"] {
   display: block;
+}
+
+.menu-button {
+  flex: 0 0 auto;
 }

@@ -10,6 +10,7 @@ import {
   MatIconModule,
   MatInputModule,
   MatListModule,
+  MatMenuModule,
   MatSelectModule,
   MatSidenavModule,
   MatTableModule,
@@ -74,6 +75,7 @@ import { UploadSubmissionComponent } from './common/views/upload-submission/uplo
     MatDialogModule,
     MatCheckboxModule,
     MatExpansionModule,
+    MatMenuModule,
   ],
   providers: [
     RestService,
@@ -118,6 +120,7 @@ import { UploadSubmissionComponent } from './common/views/upload-submission/uplo
     MatDialogModule,
     MatCheckboxModule,
     MatExpansionModule,
+    MatMenuModule,
   ]
 })
 export class SharedModule { }

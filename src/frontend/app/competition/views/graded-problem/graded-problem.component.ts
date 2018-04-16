@@ -64,4 +64,8 @@ export class GradedProblemComponent implements OnInit, AfterViewInit, OnDestroy 
   saveCode() {
     this.codeSaverService.save(this.problem._id, this.codeMirrors.first.config.mode, this.codeMirrors.first.value);
   }
+
+  get documentation() {
+    return this.codeSaverService.getDocumentation();
+  }
 }

@@ -3,6 +3,7 @@ import { defaultSettingsModel, SettingsModel, SettingsState } from '../../common
 import { Job, scheduleJob } from 'node-schedule';
 import { SocketManager } from '../socket.manager';
 import { UpdateSettingsPacket } from '../../common/packets/update.settings.packet';
+import { StateSwitchPacket } from '../../common/packets/state.switch.packet';
 
 type SettingsType = SettingsModel & mongoose.Document;
 
@@ -35,10 +36,16 @@ export class SettingsDao {
   }
 
   static async updateSettings(settings: any): Promise<SettingsModel> {
-    // TODO: If needed, send packet to kick connected teams.
+    const oldSettings: SettingsModel = await SettingsDao.getSettings();
     const newSettings: SettingsModel = await Settings.findOneAndUpdate({}, settings, {upsert: true, new: true}).exec();
+
     SettingsDao.scheduleJobs(newSettings);
     SocketManager.instance.emitToAll(new UpdateSettingsPacket());
+
+    if (oldSettings.state !== newSettings.state) {
+      SocketManager.instance.emitToAll(new StateSwitchPacket(newSettings.state));
+    }
+
     return newSettings;
   }
 
@@ -55,7 +62,9 @@ export class SettingsDao {
 
     settings.schedule.forEach(schedule => {
       const job = scheduleJob(schedule.when, function (newState: SettingsState) {
-        Settings.updateOne({}, {$set: {state: newState}}).exec();
+        Settings.updateOne({}, {$set: {state: newState}}).exec().then(() => {
+          SocketManager.instance.emitToAll(new StateSwitchPacket(newState));
+        });
       }.bind(null, schedule.newState));
 
       if (job !== null) {

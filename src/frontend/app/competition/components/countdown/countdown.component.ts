@@ -4,7 +4,8 @@ import { Moment } from 'moment';
 import { Router } from '@angular/router';
 import { SettingsService } from '../../../services/settings.service';
 import { SocketService } from '../../../services/socket.service';
-import { SettingsModel } from '../../../../../common/models/settings.model';
+import { SettingsModel, SettingsState } from '../../../../../common/models/settings.model';
+import { isStateSwitchPacket } from '../../../../../common/packets/state.switch.packet';
 
 @Component({
   selector: 'app-countdown',
@@ -28,6 +29,17 @@ export class CountdownComponent implements OnInit {
           this.setup();
         });
       }
+
+      else if (isStateSwitchPacket(packet)) {
+        switch (packet.newState) {
+          case SettingsState.End:
+            this.router.navigate(['/end']);
+            break;
+          case SettingsState.Closed:
+            this.router.navigate(['/login']);
+            break;
+        }
+      }
     });
 
     this.settingsService.getSettings().then(settings => {
@@ -46,14 +58,14 @@ export class CountdownComponent implements OnInit {
     const tick = () => {
       if (moment().isAfter(this.end)) {
         clearInterval(this.interval);
-        this.countdown = 'Time\'s up!';
-        this.router.navigate(['end']);
+        this.countdown = '00:00:00';
       }
 
       else {
+        // TODO: Only display days if > 1 day remains.
         const diff = moment.duration(this.end.diff(moment()));
         this.countdown = [
-          diff.days(), diff.hours(), diff.minutes(), diff.seconds()
+          diff.hours(), diff.minutes(), diff.seconds()
         ].map(x => this.pad(x)).join(':');
       }
     };

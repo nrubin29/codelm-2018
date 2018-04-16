@@ -1,5 +1,7 @@
 import mongoose = require('mongoose');
 import { isGradedProblem, ProblemModel, TestCaseOutputMode } from '../../common/models/problem.model';
+import { ProblemUtil } from '../../common/utils/problem.util';
+import { DivisionDao } from './division.dao';
 
 type ProblemType = ProblemModel & mongoose.Document;
 
@@ -37,9 +39,10 @@ export class ProblemDao {
     return Problem.findById(id).populate('divisions.division').exec();
   }
 
-  static getProblemsForDivision(divisionId: string): Promise<ProblemModel[]> {
-    // TODO: Sort based on problemNumber for given divisionId.
-    return Problem.find({'divisions.division': divisionId}).populate('divisions.division').exec();
+  static async getProblemsForDivision(divisionId: string): Promise<ProblemModel[]> {
+    const division = await DivisionDao.getDivision(divisionId);
+    const problems = await Problem.find({'divisions.division': divisionId}).populate('divisions.division').exec();
+    return problems.sort((a: ProblemModel, b: ProblemModel) => ProblemUtil.getProblemNumberForDivision(a, division) - ProblemUtil.getProblemNumberForDivision(b, division));
   }
 
   static addOrUpdateProblem(problem: ProblemModel): Promise<ProblemModel> {

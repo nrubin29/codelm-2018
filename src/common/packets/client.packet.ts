@@ -1,7 +1,6 @@
 import { Packet } from './packet';
 
 export class ClientPacket extends Packet {
-
   constructor(name: string, public version: string) {
     super(name);
   }

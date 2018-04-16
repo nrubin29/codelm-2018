@@ -47,8 +47,4 @@ export class ProblemComponent implements OnInit {
   get isGradedProblem() {
     return isGradedProblem(this.problem);
   }
-
-  get documentation() {
-    return this.codeSaverService.getDocumentation();
-  }
 }

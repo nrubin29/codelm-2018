@@ -16,7 +16,9 @@
   <br>
   <app-card title="Submissions" [pad]="false" *ngIf="submissions.length > 0">
     <mat-list>
-      <mat-list-item *ngFor="let submission of submissions; let i = index"><a [routerLink]="['/', 'dashboard', 'submission', submission._id]">Submission {{i + 1}}</a></mat-list-item>
+      <mat-list-item *ngFor="let submission of submissions; let i = index"><a
+          [routerLink]="['/', 'dashboard', 'submission', submission._id]">Submission {{i + 1}}{{submission.test ? '
+        (Test)' : ''}}</a></mat-list-item>
     </mat-list>
   </app-card>
 </div>

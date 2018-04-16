@@ -12,6 +12,10 @@ const DivisionSchema = new mongoose.Schema({
 const Division = mongoose.model<DivisionDocumentType>('Division', DivisionSchema);
 
 export class DivisionDao {
+  static getDivision(id: string): Promise<DivisionModel> {
+    return Division.findById(id).exec();
+  }
+
   static getDivisions(): Promise<DivisionModel[]> {
     return Division.find().exec();
   }

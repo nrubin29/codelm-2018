@@ -1,31 +1,28 @@
-<h1>{{team.username ? team.username : 'New Team'}}</h1>
-<form #teamForm="ngForm" [formGroup]="formGroup" (submit)="submit(teamForm)">
-  <table>
-    <tr>
-      <th>_id</th>
-      <td><input type="text" formControlName="_id" disabled></td>
-    </tr>
-    <tr>
-      <th>Username</th>
-      <td><input type="text" formControlName="username"></td>
-    </tr>
-    <tr>
-      <th>Password</th>
-      <td><input type="text" formControlName="password"></td>
-    </tr>
-    <tr>
-      <th>Members</th>
-      <td><input type="text" formControlName="members"></td>
-    </tr>
-    <tr>
-      <th>Division</th>
-      <td>
-        <select formControlName="division" *ngIf="divisions">
-          <option *ngFor="let division of divisions" [value]="division._id" [selected]="team.division && team.division._id === division._id">{{division.name}}</option>
-        </select>
-      </td>
-    </tr>
-  </table>
-  <input type="submit">
-  <input type="button" value="Delete" (click)="delete()" *ngIf="team._id">
-</form>
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>{{team.username ? 'Edit ' + team.username : 'Add Team'}}</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="container">
+  <form #teamForm="ngForm" [formGroup]="formGroup" (submit)="submit(teamForm)">
+    <mat-form-field color="accent">
+      <input matInput type="text" placeholder="_id" formControlName="_id" disabled>
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <input matInput type="text" placeholder="Username" formControlName="username">
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <input matInput type="text" placeholder="Password" formControlName="password">
+    </mat-form-field>
+    <mat-form-field color="accent">
+      <input matInput type="text" placeholder="Members" formControlName="members">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select placeholder="Division" formControlName="division" required>
+        <mat-option *ngFor="let division of divisions" [value]="division._id">{{division.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button type="submit" mat-raised-button color="accent">Submit</button>
+    <button type="button" mat-raised-button (click)="delete()" *ngIf="team._id">Delete</button>
+  </form>
+</div>

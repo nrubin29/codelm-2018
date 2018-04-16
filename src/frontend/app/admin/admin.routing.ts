@@ -19,6 +19,7 @@ import { AdminGuard } from '../guards/admin.guard';
 import { AdminComponent } from './views/admin/admin.component';
 import { NgModule } from '@angular/core';
 import { SuperUserGuard } from '../guards/super-user.guard';
+import { DivisionsResolve } from '../resolves/divisions.resolve';
 
 const routes: Routes = [
   {path: 'admin', component: AdminComponent, canActivate: [SocketGuard, AdminGuard], children:
@@ -31,7 +32,7 @@ const routes: Routes = [
         {path: 'divisions', component: DivisionsComponent, canActivate: [SuperUserGuard]},
         {path: 'problems', component: ProblemsComponent, canActivate: [SuperUserGuard], resolve: {divisionsAndProblems: DivisionsProblemsResolve}},
         {path: 'admins', component: AdminsComponent, canActivate: [SuperUserGuard]},
-        {path: 'add-team', component: EditTeamComponent}
+        {path: 'add-team', component: EditTeamComponent, resolve: {divisions: DivisionsResolve}}
       ]
   }
 ];
@@ -48,7 +49,8 @@ const routes: Routes = [
     DivisionsProblemsResolve,
     SettingsResolve,
     SubmissionsResolve,
-    DisputesResolve
+    DisputesResolve,
+    DivisionsResolve
   ]
 })
 export class AdminRoutingModule {}

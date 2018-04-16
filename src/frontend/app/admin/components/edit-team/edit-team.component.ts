@@ -2,9 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { TeamModel } from '../../../../../common/models/team.model';
 import { TeamService } from '../../../services/team.service';
-import { DivisionService } from '../../../services/division.service';
 import { DivisionModel } from '../../../../../common/models/division.model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-edit-team',
@@ -18,23 +17,31 @@ export class EditTeamComponent implements OnInit {
   formGroup: FormGroup;
   originalPassword: string;
 
-  constructor(private divisionService: DivisionService, private teamService: TeamService, private router: Router) { }
+  constructor(private teamService: TeamService, private activatedRoute: ActivatedRoute, private router: Router) {
+  }
 
   ngOnInit() {
-    this.team = this.team ? this.team : {_id: undefined, username: undefined, password: undefined, salt: undefined, members: undefined, division: undefined};
-    this.originalPassword = this.team.password;
+    this.activatedRoute.data.subscribe(data => {
+      this.divisions = data['divisions'];
 
-    this.formGroup = new FormGroup({
-      _id: new FormControl(this.team._id),
-      username: new FormControl(this.team.username),
-      password: new FormControl('', Validators.required),
-      members: new FormControl(this.team.members),
-      division: new FormControl(this.team.division)
+      this.team = this.team ? this.team : {
+        _id: undefined,
+        username: undefined,
+        password: undefined,
+        salt: undefined,
+        members: undefined,
+        division: undefined
+      };
+      this.originalPassword = this.team.password;
+
+      this.formGroup = new FormGroup({
+        _id: new FormControl(this.team._id),
+        username: new FormControl(this.team.username),
+        password: new FormControl('', Validators.required),
+        members: new FormControl(this.team.members),
+        division: new FormControl(this.team.division)
+      });
     });
-
-    this.divisionService.getDivisions().then(divisions => {
-      this.divisions = divisions;
-    })
   }
 
   submit(form: NgForm) {

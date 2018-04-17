@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import { ProblemDao, sanitizeProblem } from '../daos/problem.dao';
 import { ClientGradedProblemSubmission, ClientProblemSubmission, ServerGradedProblemSubmission } from '../../common/problem-submission';
 import { isGradedProblem, ProblemModel, ProblemType } from '../../common/models/problem.model';
-import { SubmissionDao } from '../daos/submission.dao';
+import { isFalse, SubmissionDao } from '../daos/submission.dao';
 import { PermissionsUtil } from '../permissions.util';
 import {
   GradedSubmissionModel,
@@ -66,9 +66,10 @@ router.post('/submit', PermissionsUtil.requireTeam, PermissionsUtil.requireAcces
   if (isGradedProblem(problem)) {
     const gradedProblemSubmission = <ClientGradedProblemSubmission>problemSubmission;
 
+    // For some reason, gradedProblemSubmission.test is a string instead of a boolean.
     const serverProblemSubmission: ServerGradedProblemSubmission = {
       problemTitle: problem.title,
-      testCases: problem.testCases.filter(testCase => !gradedProblemSubmission.test || !testCase.hidden),
+      testCases: problem.testCases.filter(testCase => isFalse(gradedProblemSubmission.test.toString()) || !testCase.hidden),
       language: gradedProblemSubmission.language,
       code: gradedProblemSubmission.code
     };

@@ -23,7 +23,7 @@
             </mat-table>
         </div>
     </app-card>
-    <app-card title="Starter Code">
+    <app-card title="Starter Code" *ngIf="link">
         <a mat-raised-button color="accent" [href]="link" target="_blank">Download Starter Code</a>
     </app-card>
     <!--<app-card title="Activity Feed">-->

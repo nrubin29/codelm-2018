@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { sanitizeSubmission, SubmissionDao } from '../daos/submission.dao';
 import { PermissionsUtil } from '../permissions.util';
-import { isUploadSubmission, SubmissionModel, UploadSubmissionModel } from '../../common/models/submission.model';
+import { isUploadSubmission, SubmissionModel } from '../../common/models/submission.model';
 
 const router = Router();
 
@@ -71,7 +71,7 @@ router.get('/:id/file/:fileName', async (req: Request, res: Response) => {
 
 router.put('/:id', PermissionsUtil.requireAuth, async (req: Request, res: Response) => {
   if (req.params.team) {
-    const submission = await SubmissionDao.getSubmission(req.params.id);
+    const submission = await SubmissionDao.getSubmissionRaw(req.params.id);
     // Only allow teams to set the dispute message.
     submission.set('dispute.message', req.body.dispute.message);
     submission.set('dispute.open', true);

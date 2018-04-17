@@ -18,11 +18,11 @@ const TestCaseSubmissionSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
-function isTrue(str: string): boolean {
+export function isTrue(str: string): boolean {
   return str === 'true' || str === 'True' || str === '1';
 }
 
-function isFalse(str: string): boolean {
+export function isFalse(str: string): boolean {
   return str === 'false' || str === 'False' || str === '0';
 }
 
@@ -141,12 +141,17 @@ export class SubmissionDao {
   private static readonly problemPopulationPath: ModelPopulateOptions = {path: 'problem', model: 'Problem', populate: {path: 'divisions.division', model: 'Division'}};
   private static readonly teamPopulationPath: ModelPopulateOptions = {path: 'team', model: 'Team', populate: {path: 'division', model: 'Division'}};
 
-  static getSubmission(id: string): Promise<SubmissionType> {
+  static getSubmissionRaw(id: string): Promise<SubmissionType | null> {
     return Submission.findById(id).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
   }
 
-  static getSubmissionsForTeam(teamId: string): Promise<SubmissionModel[]> {
-    return Submission.find({team: teamId}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
+  static async getSubmission(id: string): Promise<SubmissionModel> {
+    return (await Submission.findById(id).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec()).toObject();
+  }
+
+  static async getSubmissionsForTeam(teamId: string): Promise<SubmissionModel[]> {
+    const submissions = await Submission.find({team: teamId}).populate(SubmissionDao.problemPopulationPath).populate(SubmissionDao.teamPopulationPath).exec();
+    return submissions.map(submission => submission.toObject());
   }
 
   static getDisputedSubmissions(): Promise<SubmissionModel[]> {

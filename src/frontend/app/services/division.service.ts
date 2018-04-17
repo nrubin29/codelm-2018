@@ -12,12 +12,17 @@ export class DivisionService {
     return this.restService.get<DivisionModel[]>(this.endpoint);
   }
 
-  addOrUpdateDivision(division: DivisionModel & {file?: File}): Promise<DivisionModel> {
+  addOrUpdateDivision(division: DivisionModel & { graded?: File, upload?: File }): Promise<DivisionModel> {
     const formData = new FormData();
 
-    if (division.file) {
-      formData.append('starterCode', division.file, division.file.name);
-      delete division.file;
+    if (division.graded) {
+      formData.append('gradedStarterCode', division.graded, division.graded.name);
+      delete division.graded;
+    }
+
+    if (division.upload) {
+      formData.append('uploadStarterCode', division.upload, division.upload.name);
+      delete division.upload;
     }
 
     for (const key of Object.keys(division)) {

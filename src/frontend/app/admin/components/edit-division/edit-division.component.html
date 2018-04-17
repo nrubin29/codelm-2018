@@ -12,9 +12,13 @@
         <mat-option *ngFor="let type of types" [value]="type">{{type}}</mat-option>
       </mat-select>
     </mat-form-field>
-    <label for="starterCode">Starter Code</label>
+    <label for="uploadStarterCode">Open-Ended Starter Code</label>
     <br>
-    <input type="file" id="starterCode" accept="application/zip" (change)="handleFile($event.target.files)">
+    <input type="file" id="uploadStarterCode" accept="application/zip" (change)="handleUploadFile($event.target.files)">
+    <br><br>
+    <label for="gradedStarterCode">Algorithm Starter Code</label>
+    <br>
+    <input type="file" id="gradedStarterCode" accept="application/zip" (change)="handleGradedFile($event.target.files)">
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button color="accent" type="button" [mat-dialog-close]="['save', formValue]">Save</button>

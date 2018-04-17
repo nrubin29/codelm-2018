@@ -14,7 +14,8 @@ export class EditDivisionComponent implements OnInit {
   division: DivisionModel;
 
   formGroup: FormGroup;
-  file: File;
+  graded: File;
+  upload: File;
 
   constructor(private divisionService: DivisionService, private dialogRef: MatDialogRef<EditProblemComponent>, @Inject(MAT_DIALOG_DATA) private data: {division: DivisionModel}) { }
 
@@ -28,12 +29,16 @@ export class EditDivisionComponent implements OnInit {
     });
   }
 
-  handleFile(files: FileList) {
-    this.file = files[0];
+  handleGradedFile(files: FileList) {
+    this.graded = files[0];
+  }
+
+  handleUploadFile(files: FileList) {
+    this.upload = files[0];
   }
 
   get formValue() {
-    return Object.assign({file: this.file}, this.formGroup.getRawValue());
+    return Object.assign({graded: this.graded, upload: this.upload}, this.formGroup.getRawValue());
   }
 
   get types(): DivisionType[] {

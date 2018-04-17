@@ -43,7 +43,9 @@ export class DivisionsComponent implements OnInit {
         const data = r[1];
 
         if (result === 'save') {
-          this.divisionService.addOrUpdateDivision(data).then(() => {
+          this.divisionService.addOrUpdateDivision(data).then(response => {
+            // TODO: If this is an error, display it.
+            console.log(response);
             this.reload();
           }).catch(alert);
         }

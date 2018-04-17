@@ -20,16 +20,43 @@ router.put('/', PermissionsUtil.requireAdmin, PermissionsUtil.requireSuperUser, 
   const division = await DivisionDao.addOrUpdateDivision(req.body as DivisionModel);
 
   if (req.files) {
-    const file = req.files['starterCode'] as UploadedFile;
-    file.mv(`./files/files/${division._id}.zip`, err => {
-      if (err) {
-        res.json(err);
+    const handle = (file: UploadedFile, type: string) => {
+      return new Promise<void>((resolve, reject) => {
+        file.mv(`./files/files/${type}/${division._id}.zip`, err => {
+          if (err) {
+            reject(err);
+          }
+
+          else {
+            resolve();
+          }
+        });
+      });
+    };
+
+    if (req.files['gradedStarterCode']) {
+      try {
+        await handle(<UploadedFile>req.files['gradedStarterCode'], 'graded');
       }
 
-      else {
-        res.json(division);
+      catch (err) {
+        res.json(err);
+        return;
       }
-    });
+    }
+
+    if (req.files['uploadStarterCode']) {
+      try {
+        await handle(<UploadedFile>req.files['uploadStarterCode'], 'upload');
+      }
+
+      catch (err) {
+        res.json(err);
+        return;
+      }
+    }
+
+    res.json(division);
   }
 
   else {

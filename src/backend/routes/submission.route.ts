@@ -56,7 +56,7 @@ router.get('/:id/file/:fileName', async (req: Request, res: Response) => {
         'Content-Length': file.contents.length
       });
 
-      res.send(file);
+      res.send(file.contents);
     }
 
     else {
@@ -76,7 +76,7 @@ router.put('/:id', PermissionsUtil.requireAuth, async (req: Request, res: Respon
     submission.set('dispute.message', req.body.dispute.message);
     submission.set('dispute.open', true);
 
-    res.json(await SubmissionDao.updateSubmission(req.params.id, submission as SubmissionModel));
+    res.json(sanitizeSubmission(await SubmissionDao.updateSubmission(req.params.id, submission as SubmissionModel)));
   }
 
   else if (req.params.admin) {

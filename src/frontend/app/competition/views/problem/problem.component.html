@@ -2,7 +2,7 @@
   <mat-toolbar-row>
     <span>{{problemNumber}}. {{problem.title}}</span>
       <mat-chip-list>
-          <mat-chip color="accent" selected="true">{{problemPoints}} {{'point'|pluralize:problemPoints}}</mat-chip>
+          <mat-chip color="accent" selected="true">{{problemPoints}} {{'WaveCoin'|pluralize:problemPoints}}</mat-chip>
       </mat-chip-list>
     <span class="spacer"></span>
       <button type="button" *ngIf="enableTest" (click)="submitClicked(true)" mat-raised-button color="accent">Test

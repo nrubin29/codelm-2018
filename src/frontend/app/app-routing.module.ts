@@ -8,13 +8,13 @@ import { NotEndGuard } from './guards/not-end.guard';
 import { DisconnectGuard } from './guards/disconnect.guard';
 import { EndComponent } from './competition/views/end/end.component';
 import { DivisionsResolve } from './resolves/divisions.resolve';
-import { AdminRoutingModule } from './admin/admin.routing';
-import { CompetitionRoutingModule } from './competition/competition.routing';
 import { SettingsResolve } from './resolves/settings.resolve';
 import { OpenRegistrationGuard } from './guards/open-registration.guard';
 
 const routes: Routes = [
   {path: '', redirectTo: '/login', pathMatch: 'full'},
+  {path: 'admin', loadChildren: 'app/admin/admin.module#AdminModule'},
+  {path: 'dashboard', loadChildren: 'app/competition/competition.module#CompetitionModule'},
   {path: 'login', component: LoginComponent, canActivate: [EndGuard], resolve: {settings: SettingsResolve}},
   {path: 'register', component: RegisterComponent, canActivate: [EndGuard, OpenRegistrationGuard], resolve: {divisions: DivisionsResolve}},
   {path: 'disconnected', component: DisconnectedComponent, canActivate: [DisconnectGuard, EndGuard]},
@@ -23,9 +23,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, {useHash: true}),
-    CompetitionRoutingModule,
-    AdminRoutingModule
+    RouterModule.forRoot(routes, {useHash: true})
   ],
   exports: [RouterModule]
 })

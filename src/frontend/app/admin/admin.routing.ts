@@ -22,7 +22,8 @@ import { SuperUserGuard } from '../guards/super-user.guard';
 import { DivisionsResolve } from '../resolves/divisions.resolve';
 
 const routes: Routes = [
-  {path: 'admin', component: AdminComponent, canActivate: [SocketGuard, AdminGuard], children:
+  {
+    path: '', component: AdminComponent, canActivate: [SocketGuard, AdminGuard], children:
       [
         {path: '', component: AdminHomeComponent},
         {path: 'settings', component: SettingsComponent, canActivate: [SuperUserGuard], resolve: {settings: SettingsResolve}},

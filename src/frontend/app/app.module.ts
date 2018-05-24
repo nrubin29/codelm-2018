@@ -4,9 +4,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { LoginComponent } from './common/views/login/login.component';
 import { DisconnectedComponent } from './common/views/disconnected/disconnected.component';
 import { RegisterComponent } from './common/views/register/register.component';
-import { CompetitionModule } from './competition/competition.module';
-import { AdminModule } from './admin/admin.module';
 import { SharedModule } from './shared.module';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { EndComponent } from './competition/views/end/end.component';
 
 @NgModule({
   declarations: [
@@ -14,12 +15,13 @@ import { SharedModule } from './shared.module';
     LoginComponent,
     DisconnectedComponent,
     RegisterComponent,
+    EndComponent
   ],
   imports: [
     SharedModule,
-    AppRoutingModule,
-    CompetitionModule,
-    AdminModule
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule
   ],
   bootstrap: [AppComponent]
 })

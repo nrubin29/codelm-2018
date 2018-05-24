@@ -15,7 +15,8 @@ import { NgModule } from '@angular/core';
 import { SubmittingGuard } from '../guards/submitting.guard';
 
 const routes: Routes = [
-  {path: 'dashboard', component: DashboardComponent, canActivate: [SocketGuard, TeamGuard, EndGuard], children:
+  {
+    path: '', component: DashboardComponent, canActivate: [SocketGuard, TeamGuard, EndGuard], children:
       [
         {path: '', component: StandingsComponent},
         {path: 'problem/:id', component: ProblemComponent, canActivate: [ProblemGuard], resolve: {problem: ProblemResolve, submissions: SubmissionsResolve}},

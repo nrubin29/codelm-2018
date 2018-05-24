@@ -17,11 +17,9 @@ import {
   MatTabsModule,
   MatToolbarModule
 } from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { SubmissionComponent } from './common/views/submission/submission.component';
@@ -42,11 +40,9 @@ import { UploadSubmissionComponent } from './common/views/upload-submission/uplo
   ],
   imports: [
     CommonModule,
-    BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    BrowserAnimationsModule,
     RouterModule,
     MatCardModule,
     MatSidenavModule,
@@ -75,11 +71,9 @@ import { UploadSubmissionComponent } from './common/views/upload-submission/uplo
     CodeMirrorComponent,
     PluralizePipe,
     CommonModule,
-    BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    BrowserAnimationsModule,
     RouterModule,
     MatCardModule,
     MatSidenavModule,

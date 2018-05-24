@@ -7,7 +7,7 @@ import { TeamService } from '../../../services/team.service';
 import { TeamModel } from '../../../../../common/models/team.model';
 import { CodeSaverService } from '../../../services/code-saver.service';
 import { ProblemUtil } from '../../../../../common/utils/problem.util';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-problem',

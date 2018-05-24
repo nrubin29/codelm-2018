@@ -5,7 +5,7 @@ import { TeamModel } from '../../../../../common/models/team.model';
 import { CodeSaverService } from '../../../services/code-saver.service';
 import { ProblemService } from '../../../services/problem.service';
 import { Router } from '@angular/router';
-import 'rxjs/add/operator/debounceTime';
+import { debounceTime } from 'rxjs/operators';
 import { ProblemComponent } from '../problem/problem.component';
 import { ClientGradedProblemSubmission } from '../../../../../common/problem-submission';
 
@@ -52,7 +52,7 @@ export class GradedProblemComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private subscribeTo(codeMirror: CodeMirrorComponent) {
     codeMirror.writeValue(this.codeSaverService.get(this.problem._id, codeMirror.config.mode));
-    codeMirror.change.debounceTime(5000).subscribe(() => {
+    codeMirror.change.pipe(debounceTime(5000)).subscribe(() => {
       this.saveCode();
     });
   }

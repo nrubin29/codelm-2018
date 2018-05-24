@@ -28,7 +28,7 @@ const socketServer = io(httpSocketServer);
 console.log(`Starting CodeLM server build ${VERSION}`);
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/codelm', {useMongoClient: true}).then(() => {
+mongoose.connect('mongodb://localhost/codelm').then(() => {
   console.log('Connected to MongoDB');
 
   SettingsDao.getSettings().then(settings => {

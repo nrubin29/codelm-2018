@@ -1,8 +1,8 @@
 import fs = require('fs-extra');
 import { execFile } from 'child_process';
 import { TestCaseModel } from '../common/models/problem.model';
-import { Subject } from 'rxjs/Subject';
 import { TestCaseSubmissionModel } from '../common/models/submission.model';
+import { Subject } from 'rxjs';
 
 // This interface is used internally by runProcess().
 interface ProcessRunResult {
@@ -11,7 +11,7 @@ interface ProcessRunResult {
 }
 
 interface RunResult {
-  output: string
+  output: string;
 }
 
 export type TestCaseRunResult = TestCaseSubmissionModel & RunResult;
@@ -19,7 +19,7 @@ export type TestCaseRunResult = TestCaseSubmissionModel & RunResult;
 export interface RunError {
   stage: 'compile' | 'run';
   testCase?: number;
-  error: string
+  error: string;
 }
 
 export class CodeFile {

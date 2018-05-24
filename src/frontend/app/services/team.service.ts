@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TeamModel } from '../../../common/models/team.model';
 import { RestService } from './rest.service';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class TeamService {

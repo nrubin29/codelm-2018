@@ -12,7 +12,6 @@ import { DivisionsComponent } from './views/divisions/divisions.component';
 import { ProblemsComponent } from './views/problems/problems.component';
 import { SettingsComponent } from './views/settings/settings.component';
 import { TeamComponent } from './views/team/team.component';
-import { DpDatePickerModule } from 'ng2-date-picker';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { SharedModule } from '../shared.module';
 import { EditGradedProblemComponent } from './components/edit-graded-problem/edit-graded-problem.component';
@@ -36,7 +35,6 @@ import { EditGradedProblemComponent } from './components/edit-graded-problem/edi
   ],
   imports: [
     SharedModule,
-    DpDatePickerModule,
     FroalaEditorModule.forRoot(),
     FroalaViewModule.forRoot(),
   ],

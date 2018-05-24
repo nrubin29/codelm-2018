@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProblemModel } from '../../../../../common/models/problem.model';
 import { TeamService } from '../../../services/team.service';
 import { ProblemService } from '../../../services/problem.service';
-import { MatSidenav } from '@angular/material';
+import { MatDrawerToggleResult, MatSidenav } from '@angular/material';
 import { TeamModel } from '../../../../../common/models/team.model';
 import { SocketService } from '../../../services/socket.service';
 import { Packet } from '../../../../../common/packets/packet';
@@ -44,7 +44,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  toggle(): Promise<void> {
+  toggle(): Promise<MatDrawerToggleResult> {
     return this.sideNav.toggle();
   }
 

@@ -3,7 +3,9 @@ import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { DivisionModel } from '../../../common/models/division.model';
 import { DivisionService } from '../services/division.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class DivisionsResolve implements Resolve<DivisionModel[]> {
   constructor(private divisionService: DivisionService) {}
 

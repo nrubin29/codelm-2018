@@ -4,7 +4,9 @@ import { SubmissionModel } from '../../../common/models/submission.model';
 import { SubmissionService } from '../services/submission.service';
 import { AdminService } from '../services/admin.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SubmissionsResolve implements Resolve<SubmissionModel[]> {
   constructor(private adminService: AdminService, private submissionService: SubmissionService) {}
 

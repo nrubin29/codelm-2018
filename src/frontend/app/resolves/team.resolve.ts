@@ -5,7 +5,9 @@ import { TeamService } from '../services/team.service';
 import { ProblemModel } from '../../../common/models/problem.model';
 import { ProblemService } from '../services/problem.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class TeamResolve implements Resolve<[TeamModel, ProblemModel[]]> {
   constructor(private teamService: TeamService, private problemService: ProblemService) {}
 

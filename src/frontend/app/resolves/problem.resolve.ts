@@ -3,7 +3,9 @@ import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { ProblemService } from '../services/problem.service';
 import { ProblemModel } from '../../../common/models/problem.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ProblemResolve implements Resolve<ProblemModel> {
   constructor(private problemService: ProblemService) {}
 

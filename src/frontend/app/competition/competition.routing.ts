@@ -27,16 +27,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [ RouterModule.forChild(routes) ],
-  exports: [ RouterModule ],
-  providers: [
-    SocketGuard,
-    TeamGuard,
-    ProblemGuard,
-    EndGuard,
-    SubmittingGuard,
-    SubmissionResolve,
-    ProblemResolve,
-    SubmissionsResolve
-  ]
+  exports: [RouterModule]
 })
 export class CompetitionRoutingModule {}

@@ -5,7 +5,9 @@ import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { Packet } from '../../../common/packets/packet';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SocketService {
   private socket: SocketIOClient.Socket;
   stream: Observable<Packet>;

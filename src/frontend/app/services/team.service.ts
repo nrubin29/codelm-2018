@@ -3,7 +3,9 @@ import { TeamModel } from '../../../common/models/team.model';
 import { RestService } from './rest.service';
 import { BehaviorSubject } from 'rxjs';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class TeamService {
   private endpoint = 'teams';
   team: BehaviorSubject<TeamModel>;

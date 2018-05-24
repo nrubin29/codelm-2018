@@ -4,7 +4,9 @@ import { ProblemService } from '../services/problem.service';
 import { SubmissionService } from '../services/submission.service';
 import { SubmissionUtil } from '../../../common/utils/submission.util';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ProblemGuard implements CanActivate {
   constructor(private problemService: ProblemService, private submissionService: SubmissionService, private router: Router) {}
 

@@ -3,7 +3,9 @@ import { ActivatedRouteSnapshot, CanActivate, CanDeactivate, RouterStateSnapshot
 import { SubmitComponent } from '../competition/views/submit/submit.component';
 import { ProblemService } from '../services/problem.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SubmittingGuard implements CanActivate, CanDeactivate<SubmitComponent> {
   constructor(private problemService: ProblemService) {
   }

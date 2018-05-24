@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
 import { DivisionModel } from '../../../common/models/division.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class DivisionService {
   private endpoint = 'divisions';
 

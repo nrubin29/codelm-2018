@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { TeamService } from '../services/team.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class TeamGuard implements CanActivate {
   constructor(private teamService: TeamService, private router: Router) {}
 

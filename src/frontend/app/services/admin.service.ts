@@ -3,7 +3,9 @@ import { RestService } from './rest.service';
 import { BehaviorSubject } from 'rxjs';
 import { AdminModel } from '../../../common/models/admin.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AdminService {
   private endpoint = 'admins';
   admin: BehaviorSubject<AdminModel>;

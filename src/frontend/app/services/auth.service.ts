@@ -8,7 +8,9 @@ import { AdminService } from './admin.service';
 import { RegisterPacket, RegisterTeamData } from '../../../common/packets/register.packet';
 import { VERSION } from '../../../common/version';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
   constructor(private socketService: SocketService, private restService: RestService, private teamService: TeamService, private adminService: AdminService) {}
 

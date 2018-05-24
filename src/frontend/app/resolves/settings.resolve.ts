@@ -3,7 +3,9 @@ import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { SettingsService } from '../services/settings.service';
 import { SettingsModel } from '../../../common/models/settings.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SettingsResolve implements Resolve<SettingsModel> {
   constructor(private settingsService: SettingsService) {}
 

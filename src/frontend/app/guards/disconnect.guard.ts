@@ -4,7 +4,9 @@ import { SocketService } from '../services/socket.service';
 
 // This is the opposite of SocketGuard. Maybe it should have a better name.
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class DisconnectGuard implements CanActivate {
   constructor(private socketService: SocketService) {}
 

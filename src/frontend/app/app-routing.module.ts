@@ -1,9 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './common/views/login/login.component';
-import { SocketGuard } from './guards/socket.guard';
-import { TeamGuard } from './guards/team.guard';
-import { AdminGuard } from './guards/admin.guard';
 import { DisconnectedComponent } from './common/views/disconnected/disconnected.component';
 import { RegisterComponent } from './common/views/register/register.component';
 import { EndGuard } from './guards/end.guard';
@@ -30,17 +27,6 @@ const routes: Routes = [
     CompetitionRoutingModule,
     AdminRoutingModule
   ],
-  exports: [ RouterModule ],
-  providers: [
-    SocketGuard,
-    TeamGuard,
-    AdminGuard,
-    EndGuard,
-    NotEndGuard,
-    OpenRegistrationGuard,
-    DisconnectGuard,
-    DivisionsResolve,
-    SettingsResolve
-  ]
+  exports: [RouterModule]
 })
 export class AppRoutingModule {}

@@ -5,7 +5,9 @@ import { ProblemService } from '../services/problem.service';
 import { DivisionModel } from '../../../common/models/division.model';
 import { DivisionService } from '../services/division.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class DivisionsProblemsResolve implements Resolve<DivisionModelWithProblems[]> {
   constructor(private divisionService: DivisionService, private problemService: ProblemService) {}
 

@@ -39,18 +39,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [ RouterModule.forChild(routes) ],
-  exports: [ RouterModule ],
-  providers: [
-    SocketGuard,
-    AdminGuard,
-    SuperUserGuard,
-    SubmissionResolve,
-    TeamResolve,
-    DivisionsProblemsResolve,
-    SettingsResolve,
-    SubmissionsResolve,
-    DisputesResolve,
-    DivisionsResolve
-  ]
+  exports: [RouterModule]
 })
 export class AdminRoutingModule {}

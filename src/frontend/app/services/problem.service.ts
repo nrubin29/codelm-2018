@@ -4,7 +4,9 @@ import { ProblemModel } from '../../../common/models/problem.model';
 import { TestCaseSubmissionModel } from '../../../common/models/submission.model';
 import { ClientProblemSubmission, isUploadProblemSubmission } from '../../../common/problem-submission';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ProblemService {
   private endpoint = 'problems';
 

@@ -3,7 +3,9 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from
 import { SettingsService } from '../services/settings.service';
 import { SettingsState } from '../../../common/models/settings.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class EndGuard implements CanActivate {
   constructor(private settingsService: SettingsService, private router: Router) {}
 

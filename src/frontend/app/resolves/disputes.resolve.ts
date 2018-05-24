@@ -3,7 +3,9 @@ import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { SubmissionModel } from '../../../common/models/submission.model';
 import { SubmissionService } from '../services/submission.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class DisputesResolve implements Resolve<SubmissionModel[]> {
   constructor(private submissionService: SubmissionService) {}
 

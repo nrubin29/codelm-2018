@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { RestService } from './rest.service';
 import { SettingsModel } from '../../../common/models/settings.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class SettingsService {
   private endpoint = 'settings';
 

@@ -24,7 +24,7 @@
     "@angular/router": "^6.0.1",
     "angular-froala-wysiwyg": "^2.8.1",
     "body-parser": "^1.18.3",
-    "codemirror": "^5.37.0",
+    "codemirror": "^5.54.0",
     "core-js": "^2.5.6",
     "express": "^4.16.3",
     "express-fileupload": "^0.4.0",
